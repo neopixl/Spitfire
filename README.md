@@ -14,8 +14,16 @@ This library was designed to be as simple to use as possible.  Here are the step
 
 * Include the maven dependencies for this library as well as it's dependencies build.gradle file.  (Note: Event bus is required only if you use it.)
 
+
+		repositories {	
+		    maven {
+		        url "http://nexus.neopixl.com/nexus/content/repositories/releases/"
+		    }
+	
+		}
+
 		dependencies {
-			compile 'com.neopixl.library:neorequest:1.0.0'
+			compile 'com.neopixl.library:neorequest:0.1'
 			compile 'com.android.volley:volley:1.0.0'
 			compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
 			compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
