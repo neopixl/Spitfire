@@ -5,7 +5,7 @@ package com.neopixl.library.neorequest.model;
  * For Neopixl
  */
 
-public class SatusMessageResponse {
+public class StatusMessageResponse {
 
     private String message;
     private int status;
