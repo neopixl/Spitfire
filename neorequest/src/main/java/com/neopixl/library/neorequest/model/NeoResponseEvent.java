@@ -14,9 +14,9 @@ public class NeoResponseEvent<T> {
 
     /**
      * Constructor for a NeoResponseEvent (sent using EventBus)
-     * @param data
-     * @param error
-     * @param statusCode
+     * @param data Response received for a request
+     * @param error error received for a request
+     * @param statusCode current http status code <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">status code</a>
      */
     public NeoResponseEvent(T data, VolleyError error, int statusCode) {
         this.statusCode = statusCode;
@@ -42,7 +42,7 @@ public class NeoResponseEvent<T> {
 
     /**
      * Returns the data
-     * @return
+     * @return The response object
      */
     public T getData() {
         return data;

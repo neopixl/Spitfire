@@ -24,7 +24,7 @@ public final class NeoRequestManager {
 
     /**
      * Sets the timeout
-     * @param timeout
+     * @param timeout default timeout for all requests
      * @param regenerateRetryPolicy if set to true, it will generate a new retry policy (30 seconds for the timeout, 1 retry maximum, 1 backoff multiplier)
      */
     public static void setRequestTimeout(int timeout, boolean regenerateRetryPolicy) {
@@ -77,6 +77,7 @@ public final class NeoRequestManager {
      * @param method The {@link com.android.volley.Request.Method} of the URL
      * @param url    The URL
      * @param params The parameters to be appended to the URL if a GET method is used
+     * @param encoding The encoding used to parse parameters set in the url (GET method)
      * @return The full URL
      */
     public static String parseGetUrl(int method, String url, Map<String, String> params, String encoding) {

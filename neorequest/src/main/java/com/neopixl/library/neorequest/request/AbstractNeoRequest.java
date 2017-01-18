@@ -77,7 +77,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
         /**
          * Sets the headers for the request
          * @param headers used to send the request
-         * @return
+         * @return Map&lt;String, String&gt;
          */
         public AbstractBuilder headers(Map<String, String> headers) {
             this.headers = headers;
@@ -97,7 +97,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
 
         /**
          * You must implement this method in your subclass.
-         * @return
+         * @return AbstractNeoRequest
          */
         public AbstractNeoRequest build() {
             throw new RuntimeException("Must be implemented in your subclass.");
@@ -158,7 +158,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
 
     /**
      * Add accepted status codes (<a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">Http status codes</a>)
-     * @param statusCodes
+     * @param statusCodes int[]
      */
 
     public void addAcceptedStatusCodes(int[] statusCodes) {
@@ -224,7 +224,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
     /**
      * Parses the network response {@link NetworkResponse} and returns the expected Type for the request.
      * @param response {@link NetworkResponse} The response for the request (Success or error).
-     * @return
+     * @return Response object linked to a specific type
      */
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
@@ -277,6 +277,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
      * throw {@link AuthFailureError} as authentication may be required to
      * provide these values.
      * @throws AuthFailureError In the event of auth failure
+     * @return Map&lt;String, String&gt;
      */
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
@@ -301,6 +302,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
      * {@link #getBodyContentType()} as well to match the new body format.
      *
      * @throws AuthFailureError in the event of auth failure
+     * @return byte[] or null if the
      */
     public byte[] getBody() throws AuthFailureError {
         if (getMethod() == Method.GET) {
@@ -312,7 +314,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
     /**
      * Returns the sticky's state for the event signal sent using EventBus.
      * see <a href="http://greenrobot.org/eventbus/documentation/configuration/sticky-events/" target="_blank">Sticky Events</a>
-     * @return
+     * @return boolean
      */
     public boolean isStickyEvent() {
         return isStickyEvent;

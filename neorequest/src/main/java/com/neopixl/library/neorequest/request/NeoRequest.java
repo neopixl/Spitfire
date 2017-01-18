@@ -43,7 +43,7 @@ public class NeoRequest<T> extends AbstractNeoRequest<T> {
 
         /**
          * Specifies the object
-         * @param jsonObject
+         * @param jsonObject The object to be embedded in the body
          * @return Builder {@link Builder}
          */
         public Builder object(Object jsonObject) {

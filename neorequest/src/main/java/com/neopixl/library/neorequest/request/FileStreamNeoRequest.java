@@ -66,8 +66,8 @@ public class FileStreamNeoRequest<T> extends AbstractNeoRequest<T> {
     }
 
     /**
-     *
-     * @param builder
+     * Constructor using the builder
+     * @param builder {@link Builder}
      */
 
     public FileStreamNeoRequest(Builder builder) {
@@ -129,7 +129,7 @@ public class FileStreamNeoRequest<T> extends AbstractNeoRequest<T> {
 
     /**
      * Get the part data of the request {@link NeoRequestData}
-     * @return
+     * @return NeoRequestData
      */
     public NeoRequestData getPartData() {
         return partData;
