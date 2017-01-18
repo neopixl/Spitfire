@@ -36,6 +36,97 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
     private Map<String, String> headers;
     private boolean isStickyEvent;
 
+    /**
+     * Abstract class Builder used to create a new request
+     * @param <T> Type used for the response of the request.
+     */
+    public static abstract class AbstractBuilder<T> {
+
+        protected int method = -10;
+        private String url;
+        private Class<T> classResponse;
+
+        private NeoRequestListener<T> mListener;
+        private Map<String, String> headers;
+        private boolean eventBusIsSticky;
+
+        /**
+         * Default
+         * @param method used to send the request
+         * @param url given url to access the resource
+         * @param classResponse class used to parse the response
+         */
+        public AbstractBuilder(int method, String url, Class classResponse) {
+
+            this.method = method;
+            this.url = url;
+            this.classResponse = classResponse;
+        }
+
+        /**
+         * Sets the listener for the request
+         * @param listener {@link NeoRequestListener}
+         * @return the builder
+         */
+
+        public AbstractBuilder listener(NeoRequestListener<T> listener) {
+            this.mListener = listener;
+            return this;
+        }
+
+        /**
+         * Sets the headers for the request
+         * @param headers used to send the request
+         * @return
+         */
+        public AbstractBuilder headers(Map<String, String> headers) {
+            this.headers = headers;
+            return this;
+        }
+
+        /**
+         * Specifies if the request will post <a href="http://greenrobot.org/eventbus/documentation/configuration/sticky-events/" target="_blank">sticky events</a>
+         * @param isStickyEvent flag used to specify if all events will be sent as sticky events
+         * @return boolean
+         */
+
+        public AbstractBuilder stickyEvent(boolean isStickyEvent) {
+            this.eventBusIsSticky = isStickyEvent;
+            return this;
+        }
+
+        /**
+         * You must implement this method in your subclass.
+         * @return
+         */
+        public AbstractNeoRequest build() {
+            throw new RuntimeException("Must be implemented in your subclass.");
+        }
+    }
+
+
+    AbstractNeoRequest(AbstractBuilder builder) {
+        super(builder.method, builder.url, null);
+
+        Map<String, String> builderHeaders = builder.headers;
+
+        this.headers = builderHeaders!=null ? builderHeaders : new HashMap<String, String>();
+        this.classResponse = builder.classResponse;
+
+        setShouldCache(builder.method == Method.GET);
+
+        this.mListener = builder.mListener;
+        this.isStickyEvent = builder.eventBusIsSticky;
+
+        mAcceptedStatusCodes = new ArrayList<>();
+        mAcceptedStatusCodes.add(HttpURLConnection.HTTP_OK);
+        mAcceptedStatusCodes.add(HttpURLConnection.HTTP_NO_CONTENT);
+        mAcceptedStatusCodes.add(HttpURLConnection.HTTP_ACCEPTED);
+        mAcceptedStatusCodes.add(HttpURLConnection.HTTP_CREATED);
+
+        setRetryPolicy(NeoRequestManager.getDefaultRetryPolicy());
+    }
+
 
     /**
      * Constructor to create the request

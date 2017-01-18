@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
     }
@@ -81,6 +80,20 @@ public class MainActivity extends AppCompatActivity {
         addRequestWithRandom(getWithoutParamsRequest);
 
         final TextView getWithoutParamsAndEmptyReturnTextView = getTextViewForRequest("getWithoutParamsAndEmptyReturn");
+
+        NeoRequest<Void> testRequest = new NeoRequest.Builder(Request.Method.GET, "", Void.class)
+                .listener(new NeoRequestListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError, int i) {
+
+                    }
+                }).build();
+
         NeoRequest<Void> getWithoutParamsAndEmptyReturnRequest = new NeoRequest.Builder<Void>(Request.Method.GET,
                 "https://private-4b982e-neorequest.apiary-mock.com/get/nodata", Void.class)
                 .listener(new NeoRequestListener<Void>() {
@@ -196,35 +209,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadFileStreamRequest() {
-        Map<String, String> emtpyHeaders = new HashMap<>();
-
         NeoRequestData data = new NeoRequestData("image1", new byte[] {1,1,1,1,0,0,1}, "image/jpeg");
 
         final TextView putImageStreamTextView = getTextViewForRequest("putImageStream");
-        FileStreamNeoRequest<Void> putImageStreamRequest = new FileStreamNeoRequest<>(Request.Method.PUT,
-                "https://private-4b982e-neorequest.apiary-mock.com/put/image", emtpyHeaders, data, new NeoRequestListener<Void>() {
-            @Override
-            public void onSuccess(Void v) {
-                setSuccessForTextView(putImageStreamTextView, true);
-            }
 
-            @Override
-            public void onFailure(VolleyError volleyError, int i) {
-                setSuccessForTextView(putImageStreamTextView, false);
+        FileStreamNeoRequest<Void> putImageStreamRequest = new FileStreamNeoRequest.Builder<Void>(Request.Method.PUT, "https://private-4b982e-neorequest.apiary-mock.com/put/image", Void.class)
+                .partData(data).listener(new NeoRequestListener<Void>() {
+                    @Override
+                    public void onSuccess(Void v) {
+                        setSuccessForTextView(putImageStreamTextView, true);
+                    }
 
-            }
-        }, Void.class);
+                    @Override
+                    public void onFailure(VolleyError volleyError, int i) {
+                        setSuccessForTextView(putImageStreamTextView, false);
+
+                    }
+                }).build();
+
         addRequestWithRandom(putImageStreamRequest);
     }
 
     private void loadMultipartRequest() {
-        Map<String, String> emtpyHeaders = new HashMap<>();
-
-        HashMap<String, NeoRequestData> multipardData = new HashMap<>();
+        HashMap<String, NeoRequestData> multiPartData = new HashMap<>();
         NeoRequestData data = new NeoRequestData("image1", new byte[] {1,1,1,1,0,0,1}, "image/jpeg");
-        multipardData.put("image1", data);
+        multiPartData.put("image1", data);
         data = new NeoRequestData("image1", new byte[] {1,1,1,1,0,0,1}, "image/jpeg");
-        multipardData.put("image1", data);
+        multiPartData.put("image1", data);
 
         final TextView putImageMultipartTextView = getTextViewForRequest("putImageMultipart");
         MultipartNeoRequest<Void> putImageMultipartRequest = new MultipartNeoRequest.Builder<Void>(Request.Method.PUT,
@@ -264,12 +275,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setSuccessForTextView(TextView textView, boolean success) {
-        String newText = "ERROR";
-        int color = Color.RED;
-        if (success) {
-            newText = "OK";
-            color = Color.GREEN;
-        }
+        String newText = success ? "OK" : "ERROR";
+        int color = success ? Color.RED : Color.GREEN;
+
         textView.setText(newText);
         textView.setTextColor(color);
     }

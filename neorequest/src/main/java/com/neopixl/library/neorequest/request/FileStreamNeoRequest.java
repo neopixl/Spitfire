@@ -18,15 +18,63 @@ public class FileStreamNeoRequest<T> extends AbstractNeoRequest<T> {
 
     private NeoRequestData partData;
 
-    public FileStreamNeoRequest(int method, String url, Map<String, String> headers, NeoRequestData partData, Class<T> classResponse) {
-        this(method, url, headers, partData, null, classResponse);
+    public static class Builder<T> extends AbstractBuilder {
+
+        private NeoRequestData partData;
+
+        /**
+         * Default
+         *
+         * @param method        used to send the request
+         * @param url           given url to access the resource
+         * @param classResponse class used to parse the response
+         */
+        public Builder(int method, String url, Class classResponse) {
+            super(method, url, classResponse);
+        }
+
+        public Builder partData(NeoRequestData partData) {
+            this.partData = partData;
+            return this;
+        }
+
+        @Override
+        public Builder listener(NeoRequestListener listener) {
+            super.listener(listener);
+            return this;
+        }
+
+        @Override
+        public Builder headers(Map headers) {
+            super.headers(headers);
+            return this;
+        }
+
+        @Override
+        public Builder stickyEvent(boolean isStickyEvent) {
+            super.stickyEvent(isStickyEvent);
+            return this;
+        }
+
+        /**
+         * Create a request based on the current request
+         * @return The request
+         */
+        public FileStreamNeoRequest<T> build() {
+            return new FileStreamNeoRequest(this);
+        }
     }
 
-    public FileStreamNeoRequest(int method, String url, Map<String, String> headers, NeoRequestData partData, NeoRequestListener<T> listener, Class<T> classResponse) {
-        super(method, url, headers, listener, classResponse, false);
-        this.partData = partData;
+    /**
+     *
+     * @param builder
+     */
 
-        if (method == Method.GET) {
+    public FileStreamNeoRequest(Builder builder) {
+        super(builder);
+        this.partData = builder.partData;
+
+        if (builder.method == Method.GET) {
             throw new IllegalArgumentException("Cannot use streamfile with GET request");
         }
     }

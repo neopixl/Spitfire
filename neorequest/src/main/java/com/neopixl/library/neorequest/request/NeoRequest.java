@@ -25,61 +25,20 @@ public class NeoRequest<T> extends AbstractNeoRequest<T> {
 
     /**
      * Class Builder used to create a new request
-     * @param <T> Type used for the request
      */
-    public static class Builder<T> {
-
-        protected int method = -10;
-        private String url;
-
-        private Class<T> classResponse;
-        private NeoRequestListener<T> mListener;
-        private Map<String, String> headers;
-        private boolean eventBusIsSticky;
+    public static class Builder<T> extends AbstractBuilder {
         private Map<String, String> parameters;
         private Object jsonObject;
 
-
         /**
          * Default
-         * @param method used to send the request
-         * @param url given url to access the resource
+         *
+         * @param method        used to send the request
+         * @param url           given url to access the resource
          * @param classResponse class used to parse the response
          */
         public Builder(int method, String url, Class classResponse) {
-            this.method = method;
-            this.url = url;
-            this.classResponse = classResponse;
-        }
-
-        /**
-         * Sets the listener for the request
-         * @param listener {@link NeoRequestListener}
-         * @return the builder
-         */
-        public Builder listener(NeoRequestListener<T> listener) {
-            this.mListener = listener;
-            return this;
-        }
-
-        /**
-         * Sets the headers for the request
-         * @param headers used to send the request
-         * @return
-         */
-        public Builder headers(Map<String, String> headers) {
-            this.headers = headers;
-            return this;
-        }
-
-        /**
-         * Specifies if the request will post <a href="http://greenrobot.org/eventbus/documentation/configuration/sticky-events/" target="_blank">sticky events</a>
-         * @param isStickyEvent flag used to specify if all events will be sent as sticky events
-         * @return boolean
-         */
-        public Builder stickyEvent(boolean isStickyEvent) {
-            this.eventBusIsSticky = isStickyEvent;
-            return this;
+            super(method, url, classResponse);
         }
 
         /**
@@ -102,12 +61,31 @@ public class NeoRequest<T> extends AbstractNeoRequest<T> {
             return this;
         }
 
+        @Override
+        public Builder listener(NeoRequestListener listener) {
+            super.listener(listener);
+            return this;
+        }
+
+        @Override
+        public Builder headers(Map headers) {
+            super.headers(headers);
+            return this;
+        }
+
+        @Override
+        public Builder stickyEvent(boolean isStickyEvent) {
+            super.stickyEvent(isStickyEvent);
+            return this;
+        }
+
         /**
          * Create a request based on the current request
          * @return The request
          */
-        public NeoRequest<T> build() {
-            return new NeoRequest<T>(this);
+
+        public NeoRequest build() {
+            return new NeoRequest(this);
         }
     }
 
@@ -116,15 +94,12 @@ public class NeoRequest<T> extends AbstractNeoRequest<T> {
      * @param builder {@link Builder}
      */
     protected NeoRequest(Builder builder) {
-        this(builder.method, builder.url, builder.headers, builder.parameters, builder.jsonObject, builder.mListener, builder.classResponse, builder.eventBusIsSticky);
-    }
+        super(builder);
 
-    private NeoRequest(int method, String url, Map<String, String> headers, Map<String, String> params, Object jsonObject, NeoRequestListener<T> listener, Class<T> classResponse, boolean isStickyEvent) {
-        super(method, url, headers, listener, classResponse , isStickyEvent);
-        standardParams = params;
-        jsonObjectBody = jsonObject;
+        this.standardParams = builder.parameters;
+        this.jsonObjectBody = builder.jsonObject;
 
-        if (method == Method.GET && jsonObjectBody != null) {
+        if (builder.method == Method.GET && jsonObjectBody != null) {
             throw new IllegalArgumentException("Cannot use json body request with GET");
         }
     }
