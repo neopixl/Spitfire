@@ -41,7 +41,7 @@ public class NeoRequestData {
     }
 
     /**
-     * Getter file name.
+     * Get the file name.
      *
      * @return file name
      */
@@ -50,7 +50,7 @@ public class NeoRequestData {
     }
 
     /**
-     * Setter file name.
+     * Set the file name.
      *
      * @param fileName string file name
      */
@@ -59,7 +59,7 @@ public class NeoRequestData {
     }
 
     /**
-     * Getter content.
+     * Get the content
      *
      * @return byte file data
      */
@@ -68,7 +68,7 @@ public class NeoRequestData {
     }
 
     /**
-     * Setter content.
+     * Set the content
      *
      * @param content byte file data
      */
@@ -77,7 +77,7 @@ public class NeoRequestData {
     }
 
     /**
-     * Getter mime type.
+     * Get the mime type.
      *
      * @return mime type
      */
@@ -86,7 +86,7 @@ public class NeoRequestData {
     }
 
     /**
-     * Setter mime type.
+     * Set the mime type.
      *
      * @param type mime type
      */
@@ -94,6 +94,9 @@ public class NeoRequestData {
         this.type = type;
     }
 
+    /**
+     * Clear the current content
+     */
     public void clear() {
         content = new byte[0];
     }

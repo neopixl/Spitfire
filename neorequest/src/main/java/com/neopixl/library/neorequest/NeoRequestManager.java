@@ -11,31 +11,49 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 /**
- * Created by Florian ALONSO on 12/30/16.
- * For Neopixl
+ * Main class used to store the object mapper {@link ObjectMapper} and the default retry policy {@link RetryPolicy} used by all requests. It acts as a singleton.
+ * <p>Created by Florian ALONSO on 12/30/16.
+ * For Neopixl</p>
  */
 
-public class NeoRequestManager {
+public final class NeoRequestManager {
 
     private static ObjectMapper objectMapper;
     private static RetryPolicy defaultRetryPolicy = generateRetryPolicy();
     private static int requestTimeout = 30000;// 30 seconds
 
-    static public void setReqestTimeout(int newTimeout, boolean regenerateRetryPolicy) {
-        requestTimeout = newTimeout;
+    /**
+     * Sets the timeout
+     * @param timeout
+     * @param regenerateRetryPolicy if set to true, it will generate a new retry policy (30 seconds for the timeout, 1 retry maximum, 1 backoff multiplier)
+     */
+    public static void setRequestTimeout(int timeout, boolean regenerateRetryPolicy) {
+        requestTimeout = timeout;
         if (regenerateRetryPolicy) {
             defaultRetryPolicy = generateRetryPolicy();
         }
     }
 
+    /**
+     * Store a retry policy
+     * @param newRetryPolicy {@link RetryPolicy}
+     */
     public static void setDefaultRetryPolicy(RetryPolicy newRetryPolicy) {
         defaultRetryPolicy = newRetryPolicy;
     }
 
+    /**
+     * Get the default retry policy
+     * @return the default retry policy {@link RetryPolicy}
+     */
     public static RetryPolicy getDefaultRetryPolicy() {
         return defaultRetryPolicy;
     }
 
+    /**
+     * Get the default object mapper (with SerializationFeature.INDENT_OUTPUT set to false and SerializationInclusion set to JsonInclude.Include.NON_NULL)
+     * @return the current object mapper {@link ObjectMapper}
+     */
     public static ObjectMapper getObjectMapper() {
         if (objectMapper == null) {
             objectMapper = new ObjectMapper();
@@ -45,7 +63,11 @@ public class NeoRequestManager {
         return objectMapper;
     }
 
-    static private RetryPolicy generateRetryPolicy() {
+    /**
+     * Generate a default retry policy (30 seconds for the timeout, 1 retry maximum, 1 backoff multiplier)
+     * @return a default retry policy
+     */
+    private static RetryPolicy generateRetryPolicy() {
         return new DefaultRetryPolicy(requestTimeout, 1, 1);
     }
 

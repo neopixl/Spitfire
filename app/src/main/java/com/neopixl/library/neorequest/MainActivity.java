@@ -17,7 +17,7 @@ import com.neopixl.library.neorequest.model.NeoRequestData;
 import com.neopixl.library.neorequest.listener.NeoRequestListener;
 import com.neopixl.library.neorequest.model.NeoResponseEvent;
 import com.neopixl.library.neorequest.model.PostJsonRequest;
-import com.neopixl.library.neorequest.model.SatusMessageResponse;
+import com.neopixl.library.neorequest.model.StatusMessageResponse;
 import com.neopixl.library.neorequest.request.AbstractNeoRequest;
 import com.neopixl.library.neorequest.request.FileStreamNeoRequest;
 import com.neopixl.library.neorequest.request.MultipartNeoRequest;
@@ -68,59 +68,62 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Subscribe
-    public void didReceiveResponseForGetWithoutParams(NeoResponseEvent<SatusMessageResponse> event) {
+    public void didReceiveResponseForGetWithoutParams(NeoResponseEvent<StatusMessageResponse> event) {
         setSuccessForTextView(getWithoutParamsTextViewEventBus, event.isSuccess());
     }
 
     private void loadGetRequest() {
-        Map<String, String> emtpyHeaders = new HashMap<>();
-
         getWithoutParamsTextViewEventBus = getTextViewForRequest("getWithoutParams");
-        NeoRequest<SatusMessageResponse> getWithoutParamsRequest = new NeoRequest<>(Request.Method.GET,
-                "https://private-4b982e-neorequest.apiary-mock.com/get/data", emtpyHeaders, SatusMessageResponse.class);
+        NeoRequest<StatusMessageResponse> getWithoutParamsRequest = new NeoRequest.Builder<StatusMessageResponse>(Request.Method.GET,
+                "https://private-4b982e-neorequest.apiary-mock.com/get/data", StatusMessageResponse.class)
+                .build();
+
         addRequestWithRandom(getWithoutParamsRequest);
 
-
         final TextView getWithoutParamsAndEmptyReturnTextView = getTextViewForRequest("getWithoutParamsAndEmptyReturn");
-        NeoRequest<Void> getWithoutParamsAndEmptyReturnRequest = new NeoRequest<>(Request.Method.GET,
-                "https://private-4b982e-neorequest.apiary-mock.com/get/nodata", emtpyHeaders, new NeoRequestListener<Void>() {
-            @Override
-            public void onSuccess(Void v) {
-                setSuccessForTextView(getWithoutParamsAndEmptyReturnTextView, true);
-            }
+        NeoRequest<Void> getWithoutParamsAndEmptyReturnRequest = new NeoRequest.Builder<Void>(Request.Method.GET,
+                "https://private-4b982e-neorequest.apiary-mock.com/get/nodata", Void.class)
+                .listener(new NeoRequestListener<Void>() {
+                    @Override
+                    public void onSuccess(Void v) {
+                        setSuccessForTextView(getWithoutParamsAndEmptyReturnTextView, true);
+                    }
 
-            @Override
-            public void onFailure(VolleyError volleyError, int i) {
-                setSuccessForTextView(getWithoutParamsAndEmptyReturnTextView, false);
+                    @Override
+                    public void onFailure(VolleyError volleyError, int i) {
+                        setSuccessForTextView(getWithoutParamsAndEmptyReturnTextView, false);
 
-            }
-        }, Void.class);
+                    }
+                })
+                .build();
+
         addRequestWithRandom(getWithoutParamsAndEmptyReturnRequest);
-
 
         Map<String, String> params = new HashMap<>();
         params.put("query1", "test1");
         params.put("query2", "test2");
         final TextView getWithParamsTextView = getTextViewForRequest("getWithParams");
-        NeoRequest<Void> getWithParamsRequest = new NeoRequest<>(Request.Method.GET,
-                "https://private-4b982e-neorequest.apiary-mock.com/get/data/3", emtpyHeaders, params, new NeoRequestListener<Void>() {
-            @Override
-            public void onSuccess(Void v) {
-                setSuccessForTextView(getWithParamsTextView, true);
-            }
+        NeoRequest<Void> getWithParamsRequest = new NeoRequest.Builder<Void>(Request.Method.GET,
+                "https://private-4b982e-neorequest.apiary-mock.com/get/data/3", Void.class)
+                .listener(new NeoRequestListener<Void>() {
+                    @Override
+                    public void onSuccess(Void v) {
+                        setSuccessForTextView(getWithParamsTextView, true);
+                    }
 
-            @Override
-            public void onFailure(VolleyError volleyError, int i) {
-                setSuccessForTextView(getWithParamsTextView, false);
+                    @Override
+                    public void onFailure(VolleyError volleyError, int i) {
+                        setSuccessForTextView(getWithParamsTextView, false);
 
-            }
-        }, Void.class);
+                    }
+                }).build();
+
         addRequestWithRandom(getWithParamsRequest);
 
-
         final TextView getWithParamsErrorTextView = getTextViewForRequest("getWithParamsError");
-        NeoRequest<Void> getWithParamsErrorRequest = new NeoRequest<>(Request.Method.GET,
-                "https://private-4b982e-neorequest.apiary-mock.com/get/errordata/3", emtpyHeaders, new NeoRequestListener<Void>() {
+        NeoRequest<Void> getWithParamsErrorRequest = new NeoRequest.Builder<Void>(Request.Method.GET,
+                "https://private-4b982e-neorequest.apiary-mock.com/get/errordata/3", Void.class)
+                .listener(new NeoRequestListener<Void>() {
             @Override
             public void onSuccess(Void v) {
                 setSuccessForTextView(getWithParamsErrorTextView, false);
@@ -131,21 +134,22 @@ public class MainActivity extends AppCompatActivity {
                 setSuccessForTextView(getWithParamsErrorTextView, true);
 
             }
-        }, Void.class);
+        }).build();
+
         addRequestWithRandom(getWithParamsErrorRequest);
     }
 
     private void loadPostRequest() {
-        Map<String, String> emtpyHeaders = new HashMap<>();
 
         Map<String, String> params = new HashMap<>();
         params.put("query1", "test1");
         params.put("query2", "test2");
         final TextView postWithParamsTextView = getTextViewForRequest("postWithParams");
-        NeoRequest<SatusMessageResponse> postWithParamsRequest = new NeoRequest<>(Request.Method.POST,
-                "https://private-4b982e-neorequest.apiary-mock.com/post/data/3", emtpyHeaders, params, new NeoRequestListener<SatusMessageResponse>() {
+        NeoRequest<StatusMessageResponse> postWithParamsRequest = new NeoRequest.Builder<StatusMessageResponse>(Request.Method.POST,
+                "https://private-4b982e-neorequest.apiary-mock.com/post/data/3", StatusMessageResponse.class)
+                .listener(new NeoRequestListener<StatusMessageResponse>() {
             @Override
-            public void onSuccess(SatusMessageResponse v) {
+            public void onSuccess(StatusMessageResponse v) {
                 setSuccessForTextView(postWithParamsTextView, true);
             }
 
@@ -154,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 setSuccessForTextView(postWithParamsTextView, false);
 
             }
-        }, SatusMessageResponse.class);
+        }).parameters(params).build();
         addRequestWithRandom(postWithParamsRequest);
 
 
@@ -163,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         fullHeaders.put("Token", "abcdefghijkl");
 
         PostJsonRequest postJsonRequest = new PostJsonRequest();
-        SatusMessageResponse satusMessageRequest = new SatusMessageResponse();
+        StatusMessageResponse satusMessageRequest = new StatusMessageResponse();
         satusMessageRequest.setStatus(200);
         satusMessageRequest.setMessage("abcdefghijkl");
         postJsonRequest.setTest1(1);
@@ -171,10 +175,10 @@ public class MainActivity extends AppCompatActivity {
         postJsonRequest.setTestObject(satusMessageRequest);
 
         final TextView postWithJsonAndHeaderTextView = getTextViewForRequest("postWithJsonAndHeader");
-        NeoRequest<SatusMessageResponse> postWithJsonAndHeaderRequest = new NeoRequest<>(Request.Method.POST,
-                "https://private-4b982e-neorequest.apiary-mock.com/post/json", fullHeaders, postJsonRequest, new NeoRequestListener<SatusMessageResponse>() {
+        NeoRequest<StatusMessageResponse> postWithJsonAndHeaderRequest = new NeoRequest.Builder<StatusMessageResponse>(Request.Method.POST,
+                "https://private-4b982e-neorequest.apiary-mock.com/post/json", StatusMessageResponse.class).listener(new NeoRequestListener<StatusMessageResponse>() {
             @Override
-            public void onSuccess(SatusMessageResponse v) {
+            public void onSuccess(StatusMessageResponse v) {
                 setSuccessForTextView(postWithJsonAndHeaderTextView, true);
             }
 
@@ -183,7 +187,11 @@ public class MainActivity extends AppCompatActivity {
                 setSuccessForTextView(postWithJsonAndHeaderTextView, false);
 
             }
-        }, SatusMessageResponse.class);
+        })
+                .headers(fullHeaders)
+                .object(postJsonRequest)
+                .build();
+
         addRequestWithRandom(postWithJsonAndHeaderRequest);
     }
 
@@ -219,8 +227,9 @@ public class MainActivity extends AppCompatActivity {
         multipardData.put("image1", data);
 
         final TextView putImageMultipartTextView = getTextViewForRequest("putImageMultipart");
-        MultipartNeoRequest<Void> putImageMultipartRequest = new MultipartNeoRequest<>(Request.Method.PUT,
-                "https://private-4b982e-neorequest.apiary-mock.com/put/images/3", emtpyHeaders, multipardData, new NeoRequestListener<Void>() {
+        MultipartNeoRequest<Void> putImageMultipartRequest = new MultipartNeoRequest.Builder<Void>(Request.Method.PUT,
+                "https://private-4b982e-neorequest.apiary-mock.com/put/images/3",Void.class)
+                .listener(new NeoRequestListener<Void>() {
             @Override
             public void onSuccess(Void v) {
                 setSuccessForTextView(putImageMultipartTextView, true);
@@ -231,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 setSuccessForTextView(putImageMultipartTextView, false);
 
             }
-        }, Void.class);
+        }).build();
         addRequestWithRandom(putImageMultipartRequest);
     }
 

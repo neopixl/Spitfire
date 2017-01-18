@@ -26,44 +26,77 @@ public class MultipartNeoRequest<T> extends NeoRequest<T> {
 
     private HashMap<String, NeoRequestData> multiPartData;
 
-    public MultipartNeoRequest(int method, String url, Map<String, String> headers, HashMap<String, NeoRequestData> multipardData, NeoRequestListener<T> listener, Class<T> classResponse) {
-        this(method, url, headers, null, null, multipardData, listener, classResponse);
+    /**
+     * Builder used to create the final request
+     * @param <T> type for the request
+     */
+    public static class Builder<T> extends NeoRequest.Builder {
+
+        private HashMap<String, NeoRequestData> multiPartData;
+
+        /**
+         * Constructor for the builder
+         * @param method The {@link com.android.volley.Request.Method} of the URL
+         * @param url    The URL
+         * @param classResponse the class used to parse the response associated to the request.
+         */
+        public Builder(int method, String url, Class classResponse) {
+            super(method, url, classResponse);
+        }
+
+        @Override
+        public Builder listener(NeoRequestListener listener) {
+            super.listener(listener);
+            return this;
+        }
+
+        /**
+         * Set the multipart data for the request
+         * @param multiPartData HashMap&lt;String, NeoRequestData&gt; multiPartData
+         * @return Builder {@link Builder}
+         */
+        public Builder multiPartData(HashMap<String, NeoRequestData> multiPartData) {
+            this.multiPartData = multiPartData;
+            return this;
+        }
+
+        /**
+         * Build a new MultipartNeoRequest object based on the Builder's parameters
+         * @return MultipartNeoRequest {@link MultipartNeoRequest}
+         */
+        public MultipartNeoRequest build() {
+            return new MultipartNeoRequest<T>(this);
+        }
     }
 
-    public MultipartNeoRequest(int method, String url, Map<String, String> headers, Map<String, String> params, HashMap<String, NeoRequestData> multipardData, NeoRequestListener<T> listener, Class<T> classResponse) {
-        this(method, url, headers, params, null, multipardData, listener, classResponse);
-    }
+    private MultipartNeoRequest(Builder builder) {
+        super(builder);
 
-    public MultipartNeoRequest(int method, String url, Map<String, String> headers, Object jsonObject, HashMap<String, NeoRequestData> multipardData, NeoRequestListener<T> listener, Class<T> classResponse) {
-        this(method, url, headers, null, jsonObject, multipardData, listener, classResponse);
-    }
+        this.multiPartData = builder.multiPartData;
 
-    public MultipartNeoRequest(int method, String url, Map<String, String> headers, HashMap<String, NeoRequestData> multipardData, Class<T> classResponse) {
-        this(method, url, headers, null, null, multipardData, null, classResponse);
-    }
-
-    public MultipartNeoRequest(int method, String url, Map<String, String> headers, Map<String, String> params, HashMap<String, NeoRequestData> multipardData, Class<T> classResponse) {
-        this(method, url, headers, params, null, multipardData, null, classResponse);
-    }
-
-    public MultipartNeoRequest(int method, String url, Map<String, String> headers, Object jsonObject, HashMap<String, NeoRequestData> multipardData, Class<T> classResponse) {
-        this(method, url, headers, null, jsonObject, multipardData, null, classResponse);
-    }
-
-    protected MultipartNeoRequest(int method, String url, Map<String, String> headers, Map<String, String> params, Object jsonObject, HashMap<String, NeoRequestData> multipardData, NeoRequestListener<T> listener, Class<T> classResponse) {
-        super(method, url, headers, params, jsonObject, listener, classResponse);
-        this.multiPartData = multipardData;
-
-        if (method == Method.GET) {
+        if (builder.method == Method.GET) {
             throw new IllegalArgumentException("Cannot use multipart with GET request");
         }
     }
 
+    /**
+     * Returns the content type of the POST or PUT body.
+     * @return String
+     */
     @Override
     public String getBodyContentType() {
         return "multipart/form-data;boundary=" + boundary;
     }
 
+    /**
+     * Returns the raw POST or PUT body to be sent.
+     *
+     * <p>By default, the body consists of the request parameters in
+     * application/x-www-form-urlencoded format. When overriding this method, consider overriding
+     * {@link #getBodyContentType()} as well to match the new body format.
+     *
+     * @throws AuthFailureError in the event of auth failure
+     */
     @Override
     public byte[] getBody() throws AuthFailureError {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -204,6 +237,10 @@ public class MultipartNeoRequest<T> extends NeoRequest<T> {
         dataOutputStream.writeBytes(lineEnd);
     }
 
+    /**
+     * Get multiPart data for the current request.
+     * @return HashMap&lt;String, NeoRequestData&gt; {@link NeoRequestData}
+     */
     public HashMap<String, NeoRequestData> getMultiPartData() {
         return multiPartData;
     }

@@ -9,7 +9,7 @@ public class PostJsonRequest {
 
     private String test2;
     private int test1;
-    private SatusMessageResponse testObject;
+    private StatusMessageResponse testObject;
 
     public String getTest2() {
         return test2;
@@ -27,11 +27,11 @@ public class PostJsonRequest {
         this.test1 = test1;
     }
 
-    public SatusMessageResponse getTestObject() {
+    public StatusMessageResponse getTestObject() {
         return testObject;
     }
 
-    public void setTestObject(SatusMessageResponse testObject) {
+    public void setTestObject(StatusMessageResponse testObject) {
         this.testObject = testObject;
     }
 }

@@ -23,7 +23,7 @@ public class FileStreamNeoRequest<T> extends AbstractNeoRequest<T> {
     }
 
     public FileStreamNeoRequest(int method, String url, Map<String, String> headers, NeoRequestData partData, NeoRequestListener<T> listener, Class<T> classResponse) {
-        super(method, url, headers, listener, classResponse);
+        super(method, url, headers, listener, classResponse, false);
         this.partData = partData;
 
         if (method == Method.GET) {
@@ -31,11 +31,25 @@ public class FileStreamNeoRequest<T> extends AbstractNeoRequest<T> {
         }
     }
 
+    /**
+     * Returns the content type of the POST or PUT body.
+     * @return String
+     */
     @Override
     public String getBodyContentType() {
         return getPartData().getType();
     }
 
+
+    /**
+     * Returns the raw POST or PUT body to be sent.
+     *
+     * <p>By default, the body consists of the request parameters in
+     * application/x-www-form-urlencoded format. When overriding this method, consider overriding
+     * {@link #getBodyContentType()} as well to match the new body format.
+     *
+     * @throws AuthFailureError in the event of auth failure
+     */
     @Override
     public byte[] getBody() throws AuthFailureError {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -65,6 +79,10 @@ public class FileStreamNeoRequest<T> extends AbstractNeoRequest<T> {
         return null;
     }
 
+    /**
+     * Get the part data of the request {@link NeoRequestData}
+     * @return
+     */
     public NeoRequestData getPartData() {
         return partData;
     }

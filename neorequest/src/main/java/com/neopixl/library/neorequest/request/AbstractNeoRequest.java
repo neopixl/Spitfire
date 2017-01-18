@@ -25,6 +25,7 @@ import java.util.Map;
 /**
  * Created by Florian ALONSO on 12/30/16.
  * For Neopixl
+ * @param <T> The type used as the response for the request
  */
 
 public abstract class AbstractNeoRequest<T> extends Request<T> {
@@ -33,19 +34,27 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
     private Class<T> classResponse;
     private final NeoRequestListener<T> mListener;
     private Map<String, String> headers;
-    private boolean eventBusIsSticky;
+    private boolean isStickyEvent;
 
-    AbstractNeoRequest(int method, String url, Map<String, String> headers, NeoRequestListener<T> listener, Class<T> classResponse) {
+
+    /**
+     * Constructor to create the request
+     * @param method http method (GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH) {@link com.android.volley.Request.Method}
+     * @param url url for the request
+     * @param headers headers for the request (can be null)
+     * @param listener request listener (can be null, in this case the response will be sent using events with EventBus)
+     * @param classResponse the class used to parse the response associated to the request.
+     */
+    AbstractNeoRequest(int method, String url, Map<String, String> headers, NeoRequestListener<T> listener, Class<T> classResponse, boolean isStickyEvent) {
         super(method, url, null);
 
-        this.headers = headers;
-
+        this.headers = headers!=null ? headers : new HashMap<String, String>();
         this.classResponse = classResponse;
 
         setShouldCache(method == Method.GET);
 
-        mListener = listener;
-        eventBusIsSticky = false;
+        this.mListener = listener;
+        this.isStickyEvent = isStickyEvent;
 
         mAcceptedStatusCodes = new ArrayList<>();
         mAcceptedStatusCodes.add(HttpURLConnection.HTTP_OK);
@@ -54,8 +63,12 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
         mAcceptedStatusCodes.add(HttpURLConnection.HTTP_CREATED);
 
         setRetryPolicy(NeoRequestManager.getDefaultRetryPolicy());
-
     }
+
+    /**
+     * Add accepted status codes (<a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">Http status codes</a>)
+     * @param statusCodes
+     */
 
     public void addAcceptedStatusCodes(int[] statusCodes) {
         for (int statusCode : statusCodes) {
@@ -63,10 +76,19 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
         }
     }
 
+    /**
+     * Get the list of all accepted status codes
+     * @return list of accepted status codes
+     */
     public List<Integer> getAcceptedStatusCodes() {
         return mAcceptedStatusCodes;
     }
 
+    /**
+     * Delivers the response using the listener (if one is set) or post an event using EventBus.
+     * Note: This method is called internally, you should never call it directly. But you override it.
+     * @param response The response
+     */
     @Override
     protected void deliverResponse(T response) {
         if (mListener != null) {
@@ -74,7 +96,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
         } else {
             NeoResponseEvent<T> event = new NeoResponseEvent<>(response, null, -1);
             EventBus eventBus = EventBus.getDefault();
-            if (isEventBusIsSticky()) {
+            if (isStickyEvent) {
                 eventBus.postSticky(event);
             } else {
                 eventBus.post(event);
@@ -82,6 +104,11 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
         }
     }
 
+    /**
+     * Delivers the error using the listener (if one is set) or post an event using EventBus.
+     * Note: This method is called internally, you should never call it directly. But you override it.
+     * @param error {@link VolleyError}
+     */
     @Override
     public void deliverError(VolleyError error) {
         int statusCode = -1;
@@ -95,7 +122,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
         } else {
             NeoResponseEvent<T> event = new NeoResponseEvent<>(null, error, statusCode);
             EventBus eventBus = EventBus.getDefault();
-            if (isEventBusIsSticky()) {
+            if (isStickyEvent) {
                 eventBus.postSticky(event);
             } else {
                 eventBus.post(event);
@@ -103,6 +130,11 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
         }
     }
 
+    /**
+     * Parses the network response {@link NetworkResponse} and returns the expected Type for the request.
+     * @param response {@link NetworkResponse} The response for the request (Success or error).
+     * @return
+     */
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         JavaType returnType = getReturnType();
@@ -132,6 +164,10 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
         return Response.success(returnData, HttpHeaderParser.parseCacheHeaders(response));
     }
 
+    /**
+     * Returns the type for the response.
+     * @return null, Array, List, Map or Object.
+     */
     private JavaType getReturnType() {
         if (classResponse == Void.class) {
             return null;
@@ -145,6 +181,12 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
         return TypeFactory.defaultInstance().constructType(classResponse);
     }
 
+    /**
+     * Returns a list of extra HTTP headers to go along with this request. Can
+     * throw {@link AuthFailureError} as authentication may be required to
+     * provide these values.
+     * @throws AuthFailureError In the event of auth failure
+     */
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         Map<String, String> currentHeader = new HashMap<>(super.getHeaders());
@@ -160,6 +202,15 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
         return currentHeader;
     }
 
+    /**
+     * Returns the raw POST or PUT body to be sent.
+     *
+     * <p>By default, the body consists of the request parameters in
+     * application/x-www-form-urlencoded format. When overriding this method, consider overriding
+     * {@link #getBodyContentType()} as well to match the new body format.
+     *
+     * @throws AuthFailureError in the event of auth failure
+     */
     public byte[] getBody() throws AuthFailureError {
         if (getMethod() == Method.GET) {
             return null;
@@ -167,11 +218,12 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
         return super.getBody();
     }
 
-    public boolean isEventBusIsSticky() {
-        return eventBusIsSticky;
-    }
-
-    public void setEventBusIsSticky(boolean eventBusIsSticky) {
-        this.eventBusIsSticky = eventBusIsSticky;
+    /**
+     * Returns the sticky's state for the event signal sent using EventBus.
+     * see <a href="http://greenrobot.org/eventbus/documentation/configuration/sticky-events/" target="_blank">Sticky Events</a>
+     * @return
+     */
+    public boolean isStickyEvent() {
+        return isStickyEvent;
     }
 }
