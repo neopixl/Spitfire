@@ -18,7 +18,7 @@ public class FileStreamNeoRequest<T> extends AbstractNeoRequest<T> {
 
     private NeoRequestData partData;
 
-    public static class Builder<T> extends AbstractBuilder {
+    public static class Builder<T> extends AbstractBuilder<T, FileStreamNeoRequest<T>> {
 
         private NeoRequestData partData;
 
@@ -61,7 +61,7 @@ public class FileStreamNeoRequest<T> extends AbstractNeoRequest<T> {
          * @return The request
          */
         public FileStreamNeoRequest<T> build() {
-            return new FileStreamNeoRequest(this);
+            return new FileStreamNeoRequest<T>(this);
         }
     }
 

@@ -26,7 +26,7 @@ public class NeoRequest<T> extends AbstractNeoRequest<T> {
     /**
      * Class Builder used to create a new request
      */
-    public static class Builder<T> extends AbstractBuilder {
+    public static class Builder<T> extends AbstractBuilder<T, NeoRequest<T>> {
         private Map<String, String> parameters;
         private Object jsonObject;
 
@@ -84,8 +84,8 @@ public class NeoRequest<T> extends AbstractNeoRequest<T> {
          * @return The request
          */
 
-        public NeoRequest build() {
-            return new NeoRequest(this);
+        public NeoRequest<T> build() {
+            return new NeoRequest<T>(this);
         }
     }
 

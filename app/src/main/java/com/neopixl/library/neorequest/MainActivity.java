@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setSuccessForTextView(TextView textView, boolean success) {
         String newText = success ? "OK" : "ERROR";
-        int color = success ? Color.RED : Color.GREEN;
+        int color = success ? Color.GREEN : Color.RED;
 
         textView.setText(newText);
         textView.setTextColor(color);

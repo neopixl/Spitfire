@@ -30,7 +30,7 @@ public class MultipartNeoRequest<T> extends NeoRequest<T> {
      * Builder used to create the final request
      * @param <T> type for the request
      */
-    public static class Builder<T> extends NeoRequest.Builder {
+    public static class Builder<T> extends NeoRequest.Builder<T> {
 
         private HashMap<String, NeoRequestData> multiPartData;
 
@@ -64,7 +64,7 @@ public class MultipartNeoRequest<T> extends NeoRequest<T> {
          * Build a new MultipartNeoRequest object based on the Builder's parameters
          * @return MultipartNeoRequest {@link MultipartNeoRequest}
          */
-        public MultipartNeoRequest build() {
+        public MultipartNeoRequest<T> build() {
             return new MultipartNeoRequest<T>(this);
         }
     }

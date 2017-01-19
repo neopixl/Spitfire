@@ -40,7 +40,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
      * Abstract class Builder used to create a new request
      * @param <T> Type used for the response of the request.
      */
-    public static abstract class AbstractBuilder<T> {
+    public static abstract class AbstractBuilder<T, RequestType extends AbstractNeoRequest<T>> {
 
         protected int method = -10;
         private String url;
@@ -99,9 +99,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
          * You must implement this method in your subclass.
          * @return AbstractNeoRequest
          */
-        public AbstractNeoRequest build() {
-            throw new RuntimeException("Must be implemented in your subclass.");
-        }
+        abstract public RequestType build() ;
     }
 
 
