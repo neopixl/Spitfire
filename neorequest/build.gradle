@@ -59,6 +59,7 @@ android.libraryVariants.all { variant ->
     }
     def task = project.tasks.create "jar${name.capitalize()}", Jar
     task.dependsOn variant.javaCompile
+    //task.dependsOn javadoc    //Disabled
     task.from variant.javaCompile.destinationDir
     artifacts.add('archives', task);
     delete("../app/libs/neorequest.jar")
@@ -66,4 +67,32 @@ android.libraryVariants.all { variant ->
         from 'build/libs/neorequest.jar'
         into "../app/libs"
     }
+}
+
+// http://stackoverflow.com/questions/41488250/how-to-generate-android-jar-library-with-javadoc-included
+
+/*
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+*/
+
+
+// JavaDoc, doesn't work
+
+task javadoc(type: Javadoc) {
+    print "Javadoc - 0"
+
+    include '**/*.java'
+
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    failOnError false
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    print "Javadoc"
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
