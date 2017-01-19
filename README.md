@@ -152,6 +152,14 @@ If you want to send a full JSON in the body of your request, simply create a new
 	}, String[].class);
 	requestQueue.add(fileStreamNeoRequest);
 
+# In progress
+
+ - Update the Readme with the builder
+ - Update the Readme with Manager
+ - Enable build on 4.4.4
+ - Fix gradle Javadoc
+ - Enable deploy from gradle
+
 # They use it
 
  - App 1
