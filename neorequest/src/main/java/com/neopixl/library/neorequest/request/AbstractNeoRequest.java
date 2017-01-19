@@ -128,7 +128,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
 
     /**
      * Constructor to create the request
-     * @param method http method (GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH) {@link com.android.volley.Request.Method}
+     * @param method http method (GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH) <b>com.android.volley.Request.Method</b>
      * @param url url for the request
      * @param headers headers for the request (can be null)
      * @param listener request listener (can be null, in this case the response will be sent using events with EventBus)
@@ -196,7 +196,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
     /**
      * Delivers the error using the listener (if one is set) or post an event using EventBus.
      * Note: This method is called internally, you should never call it directly. But you override it.
-     * @param error {@link VolleyError}
+     * @param error <b>VolleyError</b>
      */
     @Override
     public void deliverError(VolleyError error) {
@@ -272,7 +272,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
 
     /**
      * Returns a list of extra HTTP headers to go along with this request. Can
-     * throw {@link AuthFailureError} as authentication may be required to
+     * throw <b>AuthFailureError</b> as authentication may be required to
      * provide these values.
      * @throws AuthFailureError In the event of auth failure
      * @return Map&lt;String, String&gt;

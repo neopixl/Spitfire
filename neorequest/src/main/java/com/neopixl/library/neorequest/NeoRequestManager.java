@@ -11,7 +11,7 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 /**
- * Main class used to store the object mapper {@link ObjectMapper} and the default retry policy {@link RetryPolicy} used by all requests. It acts as a singleton.
+ * Main class used to store the object mapper <b>ObjectMapper</b> and the default retry policy <b>RetryPolicy</b> used by all requests. It acts as a singleton.
  * <p>Created by Florian ALONSO on 12/30/16.
  * For Neopixl</p>
  */
@@ -36,7 +36,7 @@ public final class NeoRequestManager {
 
     /**
      * Store a retry policy
-     * @param newRetryPolicy {@link RetryPolicy}
+     * @param newRetryPolicy <b>RetryPolicy</b>
      */
     public static void setDefaultRetryPolicy(RetryPolicy newRetryPolicy) {
         defaultRetryPolicy = newRetryPolicy;
@@ -44,7 +44,7 @@ public final class NeoRequestManager {
 
     /**
      * Get the default retry policy
-     * @return the default retry policy {@link RetryPolicy}
+     * @return the default retry policy <b>RetryPolicy</b>
      */
     public static RetryPolicy getDefaultRetryPolicy() {
         return defaultRetryPolicy;
@@ -52,7 +52,7 @@ public final class NeoRequestManager {
 
     /**
      * Get the default object mapper (with SerializationFeature.INDENT_OUTPUT set to false and SerializationInclusion set to JsonInclude.Include.NON_NULL)
-     * @return the current object mapper {@link ObjectMapper}
+     * @return the current object mapper <b>ObjectMapper</b>
      */
     public static ObjectMapper getObjectMapper() {
         if (objectMapper == null) {
@@ -74,7 +74,7 @@ public final class NeoRequestManager {
     /**
      * Converts a base URL, endpoint, and parameters into a full URL
      *
-     * @param method The {@link com.android.volley.Request.Method} of the URL
+     * @param method The <b>com.android.volley.Request.Method</b> of the URL
      * @param url    The URL
      * @param params The parameters to be appended to the URL if a GET method is used
      * @param encoding The encoding used to parse parameters set in the url (GET method)

@@ -157,7 +157,6 @@ If you want to send a full JSON in the body of your request, simply create a new
  - Update the Readme with the builder
  - Update the Readme with Manager
  - Enable build on 4.4.4
- - Fix gradle Javadoc
  - Enable deploy from gradle
 
 # They use it

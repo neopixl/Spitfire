@@ -34,7 +34,7 @@ public class NeoResponseEvent<T> {
 
     /**
      * Return the volleyError
-     * @return {@link VolleyError}
+     * @return <b>VolleyError</b>
      */
     public VolleyError getError() {
         return error;

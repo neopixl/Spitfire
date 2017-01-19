@@ -69,30 +69,15 @@ android.libraryVariants.all { variant ->
     }
 }
 
-// http://stackoverflow.com/questions/41488250/how-to-generate-android-jar-library-with-javadoc-included
-
-/*
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-*/
-
-
-// JavaDoc, doesn't work
-
-task javadoc(type: Javadoc) {
+task jarJavadoc(type: Javadoc) {
     print "Javadoc - 0"
 
     include '**/*.java'
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
 
     source = android.sourceSets.main.java.srcDirs
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    destinationDir = file("../javadoc/")
     failOnError false
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    print "Javadoc"
-    classifier = 'javadoc'
-    from javadoc.destinationDir
 }

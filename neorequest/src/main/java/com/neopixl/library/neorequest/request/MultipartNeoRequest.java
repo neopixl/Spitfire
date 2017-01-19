@@ -36,7 +36,7 @@ public class MultipartNeoRequest<T> extends NeoRequest<T> {
 
         /**
          * Constructor for the builder
-         * @param method The {@link com.android.volley.Request.Method} of the URL
+         * @param method The <b>com.android.volley.Request.Method</b> of the URL
          * @param url    The URL
          * @param classResponse the class used to parse the response associated to the request.
          */
