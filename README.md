@@ -154,10 +154,12 @@ If you want to send a full JSON in the body of your request, simply create a new
 
 # In progress
 
+ - Change the name for Chips (Git, and project)
  - Update the Readme with the builder
  - Update the Readme with Manager
  - Enable build on 4.4.4
  - Enable deploy from gradle
+ - Add @Nullable or @NotNull params annotations
 
 # They use it
 
