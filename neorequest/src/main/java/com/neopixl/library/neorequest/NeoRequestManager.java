@@ -1,11 +1,15 @@
 package com.neopixl.library.neorequest;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
 
 import java.net.URLEncoder;
 import java.util.Map;
@@ -19,6 +23,8 @@ import java.util.Map;
 public final class NeoRequestManager {
 
     private static ObjectMapper objectMapper;
+
+    @NonNull
     private static RetryPolicy defaultRetryPolicy = generateRetryPolicy();
     private static int requestTimeout = 30000;// 30 seconds
 
@@ -36,15 +42,15 @@ public final class NeoRequestManager {
 
     /**
      * Store a retry policy
-     * @param newRetryPolicy <b>RetryPolicy</b>
+     * @param newRetryPolicy <b>RetryPolicy</b>, not null
      */
-    public static void setDefaultRetryPolicy(RetryPolicy newRetryPolicy) {
+    public static void setDefaultRetryPolicy(@NonNull RetryPolicy newRetryPolicy) {
         defaultRetryPolicy = newRetryPolicy;
     }
 
     /**
      * Get the default retry policy
-     * @return the default retry policy <b>RetryPolicy</b>
+     * @return the default retry policy <b>RetryPolicy</b>, not null
      */
     public static RetryPolicy getDefaultRetryPolicy() {
         return defaultRetryPolicy;
@@ -52,8 +58,9 @@ public final class NeoRequestManager {
 
     /**
      * Get the default object mapper (with SerializationFeature.INDENT_OUTPUT set to false and SerializationInclusion set to JsonInclude.Include.NON_NULL)
-     * @return the current object mapper <b>ObjectMapper</b>
+     * @return the current object mapper <b>ObjectMapper</b>, not null
      */
+    @NonNull
     public static ObjectMapper getObjectMapper() {
         if (objectMapper == null) {
             objectMapper = new ObjectMapper();
@@ -65,8 +72,9 @@ public final class NeoRequestManager {
 
     /**
      * Generate a default retry policy (30 seconds for the timeout, 1 retry maximum, 1 backoff multiplier)
-     * @return a default retry policy
+     * @return a default retry policy, not null
      */
+    @NonNull
     private static RetryPolicy generateRetryPolicy() {
         return new DefaultRetryPolicy(requestTimeout, 1, 1);
     }
@@ -75,12 +83,12 @@ public final class NeoRequestManager {
      * Converts a base URL, endpoint, and parameters into a full URL
      *
      * @param method The <b>com.android.volley.Request.Method</b> of the URL
-     * @param url    The URL
-     * @param params The parameters to be appended to the URL if a GET method is used
-     * @param encoding The encoding used to parse parameters set in the url (GET method)
+     * @param url    The URL, not null
+     * @param params The parameters to be appended to the URL if a GET method is used, can be null
+     * @param encoding The encoding used to parse parameters set in the url (GET method), can be null
      * @return The full URL
      */
-    public static String parseGetUrl(int method, String url, Map<String, String> params, String encoding) {
+    public static String parseGetUrl(int method, @NonNull String url, @Nullable Map<String, String> params, @NonNull String encoding) {
         if (params != null) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 if (entry.getValue() == null || entry.getValue().equals("null")) {

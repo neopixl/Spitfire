@@ -8,6 +8,7 @@ import com.android.volley.VolleyError;
  */
 
 public class NeoResponseEvent<T> {
+
     private int statusCode;
     private VolleyError error;
     private T data;

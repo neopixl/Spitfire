@@ -1,5 +1,8 @@
 package com.neopixl.library.neorequest.request;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.android.volley.AuthFailureError;
 import com.neopixl.library.neorequest.listener.NeoRequestListener;
 import com.neopixl.library.neorequest.model.NeoRequestData;
@@ -29,23 +32,23 @@ public class FileStreamNeoRequest<T> extends AbstractNeoRequest<T> {
          * @param url           given url to access the resource
          * @param classResponse class used to parse the response
          */
-        public Builder(int method, String url, Class classResponse) {
+        public Builder(int method, @NonNull String url, Class classResponse) {
             super(method, url, classResponse);
         }
 
-        public Builder partData(NeoRequestData partData) {
+        public Builder partData(@NonNull NeoRequestData partData) {
             this.partData = partData;
             return this;
         }
 
         @Override
-        public Builder listener(NeoRequestListener listener) {
+        public Builder listener(@Nullable NeoRequestListener listener) {
             super.listener(listener);
             return this;
         }
 
         @Override
-        public Builder headers(Map headers) {
+        public Builder headers(@NonNull Map headers) {
             super.headers(headers);
             return this;
         }
@@ -74,6 +77,10 @@ public class FileStreamNeoRequest<T> extends AbstractNeoRequest<T> {
         super(builder);
         this.partData = builder.partData;
 
+        if (partData == null) {
+            throw new IllegalArgumentException("Partdata should not be null.");
+        }
+
         if (builder.method == Method.GET) {
             throw new IllegalArgumentException("Cannot use streamfile with GET request");
         }
@@ -84,6 +91,7 @@ public class FileStreamNeoRequest<T> extends AbstractNeoRequest<T> {
      * @return String
      */
     @Override
+    @NonNull
     public String getBodyContentType() {
         return getPartData().getType();
     }

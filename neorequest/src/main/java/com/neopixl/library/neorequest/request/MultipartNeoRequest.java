@@ -1,5 +1,8 @@
 package com.neopixl.library.neorequest.request;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.android.volley.AuthFailureError;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.neopixl.library.neorequest.NeoRequestManager;
@@ -15,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by jjacquot on 04/10/16.
+ * Created by Florian ALONSO on 12/30/16.
  */
 
 public class MultipartNeoRequest<T> extends NeoRequest<T> {
@@ -24,6 +27,7 @@ public class MultipartNeoRequest<T> extends NeoRequest<T> {
     private final String lineEnd = "\r\n";
     private final String boundary = "bound-" + System.currentTimeMillis();
 
+    @Nullable
     private HashMap<String, NeoRequestData> multiPartData;
 
     /**
@@ -40,22 +44,27 @@ public class MultipartNeoRequest<T> extends NeoRequest<T> {
          * @param url    The URL
          * @param classResponse the class used to parse the response associated to the request.
          */
-        public Builder(int method, String url, Class classResponse) {
+        public Builder(int method, @NonNull String url, Class classResponse) {
             super(method, url, classResponse);
         }
 
+        /**
+         *
+         * @param listener {@link NeoRequestListener}, can be null
+         * @return
+         */
         @Override
-        public Builder listener(NeoRequestListener listener) {
+        public Builder listener(@Nullable NeoRequestListener listener) {
             super.listener(listener);
             return this;
         }
 
         /**
          * Set the multipart data for the request
-         * @param multiPartData HashMap&lt;String, NeoRequestData&gt; multiPartData
+         * @param multiPartData HashMap&lt;String, NeoRequestData&gt; multiPartData, not null
          * @return Builder {@link Builder}
          */
-        public Builder multiPartData(HashMap<String, NeoRequestData> multiPartData) {
+        public Builder multiPartData(@NonNull HashMap<String, NeoRequestData> multiPartData) {
             this.multiPartData = new HashMap<>(multiPartData);
             return this;
         }
@@ -84,12 +93,13 @@ public class MultipartNeoRequest<T> extends NeoRequest<T> {
      * @return String
      */
     @Override
+    @NonNull
     public String getBodyContentType() {
         return "multipart/form-data;boundary=" + boundary;
     }
 
     /**
-     * Returns the raw POST or PUT body to be sent.
+     * Returns the raw POST or PUT body to be sent. (Can be null)
      *
      * <p>By default, the body consists of the request parameters in
      * application/x-www-form-urlencoded format. When overriding this method, consider overriding
@@ -98,6 +108,7 @@ public class MultipartNeoRequest<T> extends NeoRequest<T> {
      * @throws AuthFailureError in the event of auth failure
      */
     @Override
+    @Nullable
     public byte[] getBody() throws AuthFailureError {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(bos);
@@ -239,8 +250,9 @@ public class MultipartNeoRequest<T> extends NeoRequest<T> {
 
     /**
      * Get multiPart data for the current request.
-     * @return HashMap&lt;String, NeoRequestData&gt; {@link NeoRequestData}
+     * @return HashMap&lt;String, NeoRequestData&gt; {@link NeoRequestData}, can be null
      */
+    @Nullable
     public HashMap<String, NeoRequestData> getMultiPartData() {
         return multiPartData;
     }

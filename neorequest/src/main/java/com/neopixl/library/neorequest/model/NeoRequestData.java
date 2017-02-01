@@ -1,13 +1,21 @@
 package com.neopixl.library.neorequest.model;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by Florian ALONSO on 10/14/16.
  * For Neopixl
  */
 
 public class NeoRequestData {
+
+    @NonNull
     private String fileName;
+
+    @NonNull
     private byte[] content;
+
+    @NonNull
     private String type;
 
     /**
@@ -19,10 +27,10 @@ public class NeoRequestData {
     /**
      * Constructor with data.
      *
-     * @param name label of data
-     * @param data byte data
+     * @param name label of data, not null
+     * @param data byte data, not null
      */
-    public NeoRequestData(String name, byte[] data) {
+    public NeoRequestData(@NonNull String name, @NonNull byte[] data) {
         fileName = name;
         content = data;
     }
@@ -30,11 +38,11 @@ public class NeoRequestData {
     /**
      * Constructor with mime data type.
      *
-     * @param name     label of data
-     * @param data     byte data
-     * @param mimeType mime data like "image/jpeg"
+     * @param name     label of data, not null
+     * @param data     byte data, not null
+     * @param mimeType mime data like "image/jpeg", not null
      */
-    public NeoRequestData(String name, byte[] data, String mimeType) {
+    public NeoRequestData(@NonNull String name, @NonNull byte[] data, @NonNull String mimeType) {
         fileName = name;
         content = data;
         type = mimeType;
@@ -43,8 +51,9 @@ public class NeoRequestData {
     /**
      * Get the file name.
      *
-     * @return file name
+     * @return file name, not null
      */
+    @NonNull
     public String getFileName() {
         return fileName;
     }
@@ -52,17 +61,18 @@ public class NeoRequestData {
     /**
      * Set the file name.
      *
-     * @param fileName string file name
+     * @param fileName string file name, not null
      */
-    public void setFileName(String fileName) {
+    public void setFileName(@NonNull String fileName) {
         this.fileName = fileName;
     }
 
     /**
      * Get the content
      *
-     * @return byte file data
+     * @return byte file data, not null
      */
+    @NonNull
     public byte[] getContent() {
         return content;
     }
@@ -70,16 +80,16 @@ public class NeoRequestData {
     /**
      * Set the content
      *
-     * @param content byte file data
+     * @param content byte file data, not null
      */
-    public void setContent(byte[] content) {
+    public void setContent(@NonNull byte[] content) {
         this.content = content;
     }
 
     /**
      * Get the mime type.
      *
-     * @return mime type
+     * @return mime type, not null
      */
     public String getType() {
         return type;
@@ -88,9 +98,9 @@ public class NeoRequestData {
     /**
      * Set the mime type.
      *
-     * @param type mime type
+     * @param type mime type, not null
      */
-    public void setType(String type) {
+    public void setType(@NonNull String type) {
         this.type = type;
     }
 

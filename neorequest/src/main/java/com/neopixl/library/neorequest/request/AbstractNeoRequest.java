@@ -1,5 +1,8 @@
 package com.neopixl.library.neorequest.request;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -32,7 +35,11 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
 
     private List<Integer> mAcceptedStatusCodes;
     private Class<T> classResponse;
+
+    @Nullable
     private final NeoRequestListener<T> mListener;
+
+    @Nullable
     private Map<String, String> headers;
     private boolean isStickyEvent;
 
@@ -43,9 +50,12 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
     public static abstract class AbstractBuilder<T, RequestType extends AbstractNeoRequest<T>> {
 
         protected int method = -10;
+
+        @NonNull
         private String url;
         private Class<T> classResponse;
 
+        @Nullable
         private NeoRequestListener<T> mListener;
         private Map<String, String> headers;
         private boolean eventBusIsSticky;
@@ -53,10 +63,10 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
         /**
          * Default
          * @param method used to send the request
-         * @param url given url to access the resource
+         * @param url given url to access the resource, not nul
          * @param classResponse class used to parse the response
          */
-        public AbstractBuilder(int method, String url, Class classResponse) {
+        public AbstractBuilder(int method, @NonNull String url, Class classResponse) {
             this.method = method;
             this.url = url;
             this.classResponse = classResponse;
@@ -64,21 +74,20 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
 
         /**
          * Sets the listener for the request
-         * @param listener {@link NeoRequestListener}
+         * @param listener {@link NeoRequestListener}, can be null
          * @return the builder
          */
-
-        public AbstractBuilder listener(NeoRequestListener<T> listener) {
+        public AbstractBuilder listener(@Nullable NeoRequestListener<T> listener) {
             this.mListener = listener;
             return this;
         }
 
         /**
          * Sets the headers for the request
-         * @param headers used to send the request
+         * @param headers used to send the request, can be null
          * @return Map&lt;String, String&gt;
          */
-        public AbstractBuilder headers(Map<String, String> headers) {
+        public AbstractBuilder headers(@Nullable Map<String, String> headers) {
             this.headers = new HashMap<>(headers);
             return this;
         }
@@ -154,11 +163,10 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
     }
 
     /**
-     * Add accepted status codes (<a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">Http status codes</a>)
+     * Add accepted status codes (<a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">Http status codes</a>), not null
      * @param statusCodes int[]
      */
-
-    public void addAcceptedStatusCodes(int[] statusCodes) {
+    public void addAcceptedStatusCodes(@NonNull int[] statusCodes) {
         for (int statusCode : statusCodes) {
             mAcceptedStatusCodes.add(statusCode);
         }
@@ -168,6 +176,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
      * Get the list of all accepted status codes
      * @return list of accepted status codes
      */
+    @NonNull
     public List<Integer> getAcceptedStatusCodes() {
         return mAcceptedStatusCodes;
     }
@@ -238,7 +247,6 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
             }
         }
 
-
         if (returnData == null && classResponse != Void.class) {
             ParseError parseError = new ParseError(response);
             String content = "";
@@ -256,6 +264,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
      * Returns the type for the response.
      * @return null, Array, List, Map or Object.
      */
+    @Nullable
     private JavaType getReturnType() {
         if (classResponse == Void.class) {
             return null;
@@ -277,6 +286,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
      * @return Map&lt;String, String&gt;
      */
     @Override
+    @NonNull
     public Map<String, String> getHeaders() throws AuthFailureError {
         Map<String, String> currentHeader = new HashMap<>(super.getHeaders());
         currentHeader.putAll(this.headers);
@@ -301,6 +311,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
      * @throws AuthFailureError in the event of auth failure
      * @return byte[] or null if the
      */
+    @Nullable
     public byte[] getBody() throws AuthFailureError {
         if (getMethod() == Method.GET) {
             return null;

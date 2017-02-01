@@ -1,5 +1,8 @@
 package com.neopixl.library.neorequest.request;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.VolleyLog;
@@ -20,56 +23,72 @@ import java.util.Map;
 
 public class NeoRequest<T> extends AbstractNeoRequest<T> {
 
+    @Nullable
     private Object jsonObjectBody;
-    private Map<String, String> standardParams;
 
+    @Nullable
+    private Map<String, String> standardParams;
 
     /**
      * Class Builder used to create a new request
      */
     public static class Builder<T> extends AbstractBuilder<T, NeoRequest<T>> {
+
+
         private Map<String, String> parameters;
+
+        @Nullable
         private Object jsonObject;
 
         /**
          * Default
          *
          * @param method        used to send the request
-         * @param url           given url to access the resource
+         * @param url           given url to access the resource, not null
          * @param classResponse class used to parse the response
          */
-        public Builder(int method, String url, Class classResponse) {
+        public Builder(int method, @NonNull String url, Class classResponse) {
             super(method, url, classResponse);
         }
 
         /**
          * Specifies the object
-         * @param jsonObject The object to be embedded in the body
+         * @param jsonObject The object to be embedded in the body, can be null
          * @return Builder {@link Builder}
          */
-        public Builder object(Object jsonObject) {
+        public Builder object(@Nullable Object jsonObject) {
             this.jsonObject = jsonObject;
             return this;
         }
 
         /**
          * Set the parameters for the request
-         * @param parameters Map&lt;String, String&gt;
+         * @param parameters Map&lt;String, String&gt;, not null
          * @return Builder {@link Builder}
          */
-        public Builder parameters(Map<String, String> parameters) {
+        public Builder parameters(@NonNull  Map<String, String> parameters) {
             this.parameters = new HashMap<>(parameters);
             return this;
         }
 
+        /**
+         * Set the listener for the request
+         * @param listener {@link NeoRequestListener}, can be null
+         * @return
+         */
         @Override
-        public Builder listener(NeoRequestListener listener) {
+        public Builder listener(@Nullable NeoRequestListener listener) {
             super.listener(listener);
             return this;
         }
 
+        /**
+         * Set the headers for the request
+         * @param headers used to send the request, not null
+         * @return
+         */
         @Override
-        public Builder headers(Map headers) {
+        public Builder headers(@NonNull Map headers) {
             super.headers(headers);
             return this;
         }
@@ -109,6 +128,7 @@ public class NeoRequest<T> extends AbstractNeoRequest<T> {
      * Get the json content type  (default : "application/json; charset=UTF-8")
      * @return the current content type
      */
+    @NonNull
     protected String getJsonContentType() {
         return "application/json; charset=" + getParamsEncoding();
     }
@@ -119,6 +139,7 @@ public class NeoRequest<T> extends AbstractNeoRequest<T> {
      */
 
     @Override
+    @NonNull
     public String getBodyContentType() {
         if ((getMethod() == Request.Method.POST || getMethod() == Request.Method.PUT) && getJsonObjectBody() != null) {
             return getJsonContentType();
@@ -136,6 +157,7 @@ public class NeoRequest<T> extends AbstractNeoRequest<T> {
      * @throws AuthFailureError in the event of auth failure
      */
     @Override
+    @Nullable
     public byte[] getBody() throws AuthFailureError {
         String bodyContentType = getBodyContentType();
         int method = getMethod();
@@ -159,9 +181,10 @@ public class NeoRequest<T> extends AbstractNeoRequest<T> {
 
     /**
      * Get the url for the request
-     * @return the url used to access the ressource
+     * @return the url used to access the ressource, not null
      */
     @Override
+    @NonNull
     public String getUrl() {
         int method = getMethod();
         String topUrl = super.getUrl();
@@ -173,17 +196,19 @@ public class NeoRequest<T> extends AbstractNeoRequest<T> {
 
     /**
      * Get the json object body for the request
-     * @return the json body
+     * @return the json body, can be null
      */
+    @Nullable
     public Object getJsonObjectBody() {
         return jsonObjectBody;
     }
 
     /**
      * Get the parameters for the request
-     * @return the current parameters associated to the request
+     * @return the current parameters associated to the request, can be null
      */
     @Override
+    @Nullable
     public Map<String, String> getParams() {
         return standardParams;
     }
