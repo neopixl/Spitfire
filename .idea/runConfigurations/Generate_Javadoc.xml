@@ -2,7 +2,7 @@
   <configuration default="false" name="Generate Javadoc" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
-      <option name="externalProjectPath" value="$PROJECT_DIR$/neorequest/build.gradle" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$/spitfire/build.gradle" />
       <option name="externalSystemIdString" value="GRADLE" />
       <option name="scriptParameters" value="" />
       <option name="taskDescriptions">

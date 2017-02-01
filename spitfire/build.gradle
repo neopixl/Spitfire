@@ -1,0 +1,85 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    publishNonDefault true
+
+    def p = ['curl', '-u', 'build:E$^VM8476C(XW>Kb6f;b', 'http://tools.neopixl.com/buildnumber/nextBuildNumber.php?project=Spitfire'].execute()
+    def code = p.text.toInteger()
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode code
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main/java'
+            }
+            resources {
+                srcDir 'src/../lib'
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.5'
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.android.support:support-annotations:25.1.0'
+
+}
+
+android.libraryVariants.all { variant ->
+    def name = variant.buildType.name
+    if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
+        return; // Skip debug builds.
+    }
+    def task = project.tasks.create "jar${name.capitalize()}", Jar
+    task.dependsOn variant.javaCompile
+    //task.dependsOn javadoc    //Disabled
+    task.from variant.javaCompile.destinationDir
+    artifacts.add('archives', task);
+    delete("../app/libs/spitfire.jar")
+    copy {
+        from 'build/libs/spitfire.jar'
+        into "../app/libs"
+    }
+}
+
+task jarJavadoc(type: Javadoc) {
+    print "Javadoc - 0"
+
+    include '**/*.java'
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
+
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    destinationDir = file("../javadoc/")
+    failOnError false
+}

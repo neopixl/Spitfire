@@ -162,4 +162,4 @@ If you want to send a full JSON in the body of your request, simply create a new
  - App 1
 
 # License
-NeoRequest is released under the XXXXXXXX license.
+Spitfire is released under the Apache 2.0 licence. See LICENSE for details.
