@@ -10,6 +10,7 @@ import com.neopixl.library.neorequest.listener.NeoRequestListener;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -57,7 +58,7 @@ public class NeoRequest<T> extends AbstractNeoRequest<T> {
          * @return Builder {@link Builder}
          */
         public Builder parameters(Map<String, String> parameters) {
-            this.parameters = parameters;
+            this.parameters = new HashMap<>(parameters);
             return this;
         }
 

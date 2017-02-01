@@ -154,7 +154,6 @@ If you want to send a full JSON in the body of your request, simply create a new
 
  - Change the name for Chips (Git, and project)
  - Update the Readme with Manager
- - Check and fix all the Hashmap and ArrayList. We should create a new one reference and not use directly the given one
  - Enable build on 4.4.4
  - Enable deploy from gradle
  - Add @Nullable or @NotNull params annotations

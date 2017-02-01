@@ -56,7 +56,7 @@ public class MultipartNeoRequest<T> extends NeoRequest<T> {
          * @return Builder {@link Builder}
          */
         public Builder multiPartData(HashMap<String, NeoRequestData> multiPartData) {
-            this.multiPartData = multiPartData;
+            this.multiPartData = new HashMap<>(multiPartData);
             return this;
         }
 

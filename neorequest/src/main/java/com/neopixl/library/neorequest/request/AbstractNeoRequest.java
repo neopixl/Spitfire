@@ -57,7 +57,6 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
          * @param classResponse class used to parse the response
          */
         public AbstractBuilder(int method, String url, Class classResponse) {
-
             this.method = method;
             this.url = url;
             this.classResponse = classResponse;
@@ -80,7 +79,7 @@ public abstract class AbstractNeoRequest<T> extends Request<T> {
          * @return Map&lt;String, String&gt;
          */
         public AbstractBuilder headers(Map<String, String> headers) {
-            this.headers = headers;
+            this.headers = new HashMap<>(headers);
             return this;
         }
 
