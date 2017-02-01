@@ -47,21 +47,19 @@ This library was designed to be as simple to use as possible.  Here are the step
 		
 * Add a new NeoRequest to your RequestQueue.  This will kick off the process of accessing the network resource and parsing the response into your DTO. 
 
-		Map<String, String> emtpyHeaders = new HashMap<>();
-		Map<String, String> emtpyParameters = new HashMap<>();
 		
-		NeoRequest<DummyResponse> neoRequest = new NeoRequest<>(Request.Method.GET,
-		"YOUR URL", emtpyHeaders, emtpyParameters, new NeoRequestListener<DummyResponse>() {
-			@Override
-			public void onSuccess(DummyResponse dummyResponse) {
-				Log.d("YOUR APP", "Dummy success");
-			}
-		
-			@Override
-			public void onFailure(VolleyError volleyError, int statusCode) {
-				Log.d("YOUR APP", "Dummy error");
-			}
-		}, DummyResponse.class);
+		NeoRequest<DummyResponse> neoRequest = new NeoRequest.Builder<DummyResponse>(Request.Method.GET,
+                "YOUR URL", DummyResponse.class).listener(new NeoRequestListener<DummyResponse>() {
+            @Override
+            public void onSuccess(DummyResponse response) {
+                Log.d("YOUR APP", "Dummy success");
+            }
+
+            @Override
+            public void onFailure(VolleyError volleyError, int statusCode) {
+                Log.d("YOUR APP", "Dummy error");
+            }
+        }).build();
 		requestQueue.add(neoRequest);
 
 * That's it! 
@@ -72,7 +70,7 @@ If you do not specify a listener the library automaticaly fallback to a EventBus
 	@Override
 	protected void onStart() {
 		super.onStart();
-		NeoRequest<DummyResponse> neoRequest = new NeoRequest<>(Request.Method.GET, "YOUR URL", emtpyHeaders, DummyResponse.class);
+		NeoRequest<DummyResponse> neoRequest = new NeoRequest.Builder<DummyResponse>(Request.Method.GET, "YOUR URL", DummyResponse.class).build();
 		requestQueue.add(neoRequest);
 	}
 	
@@ -90,72 +88,71 @@ All the parameters will be added to the URL for the GET requests and to the body
 ### Json Body
 
 If you want to send a full JSON in the body of your request, simply create a new DTO, for example our "DummyResponse"
-
-	Map<String, String> emtpyHeaders = new HashMap<>();
 	
 	DummyResponse objectToSerializeAndSend = new DummyResponse();
 	objectToSerializeAndSend.setMessage("My message");
 	
-	NeoRequest<DummyResponse> neoRequest = new NeoRequest<>(Request.Method.GET,
-	"YOUR URL", emtpyHeaders, objectToSerializeAndSend, new NeoRequestListener<DummyResponse>() {
-		@Override
-		public void onSuccess(DummyResponse dummyResponse) {
-			Log.d("YOUR APP", "Dummy success");
-		}
-	
-		@Override
-		public void onFailure(VolleyError volleyError, int statusCode) {
-			Log.d("YOUR APP", "Dummy error");
-		}
-	}, DummyResponse.class);
+	NeoRequest<DummyResponse> neoRequest = new NeoRequest.Builder<DummyResponse>(Request.Method.GET, "YOUR URL", DummyResponse.class)
+                .object(objectToSerializeAndSend)
+                .listener(new NeoRequestListener<DummyResponse>() {
+                    @Override
+                    public void onSuccess(DummyResponse dummyResponse) {
+                        Log.d("YOUR APP", "Dummy success");
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError, int statusCode) {
+                        Log.d("YOUR APP", "Dummy error");
+                    }
+                }).build();
 	requestQueue.add(neoRequest);
 
 ### MultipartData
 
-	Map<String, String> emtpyHeaders = new HashMap<>();
 	    
-	HashMap<String, NeoRequestData> multipardData = new HashMap<>();
-	NeoRequestData data = new NeoRequestData("image1", new byte[] {1,1,1,1,0,0,1}, "image/jpeg");
-	multipardData.put("image1", data);
-	data = new NeoRequestData("image1", new byte[] {1,1,1,1,0,0,1}, "image/jpeg");
-	multipardData.put("image1", data);
-	    
-	Map<String, String> emtpyParametersOrJsonObject = new HashMap<>();
-	    
-	MultipartNeoRequest<Void> multipartNeoRequest = new MultipartNeoRequest<>(Request.Method.PUT,
-	"YOUR URL", emtpyHeaders, emtpyParametersOrJsonObject, multipardData, new NeoRequestListener<Void>() {
-		@Override
-		public void onSuccess(Void v) {
-			Log.d("YOUR APP", "Dummy success");
-		}
-	    
-		@Override
-		public void onFailure(VolleyError volleyError, int i) {
-			Log.d("YOUR APP", "Dummy error"); 
-		}
-	}, Void.class);
-	requestQueue.add(multipartNeoRequest);
+		 HashMap<String, NeoRequestData> multipardData = new HashMap<>();
+        NeoRequestData data = new NeoRequestData("image1", new byte[] {1,1,1,1,0,0,1}, "image/jpeg");
+        multipardData.put("image1", data);
+        data = new NeoRequestData("image1", new byte[] {1,1,1,1,0,0,1}, "image/jpeg");
+        multipardData.put("image1", data);
+
+        MultipartNeoRequest<Void> multipartNeoRequest = new MultipartNeoRequest.Builder<Void>(Request.Method.PUT, "YOUR URL", Void.class)
+                .listener(new NeoRequestListener<Void>() {
+                    @Override
+                    public void onSuccess(Void v) {
+                        Log.d("YOUR APP", "Dummy success");
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError, int i) {
+                        Log.d("YOUR APP", "Dummy error");
+                    }
+                })
+                .multiPartData(multipardData)
+                .build();
+         requestQueue.add(multipartNeoRequest);
 
 ### FileStream
 
-	FileStreamNeoRequest<String[]> fileStreamNeoRequest = new FileStreamNeoRequest<>(Request.Method.PUT,
-	"YOUR URL", emtpyHeaders, data, new NeoRequestListener<String[]>() {
-		@Override
-		public void onSuccess(String[] v) {
-			Log.d("YOUR APP", "Dummy sucess");
-		}
-	    
-		@Override
-		public void onFailure(VolleyError volleyError, int i) {
-			Log.d("YOUR APP", "Dummy error");   
-		}
-	}, String[].class);
+	FileStreamNeoRequest<String[]> fileStreamNeoRequest = new FileStreamNeoRequest.Builder<String[]>(Request.Method.PUT, "YOUR URL", String[].class)
+                .listener(new NeoRequestListener<String[]>() {
+                    @Override
+                    public void onSuccess(String[] v) {
+                        Log.d("YOUR APP", "Dummy sucess");
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError, int i) {
+                        Log.d("YOUR APP", "Dummy error");
+                    }
+                })
+                .partData(data)
+                .build();
 	requestQueue.add(fileStreamNeoRequest);
 
 # In progress
 
  - Change the name for Chips (Git, and project)
- - Update the Readme with the builder
  - Update the Readme with Manager
  - Check and fix all the Hashmap and ArrayList. We should create a new one reference and not use directly the given one
  - Enable build on 4.4.4

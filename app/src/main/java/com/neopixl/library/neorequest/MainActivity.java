@@ -81,19 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView getWithoutParamsAndEmptyReturnTextView = getTextViewForRequest("getWithoutParamsAndEmptyReturn");
 
-        NeoRequest<Void> testRequest = new NeoRequest.Builder(Request.Method.GET, "", Void.class)
-                .listener(new NeoRequestListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-
-                    }
-
-                    @Override
-                    public void onFailure(VolleyError volleyError, int i) {
-
-                    }
-                }).build();
-
         NeoRequest<Void> getWithoutParamsAndEmptyReturnRequest = new NeoRequest.Builder<Void>(Request.Method.GET,
                 "https://private-4b982e-neorequest.apiary-mock.com/get/nodata", Void.class)
                 .listener(new NeoRequestListener<Void>() {
@@ -173,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }).parameters(params).build();
         addRequestWithRandom(postWithParamsRequest);
-
 
         Map<String, String> fullHeaders = new HashMap<>();
         fullHeaders.put("Authorization", "Basic abcdefghijklmnopqrstuvwxyz");
