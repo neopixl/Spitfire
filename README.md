@@ -1,4 +1,4 @@
-# NeoRequest by @Neopixl
+# Spitfire by @Neopixl
 
 A simple Android Network library. This library can be used as a wrapper for Google Volley, FasterXML Jackson serializer.
 All the Volley and Jackson method are fully operational.
@@ -23,7 +23,7 @@ This library was designed to be as simple to use as possible.  Here are the step
 		}
 
 		dependencies {
-			compile 'com.neopixl.library:neorequest:0.1'
+			compile 'com.neopixl.library:spitfire:0.1'
 			compile 'com.android.volley:volley:1.0.0'
 			compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
 			compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
@@ -43,13 +43,13 @@ This library was designed to be as simple to use as possible.  Here are the step
 
 * Create a new Volley RequestQueue, where all requests will be processed.
 
-		RequestQueue mRequestQueue = Volley.newRequestQueue(this);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
 		
-* Add a new NeoRequest to your RequestQueue.  This will kick off the process of accessing the network resource and parsing the response into your DTO. 
+* Add a new BaseRequest to your RequestQueue.  This will kick off the process of accessing the network resource and parsing the response into your DTO. 
 
 		
-		NeoRequest<DummyResponse> neoRequest = new NeoRequest.Builder<DummyResponse>(Request.Method.GET,
-                "YOUR URL", DummyResponse.class).listener(new NeoRequestListener<DummyResponse>() {
+		BaseRequest<DummyResponse> request = new BaseRequest.Builder<DummyResponse>(Request.Method.GET,
+                "YOUR URL", DummyResponse.class).listener(new RequestListener<DummyResponse>() {
             @Override
             public void onSuccess(DummyResponse response) {
                 Log.d("YOUR APP", "Dummy success");
@@ -60,8 +60,8 @@ This library was designed to be as simple to use as possible.  Here are the step
                 Log.d("YOUR APP", "Dummy error");
             }
         }).build();
-		requestQueue.add(neoRequest);
-
+        requestQueue.add(request);
+        
 * That's it! 
 
 ### Listener
@@ -70,31 +70,31 @@ If you do not specify a listener the library automaticaly fallback to a EventBus
 	@Override
 	protected void onStart() {
 		super.onStart();
-		NeoRequest<DummyResponse> neoRequest = new NeoRequest.Builder<DummyResponse>(Request.Method.GET, "YOUR URL", DummyResponse.class).build();
-		requestQueue.add(neoRequest);
+		BaseRequest<DummyResponse> request = new BaseRequest.Builder<DummyResponse>(Request.Method.GET, "YOUR URL", DummyResponse.class).build();
+       requestQueue.add(request);
 	}
 	
 	@Subscribe
-	public void requestResponse(NeoResponseEvent<DummyResponse> event) {
+	public void requestResponse(ResponseEvent<DummyResponse> event) {
 		Log.d("YOUR APP", "Dummy success ?: "+ event.isSuccess());
 	}
 
 ## More Complex Usage
 
 ### Get / Post / Put
-To launch a Get, Post, Put request simply use the NeoRequest as before.
+To launch a Get, Post, Put request simply use the BaseRequest as before.
 All the parameters will be added to the URL for the GET requests and to the body for the others
 
 ### Json Body
 
 If you want to send a full JSON in the body of your request, simply create a new DTO, for example our "DummyResponse"
 	
-	DummyResponse objectToSerializeAndSend = new DummyResponse();
-	objectToSerializeAndSend.setMessage("My message");
-	
-	NeoRequest<DummyResponse> neoRequest = new NeoRequest.Builder<DummyResponse>(Request.Method.GET, "YOUR URL", DummyResponse.class)
+		DummyResponse objectToSerializeAndSend = new DummyResponse();
+        objectToSerializeAndSend.setMessage("My message");
+
+        BaseRequest<DummyResponse> request = new BaseRequest.Builder<DummyResponse>(Request.Method.GET, "YOUR URL", DummyResponse.class)
                 .object(objectToSerializeAndSend)
-                .listener(new NeoRequestListener<DummyResponse>() {
+                .listener(new RequestListener<DummyResponse>() {
                     @Override
                     public void onSuccess(DummyResponse dummyResponse) {
                         Log.d("YOUR APP", "Dummy success");
@@ -105,19 +105,19 @@ If you want to send a full JSON in the body of your request, simply create a new
                         Log.d("YOUR APP", "Dummy error");
                     }
                 }).build();
-	requestQueue.add(neoRequest);
+        requestQueue.add(request);
 
 ### MultipartData
 
 	    
-		 HashMap<String, NeoRequestData> multipardData = new HashMap<>();
-        NeoRequestData data = new NeoRequestData("image1", new byte[] {1,1,1,1,0,0,1}, "image/jpeg");
+		 HashMap<String, RequestData> multipardData = new HashMap<>();
+        RequestData data = new RequestData("image1", new byte[] {1,1,1,1,0,0,1}, "image/jpeg");
         multipardData.put("image1", data);
-        data = new NeoRequestData("image1", new byte[] {1,1,1,1,0,0,1}, "image/jpeg");
+        data = new RequestData("image1", new byte[] {1,1,1,1,0,0,1}, "image/jpeg");
         multipardData.put("image1", data);
 
-        MultipartNeoRequest<Void> multipartNeoRequest = new MultipartNeoRequest.Builder<Void>(Request.Method.PUT, "YOUR URL", Void.class)
-                .listener(new NeoRequestListener<Void>() {
+        MultipartRequest<Void> multipartRequest = new MultipartRequest.Builder<Void>(Request.Method.PUT, "YOUR URL", Void.class)
+                .listener(new RequestListener<Void>() {
                     @Override
                     public void onSuccess(Void v) {
                         Log.d("YOUR APP", "Dummy success");
@@ -130,12 +130,12 @@ If you want to send a full JSON in the body of your request, simply create a new
                 })
                 .multiPartData(multipardData)
                 .build();
-         requestQueue.add(multipartNeoRequest);
-
+        requestQueue.add(multipartRequest);
+        
 ### FileStream
 
-	FileStreamNeoRequest<String[]> fileStreamNeoRequest = new FileStreamNeoRequest.Builder<String[]>(Request.Method.PUT, "YOUR URL", String[].class)
-                .listener(new NeoRequestListener<String[]>() {
+	FileStreamRequest<String[]> fileStreamRequest = new FileStreamRequest.Builder<String[]>(Request.Method.PUT, "YOUR URL", String[].class)
+                .listener(new RequestListener<String[]>() {
                     @Override
                     public void onSuccess(String[] v) {
                         Log.d("YOUR APP", "Dummy sucess");
@@ -148,11 +148,10 @@ If you want to send a full JSON in the body of your request, simply create a new
                 })
                 .partData(data)
                 .build();
-	requestQueue.add(fileStreamNeoRequest);
+	requestQueue.add(fileStreamRequest);
 
 # In progress
 
- - Change the name for Spitfire (Git, and project)
  - Update the Readme with Manager
  - Enable build on 4.4.4
  - Enable deploy from gradle
