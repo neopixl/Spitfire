@@ -1,4 +1,4 @@
-package com.neopixl.library.spitfire;
+package com.neopixl.library.spitfireapp;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.neopixl.library.neorequest", appContext.getPackageName());
+        assertEquals("com.neopixl.library.spitfire", appContext.getPackageName());
     }
 }

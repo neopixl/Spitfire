@@ -153,7 +153,6 @@ If you want to send a full JSON in the body of your request, simply create a new
 # In progress
 
  - Update the Readme with Manager
- - Enable build on 4.4.4
  - Enable deploy from gradle
 
 # They use it

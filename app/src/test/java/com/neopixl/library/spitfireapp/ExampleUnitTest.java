@@ -1,4 +1,4 @@
-package com.neopixl.library.spitfire;
+package com.neopixl.library.spitfireapp;
 
 import org.junit.Test;
 

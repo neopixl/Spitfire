@@ -1,4 +1,4 @@
-package com.neopixl.library.spitfire.model;
+package com.neopixl.library.spitfireapp.model;
 
 /**
  * Created by Florian ALONSO on 12/30/16.

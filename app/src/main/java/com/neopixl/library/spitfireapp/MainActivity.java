@@ -1,4 +1,4 @@
-package com.neopixl.library.spitfire;
+package com.neopixl.library.spitfireapp;
 
 import android.graphics.Color;
 import android.os.Handler;
@@ -13,11 +13,12 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.neopixl.library.spitfireapp.R;
 import com.neopixl.library.spitfire.listener.RequestListener;
-import com.neopixl.library.spitfire.model.PostJsonRequest;
+import com.neopixl.library.spitfireapp.model.PostJsonRequest;
 import com.neopixl.library.spitfire.model.RequestData;
 import com.neopixl.library.spitfire.model.ResponseEvent;
-import com.neopixl.library.spitfire.model.StatusMessageResponse;
+import com.neopixl.library.spitfireapp.model.StatusMessageResponse;
 import com.neopixl.library.spitfire.request.BaseRequest;
 import com.neopixl.library.spitfire.request.FileStreamRequest;
 import com.neopixl.library.spitfire.request.MultipartRequest;
