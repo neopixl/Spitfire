@@ -150,9 +150,31 @@ If you want to send a full JSON in the body of your request, simply create a new
                 .build();
 	requestQueue.add(fileStreamRequest);
 
+### SpitfireManager
+
+SpitfireManager is a global class used to set settings for all the requests.
+
+You can change :
+
+* default request timeout
+                
+		//Change the default timeout for the default retry policy used for all requests.
+   		SpitfireManager.setRequestTimeout(10000);
+
+
+* default retry policy
+
+		DefaultRetryPolicy retryPolicy = new DefaultRetryPolicy(
+                10000,      // 10 seconds
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+
+		//Change the default retry policy used for all requests. 
+		SpitfireManager.setDefaultRetryPolicy(retryPolicy);
+
+
 # In progress
 
- - Update the Readme with Manager
  - Enable deploy from gradle
 
 # They use it

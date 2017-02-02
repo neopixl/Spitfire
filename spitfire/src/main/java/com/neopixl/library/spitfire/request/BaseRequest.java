@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.VolleyLog;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.neopixl.library.spitfire.SpitfireManager;
@@ -12,6 +13,7 @@ import com.neopixl.library.spitfire.listener.RequestListener;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -188,7 +190,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
         int method = getMethod();
         String topUrl = super.getUrl();
         if (method == Method.GET) {
-            return SpitfireManager.parseGetUrl(method, topUrl, getParams(), getParamsEncoding());
+            return parseGetUrl(method, topUrl, getParams(), getParamsEncoding());
         }
         return topUrl;
     }
@@ -210,5 +212,47 @@ public class BaseRequest<T> extends AbstractRequest<T> {
     @Nullable
     public Map<String, String> getParams() {
         return standardParams;
+    }
+
+    /**
+     * Converts a base URL, endpoint, and parameters into a full URL
+     *
+     * @param method The <b>com.android.volley.Request.Method</b> of the URL
+     * @param url    The URL, not null
+     * @param params The parameters to be appended to the URL if a GET method is used, can be null
+     * @param encoding The encoding used to parse parameters set in the url (GET method), can be null
+     * @return The full URL
+     */
+    protected String parseGetUrl(int method, @NonNull String url, @Nullable Map<String, String> params, @NonNull String encoding) {
+        if (params != null) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                if (entry.getValue() == null || entry.getValue().equals("null")) {
+                    entry.setValue("");
+                }
+            }
+        }
+
+        if (method == Request.Method.GET && params != null && !params.isEmpty()) {
+            final StringBuilder result = new StringBuilder(url);
+            final int startLength = result.length();
+            for (String key : params.keySet()) {
+                try {
+                    final String encodedKey = URLEncoder.encode(key, encoding);
+                    final String encodedValue = URLEncoder.encode(params.get(key), encoding);
+                    if (result.length() > startLength) {
+                        result.append("&");
+                    } else {
+                        result.append("?");
+                    }
+                    result.append(encodedKey);
+                    result.append("=");
+                    result.append(encodedValue);
+                } catch (Exception e) {
+                }
+            }
+            return result.toString();
+        } else {
+            return url;
+        }
     }
 }

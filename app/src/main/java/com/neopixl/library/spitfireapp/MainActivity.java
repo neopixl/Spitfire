@@ -1,9 +1,9 @@
 package com.neopixl.library.spitfireapp;
 
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -13,15 +13,14 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.neopixl.library.spitfireapp.R;
 import com.neopixl.library.spitfire.listener.RequestListener;
-import com.neopixl.library.spitfireapp.model.PostJsonRequest;
 import com.neopixl.library.spitfire.model.RequestData;
 import com.neopixl.library.spitfire.model.ResponseEvent;
-import com.neopixl.library.spitfireapp.model.StatusMessageResponse;
 import com.neopixl.library.spitfire.request.BaseRequest;
 import com.neopixl.library.spitfire.request.FileStreamRequest;
 import com.neopixl.library.spitfire.request.MultipartRequest;
+import com.neopixl.library.spitfireapp.model.PostJsonRequest;
+import com.neopixl.library.spitfireapp.model.StatusMessageResponse;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
