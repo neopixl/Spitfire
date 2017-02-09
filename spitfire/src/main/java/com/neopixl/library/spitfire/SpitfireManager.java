@@ -1,6 +1,7 @@
 package com.neopixl.library.spitfire;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RetryPolicy;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 public final class SpitfireManager {
 
+    @Nullable
     private static ObjectMapper objectMapper;
 
     @NonNull
@@ -43,6 +45,7 @@ public final class SpitfireManager {
      * Get the default retry policy
      * @return the default retry policy <b>RetryPolicy</b>, not null
      */
+    @NonNull
     public static RetryPolicy getDefaultRetryPolicy() {
         return defaultRetryPolicy;
     }
