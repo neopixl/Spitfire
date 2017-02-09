@@ -132,9 +132,9 @@ If you want to send a full JSON in the body of your request, simply create a new
                 .build();
         requestQueue.add(multipartRequest);
         
-### FileStream
+### Unique File Upload
 
-	FileStreamRequest<String[]> fileStreamRequest = new FileStreamRequest.Builder<String[]>(Request.Method.PUT, "YOUR URL", String[].class)
+	UploadFileRequest<String[]> uploadFileRequest = new UploadFileRequest.Builder<String[]>(Request.Method.PUT, "YOUR URL", String[].class)
                 .listener(new RequestListener<String[]>() {
                     @Override
                     public void onSuccess(String[] v) {
@@ -148,7 +148,7 @@ If you want to send a full JSON in the body of your request, simply create a new
                 })
                 .partData(data)
                 .build();
-	requestQueue.add(fileStreamRequest);
+	requestQueue.add(uploadFileRequest);
 
 ### SpitfireManager
 

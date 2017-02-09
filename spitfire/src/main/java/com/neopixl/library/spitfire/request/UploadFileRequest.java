@@ -17,11 +17,11 @@ import java.util.Map;
  * Created by Florian ALONSO on 14/10/16.
  */
 
-public class FileStreamRequest<T> extends AbstractRequest<T> {
+public class UploadFileRequest<T> extends AbstractRequest<T> {
 
     private RequestData partData;
 
-    public static class Builder<T> extends AbstractBuilder<T, FileStreamRequest<T>> {
+    public static class Builder<T> extends AbstractBuilder<T, UploadFileRequest<T>> {
 
         private RequestData partData;
 
@@ -63,8 +63,8 @@ public class FileStreamRequest<T> extends AbstractRequest<T> {
          * Create a request based on the current request
          * @return The request
          */
-        public FileStreamRequest<T> build() {
-            return new FileStreamRequest<T>(this);
+        public UploadFileRequest<T> build() {
+            return new UploadFileRequest<T>(this);
         }
     }
 
@@ -73,7 +73,7 @@ public class FileStreamRequest<T> extends AbstractRequest<T> {
      * @param builder {@link Builder}
      */
 
-    public FileStreamRequest(Builder builder) {
+    public UploadFileRequest(Builder builder) {
         super(builder);
         this.partData = builder.partData;
 

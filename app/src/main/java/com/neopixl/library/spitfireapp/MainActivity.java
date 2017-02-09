@@ -17,7 +17,7 @@ import com.neopixl.library.spitfire.listener.RequestListener;
 import com.neopixl.library.spitfire.model.RequestData;
 import com.neopixl.library.spitfire.model.ResponseEvent;
 import com.neopixl.library.spitfire.request.BaseRequest;
-import com.neopixl.library.spitfire.request.FileStreamRequest;
+import com.neopixl.library.spitfire.request.UploadFileRequest;
 import com.neopixl.library.spitfire.request.MultipartRequest;
 import com.neopixl.library.spitfireapp.model.PostJsonRequest;
 import com.neopixl.library.spitfireapp.model.StatusMessageResponse;
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView putImageStreamTextView = getTextViewForRequest("putImageStream");
 
-        FileStreamRequest<Void> putImageStreamRequest = new FileStreamRequest.Builder<Void>(Request.Method.PUT, "https://private-4b982e-neorequest.apiary-mock.com/put/image", Void.class)
+        UploadFileRequest<Void> putImageStreamRequest = new UploadFileRequest.Builder<Void>(Request.Method.PUT, "https://private-4b982e-neorequest.apiary-mock.com/put/image", Void.class)
                 .partData(data).listener(new RequestListener<Void>() {
                     @Override
                     public void onSuccess(Void v) {
