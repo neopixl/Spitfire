@@ -191,7 +191,7 @@ abstract class AbstractRequest<T> extends Request<T> {
         if (mListener != null) {
             mListener.onSuccess(response);
         } else {
-            ResponseEvent<T> event = new ResponseEvent<>(response, null, -1);
+            ResponseEvent<T> event = new ResponseEvent<>(response, null, -1, this.getTag());
             EventBus eventBus = EventBus.getDefault();
             if (isStickyEvent) {
                 eventBus.postSticky(event);
@@ -217,7 +217,7 @@ abstract class AbstractRequest<T> extends Request<T> {
         if (mListener != null) {
             mListener.onFailure(error, statusCode);
         } else {
-            ResponseEvent<T> event = new ResponseEvent<>(null, error, statusCode);
+            ResponseEvent<T> event = new ResponseEvent<>(null, error, statusCode, this.getTag());
             EventBus eventBus = EventBus.getDefault();
             if (isStickyEvent) {
                 eventBus.postSticky(event);
