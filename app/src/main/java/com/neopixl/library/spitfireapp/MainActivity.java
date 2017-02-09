@@ -219,8 +219,8 @@ public class MainActivity extends AppCompatActivity {
         HashMap<String, RequestData> multiPartData = new HashMap<>();
         RequestData data = new RequestData("image1", new byte[] {1,1,1,1,0,0,1}, "image/jpeg");
         multiPartData.put("image1", data);
-        data = new RequestData("image1", new byte[] {1,1,1,1,0,0,1}, "image/jpeg");
-        multiPartData.put("image1", data);
+        data = new RequestData("image2", new byte[] {1,1,1,1,0,0,1}, "image/jpeg");
+        multiPartData.put("image2", data);
 
         final TextView putImageMultipartTextView = getTextViewForRequest("putImageMultipart");
         MultipartRequest<Void> putImageMultipartRequest = new MultipartRequest.Builder<Void>(Request.Method.PUT,
