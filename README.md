@@ -175,6 +175,8 @@ You can change :
 
 # In progress
 
+ - The listener and event bus should have 3 params (CurrentRequest, Networkresponse, object parsed)
+ - Make docs for EventBus
  - Enable deploy from gradle
 
 # They use it
