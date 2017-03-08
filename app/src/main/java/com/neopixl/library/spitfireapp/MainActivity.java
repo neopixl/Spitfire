@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
@@ -84,12 +85,12 @@ public class MainActivity extends AppCompatActivity {
                 "https://private-4b982e-neorequest.apiary-mock.com/get/nodata", Void.class)
                 .listener(new RequestListener<Void>() {
                     @Override
-                    public void onSuccess(Void v) {
+                    public void onSuccess(Request request, NetworkResponse response, Void v) {
                         setSuccessForTextView(getWithoutParamsAndEmptyReturnTextView, true);
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError, int i) {
+                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
                         setSuccessForTextView(getWithoutParamsAndEmptyReturnTextView, false);
 
                     }
@@ -106,12 +107,12 @@ public class MainActivity extends AppCompatActivity {
                 "https://private-4b982e-neorequest.apiary-mock.com/get/data/3", Void.class)
                 .listener(new RequestListener<Void>() {
                     @Override
-                    public void onSuccess(Void v) {
+                    public void onSuccess(Request request, NetworkResponse response, Void v) {
                         setSuccessForTextView(getWithParamsTextView, true);
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError, int i) {
+                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
                         setSuccessForTextView(getWithParamsTextView, false);
 
                     }
@@ -124,12 +125,12 @@ public class MainActivity extends AppCompatActivity {
                 "https://private-4b982e-neorequest.apiary-mock.com/get/errordata/3", Void.class)
                 .listener(new RequestListener<Void>() {
             @Override
-            public void onSuccess(Void v) {
+            public void onSuccess(Request request, NetworkResponse response, Void v) {
                 setSuccessForTextView(getWithParamsErrorTextView, false);
             }
 
             @Override
-            public void onFailure(VolleyError volleyError, int i) {
+            public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
                 setSuccessForTextView(getWithParamsErrorTextView, true);
 
             }
@@ -148,12 +149,12 @@ public class MainActivity extends AppCompatActivity {
                 "https://private-4b982e-neorequest.apiary-mock.com/post/data/3", StatusMessageResponse.class)
                 .listener(new RequestListener<StatusMessageResponse>() {
             @Override
-            public void onSuccess(StatusMessageResponse v) {
+            public void onSuccess(Request request, NetworkResponse response, StatusMessageResponse v) {
                 setSuccessForTextView(postWithParamsTextView, true);
             }
 
             @Override
-            public void onFailure(VolleyError volleyError, int i) {
+            public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
                 setSuccessForTextView(postWithParamsTextView, false);
 
             }
@@ -176,12 +177,12 @@ public class MainActivity extends AppCompatActivity {
         BaseRequest<StatusMessageResponse> postWithJsonAndHeaderRequest = new BaseRequest.Builder<StatusMessageResponse>(Request.Method.POST,
                 "https://private-4b982e-neorequest.apiary-mock.com/post/json", StatusMessageResponse.class).listener(new RequestListener<StatusMessageResponse>() {
             @Override
-            public void onSuccess(StatusMessageResponse v) {
+            public void onSuccess(Request request, NetworkResponse response, StatusMessageResponse v) {
                 setSuccessForTextView(postWithJsonAndHeaderTextView, true);
             }
 
             @Override
-            public void onFailure(VolleyError volleyError, int i) {
+            public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
                 setSuccessForTextView(postWithJsonAndHeaderTextView, false);
 
             }
@@ -201,12 +202,12 @@ public class MainActivity extends AppCompatActivity {
         UploadFileRequest<Void> putImageStreamRequest = new UploadFileRequest.Builder<Void>(Request.Method.PUT, "https://private-4b982e-neorequest.apiary-mock.com/put/image", Void.class)
                 .partData(data).listener(new RequestListener<Void>() {
                     @Override
-                    public void onSuccess(Void v) {
+                    public void onSuccess(Request request, NetworkResponse response, Void v) {
                         setSuccessForTextView(putImageStreamTextView, true);
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError, int i) {
+                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
                         setSuccessForTextView(putImageStreamTextView, false);
 
                     }
@@ -227,12 +228,12 @@ public class MainActivity extends AppCompatActivity {
                 "https://private-4b982e-neorequest.apiary-mock.com/put/images/3",Void.class)
                 .listener(new RequestListener<Void>() {
             @Override
-            public void onSuccess(Void v) {
+            public void onSuccess(Request request, NetworkResponse response, Void v) {
                 setSuccessForTextView(putImageMultipartTextView, true);
             }
 
             @Override
-            public void onFailure(VolleyError volleyError, int i) {
+            public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
                 setSuccessForTextView(putImageMultipartTextView, false);
 
             }

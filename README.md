@@ -51,12 +51,12 @@ This library was designed to be as simple to use as possible.  Here are the step
 		BaseRequest<DummyResponse> request = new BaseRequest.Builder<DummyResponse>(Request.Method.GET,
                 "YOUR URL", DummyResponse.class).listener(new RequestListener<DummyResponse>() {
             @Override
-            public void onSuccess(DummyResponse response) {
+            public void onSuccess(Request request, NetworkResponse response, DummyResponse response) {
                 Log.d("YOUR APP", "Dummy success");
             }
 
             @Override
-            public void onFailure(VolleyError volleyError, int statusCode) {
+            public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
                 Log.d("YOUR APP", "Dummy error");
             }
         }).build();
@@ -64,7 +64,7 @@ This library was designed to be as simple to use as possible.  Here are the step
         
 * That's it! 
 
-### Listener
+### Event Bus
 If you do not specify a listener the library automaticaly fallback to a EventBus event.
 
 	@Override
@@ -96,12 +96,12 @@ If you want to send a full JSON in the body of your request, simply create a new
                 .object(objectToSerializeAndSend)
                 .listener(new RequestListener<DummyResponse>() {
                     @Override
-                    public void onSuccess(DummyResponse dummyResponse) {
+                    public void onSuccess(Request request, NetworkResponse response, DummyResponse dummyResponse) {
                         Log.d("YOUR APP", "Dummy success");
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError, int statusCode) {
+                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
                         Log.d("YOUR APP", "Dummy error");
                     }
                 }).build();
@@ -119,12 +119,12 @@ If you want to send a full JSON in the body of your request, simply create a new
         MultipartRequest<Void> multipartRequest = new MultipartRequest.Builder<Void>(Request.Method.PUT, "YOUR URL", Void.class)
                 .listener(new RequestListener<Void>() {
                     @Override
-                    public void onSuccess(Void v) {
+                    public void onSuccess(Request request, NetworkResponse response, Void v) {
                         Log.d("YOUR APP", "Dummy success");
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError, int i) {
+                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
                         Log.d("YOUR APP", "Dummy error");
                     }
                 })
@@ -137,12 +137,12 @@ If you want to send a full JSON in the body of your request, simply create a new
 	UploadFileRequest<String[]> uploadFileRequest = new UploadFileRequest.Builder<String[]>(Request.Method.PUT, "YOUR URL", String[].class)
                 .listener(new RequestListener<String[]>() {
                     @Override
-                    public void onSuccess(String[] v) {
+                    public void onSuccess(Request request, NetworkResponse response, String[] v) {
                         Log.d("YOUR APP", "Dummy sucess");
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError, int i) {
+                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
                         Log.d("YOUR APP", "Dummy error");
                     }
                 })
@@ -175,8 +175,6 @@ You can change :
 
 # In progress
 
- - The listener and event bus should have 3 params (CurrentRequest, Networkresponse, object parsed)
- - Make docs for EventBus
  - Enable deploy from gradle
 
 # They use it

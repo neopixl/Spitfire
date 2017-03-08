@@ -43,6 +43,8 @@ abstract class AbstractRequest<T> extends Request<T> {
     private Map<String, String> headers;
     private boolean isStickyEvent;
 
+    private NetworkResponse networkResponse;
+
     /**
      * Abstract class Builder used to create a new request
      * @param <T> Type used for the response of the request.
@@ -189,9 +191,9 @@ abstract class AbstractRequest<T> extends Request<T> {
     @Override
     protected void deliverResponse(T response) {
         if (mListener != null) {
-            mListener.onSuccess(response);
+            mListener.onSuccess(this, networkResponse, response);
         } else {
-            ResponseEvent<T> event = new ResponseEvent<>(response, null, -1, this.getTag());
+            ResponseEvent<T> event = new ResponseEvent<>(response, null, -1, this);
             EventBus eventBus = EventBus.getDefault();
             if (isStickyEvent) {
                 eventBus.postSticky(event);
@@ -215,9 +217,9 @@ abstract class AbstractRequest<T> extends Request<T> {
 
 
         if (mListener != null) {
-            mListener.onFailure(error, statusCode);
+            mListener.onFailure(this, networkResponse, error);
         } else {
-            ResponseEvent<T> event = new ResponseEvent<>(null, error, statusCode, this.getTag());
+            ResponseEvent<T> event = new ResponseEvent<>(null, error, statusCode, this);
             EventBus eventBus = EventBus.getDefault();
             if (isStickyEvent) {
                 eventBus.postSticky(event);
@@ -234,6 +236,8 @@ abstract class AbstractRequest<T> extends Request<T> {
      */
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
+        this.networkResponse = response;
+
         JavaType returnType = getReturnType();
         T returnData = null;
         if (returnType != null) {

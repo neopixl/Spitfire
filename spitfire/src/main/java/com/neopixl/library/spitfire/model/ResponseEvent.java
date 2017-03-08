@@ -3,6 +3,7 @@ package com.neopixl.library.spitfire.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 
 /**
@@ -18,21 +19,21 @@ public class ResponseEvent<T> {
     private VolleyError error;
     @Nullable
     private T data;
-    @Nullable
-    private Object requestTag;
+    @NonNull
+    private Request request;
 
     /**
      * Constructor for a ResponseEvent (sent using EventBus)
      * @param data Response received for a request
      * @param error error received for a request
      * @param statusCode current http status code <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">status code</a>
-     * @param requestTag current request tag attribute
+     * @param request current request
      */
-    public ResponseEvent(@Nullable T data, @Nullable VolleyError error, @NonNull int statusCode, @Nullable Object requestTag) {
+    public ResponseEvent(@Nullable T data, @Nullable VolleyError error, @NonNull int statusCode, @NonNull Request request) {
         this.statusCode = statusCode;
         this.error = error;
         this.data = data;
-        this.requestTag = requestTag;
+        this.request = request;
     }
 
     /**
@@ -63,12 +64,12 @@ public class ResponseEvent<T> {
     }
 
     /**
-     * Returns the request tag which initialized this event
-     * @return The request tag
+     * Returns the request which initialized this event
+     * @return The request
      */
     @Nullable
-    public Object getRequestTag() {
-        return requestTag;
+    public Object getRequest() {
+        return request;
     }
 
     /**
