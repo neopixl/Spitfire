@@ -32,29 +32,29 @@ public class UploadFileRequest<T> extends AbstractRequest<T> {
          * @param url           given url to access the resource
          * @param classResponse class used to parse the response
          */
-        public Builder(int method, @NonNull String url, Class classResponse) {
+        public Builder(int method, @NonNull String url, Class<T> classResponse) {
             super(method, url, classResponse);
         }
 
-        public Builder partData(@NonNull RequestData partData) {
+        public Builder<T> partData(@NonNull RequestData partData) {
             this.partData = partData;
             return this;
         }
 
         @Override
-        public Builder listener(@Nullable RequestListener listener) {
+        public Builder<T> listener(@Nullable RequestListener<T> listener) {
             super.listener(listener);
             return this;
         }
 
         @Override
-        public Builder headers(@NonNull Map headers) {
+        public Builder<T> headers(@NonNull Map headers) {
             super.headers(headers);
             return this;
         }
 
         @Override
-        public Builder stickyEvent(boolean isStickyEvent) {
+        public Builder<T> stickyEvent(boolean isStickyEvent) {
             super.stickyEvent(isStickyEvent);
             return this;
         }
@@ -73,7 +73,7 @@ public class UploadFileRequest<T> extends AbstractRequest<T> {
      * @param builder {@link Builder}
      */
 
-    public UploadFileRequest(Builder builder) {
+    public UploadFileRequest(Builder<T> builder) {
         super(builder);
         this.partData = builder.partData;
 

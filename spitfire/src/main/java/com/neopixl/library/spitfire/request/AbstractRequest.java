@@ -68,7 +68,7 @@ abstract class AbstractRequest<T> extends Request<T> {
          * @param url given url to access the resource, not nul
          * @param classResponse class used to parse the response
          */
-        public AbstractBuilder(int method, @NonNull String url, Class classResponse) {
+        public AbstractBuilder(int method, @NonNull String url, Class<T> classResponse) {
             this.method = method;
             this.url = url;
             this.classResponse = classResponse;
@@ -79,7 +79,7 @@ abstract class AbstractRequest<T> extends Request<T> {
          * @param listener {@link RequestListener}, can be null
          * @return the builder
          */
-        public AbstractBuilder listener(@Nullable RequestListener<T> listener) {
+        public AbstractBuilder<T, RequestType> listener(@Nullable RequestListener<T> listener) {
             this.mListener = listener;
             return this;
         }
@@ -89,7 +89,7 @@ abstract class AbstractRequest<T> extends Request<T> {
          * @param headers used to send the request, can be null
          * @return Map&lt;String, String&gt;
          */
-        public AbstractBuilder headers(@Nullable Map<String, String> headers) {
+        public AbstractBuilder<T, RequestType> headers(@Nullable Map<String, String> headers) {
             this.headers = new HashMap<>(headers);
             return this;
         }
@@ -100,7 +100,7 @@ abstract class AbstractRequest<T> extends Request<T> {
          * @return boolean
          */
 
-        public AbstractBuilder stickyEvent(boolean isStickyEvent) {
+        public AbstractBuilder<T, RequestType> stickyEvent(boolean isStickyEvent) {
             this.eventBusIsSticky = isStickyEvent;
             return this;
         }
@@ -296,10 +296,7 @@ abstract class AbstractRequest<T> extends Request<T> {
         currentHeader.putAll(this.headers);
 
         String bodyContentType = getBodyContentType();
-        if (bodyContentType != null) {
-
-            currentHeader.put("Content-Type", bodyContentType);
-        } else if (currentHeader.containsKey("Content-Type")) {
+        if (bodyContentType == null && currentHeader.containsKey("Content-Type")) {
             currentHeader.remove("Content-Type");
         }
         return currentHeader;

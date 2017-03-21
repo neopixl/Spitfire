@@ -48,7 +48,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
          * @param url           given url to access the resource, not null
          * @param classResponse class used to parse the response
          */
-        public Builder(int method, @NonNull String url, Class classResponse) {
+        public Builder(int method, @NonNull String url, Class<T> classResponse) {
             super(method, url, classResponse);
         }
 
@@ -57,7 +57,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
          * @param jsonObject The object to be embedded in the body, can be null
          * @return Builder {@link Builder}
          */
-        public Builder object(@Nullable Object jsonObject) {
+        public Builder<T> object(@Nullable Object jsonObject) {
             this.jsonObject = jsonObject;
             return this;
         }
@@ -67,7 +67,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
          * @param parameters Map&lt;String, String&gt;, not null
          * @return Builder {@link Builder}
          */
-        public Builder parameters(@NonNull  Map<String, String> parameters) {
+        public Builder<T> parameters(@NonNull  Map<String, String> parameters) {
             this.parameters = new HashMap<>(parameters);
             return this;
         }
@@ -78,7 +78,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
          * @return
          */
         @Override
-        public Builder listener(@Nullable RequestListener listener) {
+        public Builder<T> listener(@Nullable RequestListener<T> listener) {
             super.listener(listener);
             return this;
         }
@@ -89,13 +89,13 @@ public class BaseRequest<T> extends AbstractRequest<T> {
          * @return
          */
         @Override
-        public Builder headers(@NonNull Map headers) {
+        public Builder<T> headers(@NonNull Map headers) {
             super.headers(headers);
             return this;
         }
 
         @Override
-        public Builder stickyEvent(boolean isStickyEvent) {
+        public Builder<T> stickyEvent(boolean isStickyEvent) {
             super.stickyEvent(isStickyEvent);
             return this;
         }

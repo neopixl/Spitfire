@@ -44,7 +44,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
          * @param url    The URL
          * @param classResponse the class used to parse the response associated to the request.
          */
-        public Builder(int method, @NonNull String url, Class classResponse) {
+        public Builder(int method, @NonNull String url, Class<T> classResponse) {
             super(method, url, classResponse);
         }
 
@@ -54,7 +54,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
          * @return
          */
         @Override
-        public Builder listener(@Nullable RequestListener listener) {
+        public Builder<T> listener(@Nullable RequestListener<T> listener) {
             super.listener(listener);
             return this;
         }
@@ -64,7 +64,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
          * @param multiPartData HashMap&lt;String, NeoRequestData&gt; multiPartData, not null
          * @return Builder {@link Builder}
          */
-        public Builder multiPartData(@NonNull HashMap<String, RequestData> multiPartData) {
+        public Builder<T> multiPartData(@NonNull HashMap<String, RequestData> multiPartData) {
             this.multiPartData = new HashMap<>(multiPartData);
             return this;
         }
@@ -78,7 +78,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
         }
     }
 
-    private MultipartRequest(Builder builder) {
+    private MultipartRequest(Builder<T> builder) {
         super(builder);
 
         this.multiPartData = builder.multiPartData;
