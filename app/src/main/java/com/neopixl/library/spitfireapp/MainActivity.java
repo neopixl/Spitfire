@@ -126,17 +126,17 @@ public class MainActivity extends AppCompatActivity {
         BaseRequest<Void> getWithParamsErrorRequest = new BaseRequest.Builder<Void>(Request.Method.GET,
                 "https://private-4b982e-neorequest.apiary-mock.com/get/errordata/3", Void.class)
                 .listener(new RequestListener<Void>() {
-            @Override
-            public void onSuccess(Request request, NetworkResponse response, Void v) {
-                setSuccessForTextView(getWithParamsErrorTextView, false);
-            }
+                    @Override
+                    public void onSuccess(Request request, NetworkResponse response, Void v) {
+                        setSuccessForTextView(getWithParamsErrorTextView, false);
+                    }
 
-            @Override
-            public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
-                setSuccessForTextView(getWithParamsErrorTextView, true);
+                    @Override
+                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+                        setSuccessForTextView(getWithParamsErrorTextView, true);
 
-            }
-        }).build();
+                    }
+                }).build();
 
         addRequestWithRandom(getWithParamsErrorRequest);
     }
@@ -194,6 +194,26 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         addRequestWithRandom(postWithJsonAndHeaderRequest);
+
+
+
+        final TextView postWithStatusErrorTextView = getTextViewForRequest("postWithStatusError");
+        BaseRequest<Void> postWithStatusErrorTextViewRequest = new BaseRequest.Builder<Void>(Request.Method.POST,
+                "https://private-4b982e-neorequest.apiary-mock.com/post/errordata-json", Void.class)
+                .listener(new RequestListener<Void>() {
+                    @Override
+                    public void onSuccess(Request request, NetworkResponse response, Void v) {
+                        setSuccessForTextView(postWithStatusErrorTextView, false);
+                    }
+
+                    @Override
+                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+                        setSuccessForTextView(postWithStatusErrorTextView, (response != null && response.statusCode == 400));
+
+                    }
+                }).build();
+
+        addRequestWithRandom(postWithStatusErrorTextViewRequest);
     }
 
     private void loadFileStreamRequest() {

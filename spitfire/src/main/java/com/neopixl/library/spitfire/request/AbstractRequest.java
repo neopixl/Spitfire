@@ -193,7 +193,7 @@ abstract class AbstractRequest<T> extends Request<T> {
         if (mListener != null) {
             mListener.onSuccess(this, networkResponse, response);
         } else {
-            ResponseEvent<T> event = new ResponseEvent<>(response, null, -1, this);
+            ResponseEvent<T> event = new ResponseEvent<>(response, null, networkResponse, this);
             EventBus eventBus = EventBus.getDefault();
             if (isStickyEvent) {
                 eventBus.postSticky(event);
@@ -210,16 +210,15 @@ abstract class AbstractRequest<T> extends Request<T> {
      */
     @Override
     public void deliverError(VolleyError error) {
-        int statusCode = -1;
-        if (error != null && error.networkResponse != null) {
-            statusCode = error.networkResponse.statusCode;
+        if (error != null && error.networkResponse != null && this.networkResponse == null) {
+            this.networkResponse = error.networkResponse;
         }
 
 
         if (mListener != null) {
             mListener.onFailure(this, networkResponse, error);
         } else {
-            ResponseEvent<T> event = new ResponseEvent<>(null, error, statusCode, this);
+            ResponseEvent<T> event = new ResponseEvent<>(null, error, networkResponse, this);
             EventBus eventBus = EventBus.getDefault();
             if (isStickyEvent) {
                 eventBus.postSticky(event);
