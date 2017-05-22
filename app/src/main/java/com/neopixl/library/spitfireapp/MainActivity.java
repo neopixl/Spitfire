@@ -4,8 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.test.suitebuilder.TestMethod;
-import android.test.suitebuilder.TestSuiteBuilder;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
