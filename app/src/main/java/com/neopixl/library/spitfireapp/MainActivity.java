@@ -18,8 +18,8 @@ import com.neopixl.library.spitfire.listener.RequestListener;
 import com.neopixl.library.spitfire.model.RequestData;
 import com.neopixl.library.spitfire.model.ResponseEvent;
 import com.neopixl.library.spitfire.request.BaseRequest;
-import com.neopixl.library.spitfire.request.UploadFileRequest;
 import com.neopixl.library.spitfire.request.MultipartRequest;
+import com.neopixl.library.spitfire.request.UploadFileRequest;
 import com.neopixl.library.spitfireapp.model.PostJsonRequest;
 import com.neopixl.library.spitfireapp.model.StatusMessageResponse;
 
@@ -219,8 +219,12 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView putImageStreamTextView = getTextViewForRequest("putImageStream");
 
+        Map<String, String> fullHeaders = new HashMap<>();
+        fullHeaders.put("Authorization", "Basic abcdefghijklmnopqrstuvwxyz");
+        fullHeaders.put("Token", "abcdefghijkl");
+
         UploadFileRequest<Void> putImageStreamRequest = new UploadFileRequest.Builder<Void>(Request.Method.PUT, "https://private-4b982e-neorequest.apiary-mock.com/put/image", Void.class)
-                .partData(data).listener(new RequestListener<Void>() {
+                .listener(new RequestListener<Void>() {
                     @Override
                     public void onSuccess(Request request, NetworkResponse response, Void v) {
                         setSuccessForTextView(putImageStreamTextView, true);
@@ -231,7 +235,10 @@ public class MainActivity extends AppCompatActivity {
                         setSuccessForTextView(putImageStreamTextView, false);
 
                     }
-                }).build();
+                })
+                .headers(fullHeaders)
+                .partData(data)
+                .build();
 
         addRequestWithRandom(putImageStreamRequest);
     }
@@ -244,20 +251,29 @@ public class MainActivity extends AppCompatActivity {
         multiPartData.put("image2", data);
 
         final TextView putImageMultipartTextView = getTextViewForRequest("putImageMultipart");
+
+
+        Map<String, String> fullHeaders = new HashMap<>();
+        fullHeaders.put("Authorization", "Basic abcdefghijklmnopqrstuvwxyz");
+        fullHeaders.put("Token", "abcdefghijkl");
+
         MultipartRequest<Void> putImageMultipartRequest = new MultipartRequest.Builder<Void>(Request.Method.PUT,
-                "https://private-4b982e-neorequest.apiary-mock.com/put/images/3",Void.class)
+                "https://private-4b982e-neorequest.apiary-mock.com/put/images/3", Void.class)
                 .listener(new RequestListener<Void>() {
-            @Override
-            public void onSuccess(Request request, NetworkResponse response, Void v) {
-                setSuccessForTextView(putImageMultipartTextView, true);
-            }
+                    @Override
+                    public void onSuccess(Request request, NetworkResponse response, Void v) {
+                        setSuccessForTextView(putImageMultipartTextView, true);
+                    }
 
-            @Override
-            public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
-                setSuccessForTextView(putImageMultipartTextView, false);
+                    @Override
+                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+                        setSuccessForTextView(putImageMultipartTextView, false);
 
-            }
-        }).build();
+                    }
+                })
+                .headers(fullHeaders)
+                .multiPartData(multiPartData)
+                .build();
         addRequestWithRandom(putImageMultipartRequest);
     }
 

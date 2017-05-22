@@ -89,7 +89,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
          * @return
          */
         @Override
-        public Builder<T> headers(@NonNull Map headers) {
+        public Builder<T> headers(@NonNull Map<String, String>  headers) {
             super.headers(headers);
             return this;
         }

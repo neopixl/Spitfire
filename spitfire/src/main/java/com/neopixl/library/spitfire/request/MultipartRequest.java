@@ -49,13 +49,50 @@ public class MultipartRequest<T> extends BaseRequest<T> {
         }
 
         /**
-         *
+         * Specifies the object
+         * @param jsonObject The object to be embedded in the body, can be null
+         * @return Builder {@link BaseRequest.Builder}
+         */
+        public Builder<T> object(@Nullable Object jsonObject) {
+            super.object(jsonObject);
+            return this;
+        }
+
+        /**
+         * Set the parameters for the request
+         * @param parameters Map&lt;String, String&gt;, not null
+         * @return Builder {@link BaseRequest.Builder}
+         */
+        public Builder<T> parameters(@NonNull  Map<String, String> parameters) {
+            super.parameters(parameters);
+            return this;
+        }
+
+        /**
+         * Set the listener for the request
          * @param listener {@link RequestListener}, can be null
          * @return
          */
         @Override
         public Builder<T> listener(@Nullable RequestListener<T> listener) {
             super.listener(listener);
+            return this;
+        }
+
+        /**
+         * Set the headers for the request
+         * @param headers used to send the request, not null
+         * @return
+         */
+        @Override
+        public Builder<T> headers(@NonNull Map<String, String>  headers) {
+            super.headers(headers);
+            return this;
+        }
+
+        @Override
+        public BaseRequest.Builder<T> stickyEvent(boolean isStickyEvent) {
+            super.stickyEvent(isStickyEvent);
             return this;
         }
 
