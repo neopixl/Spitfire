@@ -172,10 +172,36 @@ You can change :
 		//Change the default retry policy used for all requests. 
 		SpitfireManager.setDefaultRetryPolicy(retryPolicy);
 
+# Proguard
+
+	# Jackson 2.x
+	-keep class com.fasterxml.jackson.databind.ObjectMapper {
+	    public <methods>;
+	    protected <methods>;
+	}
+	-keep class com.fasterxml.jackson.databind.ObjectWriter {
+	    public ** writeValueAsString(**);
+	}
+	-keep @com.fasterxml.jackson.annotation.JsonIgnoreProperties class * { *; }
+	-keep class com.fasterxml.** { *; }
+	-keep class org.codehaus.** { *; }
+	-keepnames class com.fasterxml.jackson.** { *; }
+	-keepclassmembers public final enum com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility {
+	    public static final com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility *;
+	}
+	-keep class com.fasterxml.jackson.databind.ObjectMapper {
+	    public <methods>;
+	    protected <methods>;
+	}
+	-keep class com.fasterxml.jackson.databind.ObjectWriter {
+	    public ** writeValueAsString(**);
+	}
+	-keepnames class com.fasterxml.jackson.** { *; }
+	-dontwarn com.fasterxml.jackson.databind.**
+
 
 # In progress
 
- - Enable deploy from gradle
 
 # They use it
 
