@@ -62,7 +62,6 @@ public class MultipartRequestTest {
     private String url = "http://neopixl.com/";
     private HashMap<String, String> parameters = new HashMap<>();
     private HashMap<String, String> headers = new HashMap<>();
-    private HashMap<String, String> headersWithContentType = new HashMap<>();
     private DummyResponse dummyResponse = new DummyResponse();
     private DummyResponse dummyRequestObject = new DummyResponse();
     private HashMap<String, RequestData> dummyDataMap = new HashMap<>();
@@ -84,9 +83,6 @@ public class MultipartRequestTest {
         headers.put("If-Range", "Wed, 21 Oct 2017 07:28:00 GMT");
         headers.put("X-ApiKey", "azerty");
         headers.put("Authorization", "Bearer 1000:2b52d2ccfd6007d7a8d58d8cabb32bc0");
-
-        headersWithContentType.putAll(headers);
-        headersWithContentType.put("Content-Type", "application/json");
 
         dummyData = new RequestData("neopixl.jpg", new byte[16]);
         dummyDataMap.put("1", dummyData);

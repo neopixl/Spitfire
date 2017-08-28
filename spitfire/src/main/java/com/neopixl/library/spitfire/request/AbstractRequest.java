@@ -97,6 +97,10 @@ abstract class AbstractRequest<T> extends Request<T> {
     }
 
 
+    /**
+     * Constructor to create the request
+     * @param builder a builder from the {@link AbstractBuilder}
+     */
     AbstractRequest(AbstractBuilder builder) {
         super(builder.method, builder.url, null);
 
@@ -108,34 +112,6 @@ abstract class AbstractRequest<T> extends Request<T> {
         setShouldCache(builder.method == Method.GET);
 
         this.mListener = builder.mListener;
-
-        mAcceptedStatusCodes = new ArrayList<>();
-        mAcceptedStatusCodes.add(HttpURLConnection.HTTP_OK);
-        mAcceptedStatusCodes.add(HttpURLConnection.HTTP_NO_CONTENT);
-        mAcceptedStatusCodes.add(HttpURLConnection.HTTP_ACCEPTED);
-        mAcceptedStatusCodes.add(HttpURLConnection.HTTP_CREATED);
-
-        setRetryPolicy(SpitfireManager.getDefaultRetryPolicy());
-    }
-
-
-    /**
-     * Constructor to create the request
-     * @param method http method (GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH) <b>com.android.volley.Request.Method</b>
-     * @param url url for the request
-     * @param headers headers for the request (can be null)
-     * @param listener request listener (can be null, in this case the response will be sent using events with EventBus)
-     * @param classResponse the class used to parse the response associated to the request.
-     */
-    AbstractRequest(int method, String url, Map<String, String> headers, RequestListener<T> listener, Class<T> classResponse) {
-        super(method, url, null);
-
-        this.headers = headers!=null ? headers : new HashMap<String, String>();
-        this.classResponse = classResponse;
-
-        setShouldCache(method == Method.GET);
-
-        this.mListener = listener;
 
         mAcceptedStatusCodes = new ArrayList<>();
         mAcceptedStatusCodes.add(HttpURLConnection.HTTP_OK);
