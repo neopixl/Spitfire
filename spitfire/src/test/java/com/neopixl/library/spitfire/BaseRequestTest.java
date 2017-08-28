@@ -38,6 +38,7 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -113,6 +114,23 @@ public class BaseRequestTest {
 
 
         assertNotNull(BaseRequest.Builder.class.getConstructor(int.class, String.class, Class.class));
+    }
+
+    @Test
+    public void requestStatusCodeGestion() throws Exception {
+        BaseRequest.Builder<DummyResponse> builder = new BaseRequest.Builder<>(Request.Method.GET, url, DummyResponse.class);
+        builder.parameters(parameters);
+        builder.headers(headers);
+        BaseRequest<DummyResponse> baseRequest = builder.build();
+        baseRequest.addAcceptedStatusCodes(HttpURLConnection.HTTP_BAD_GATEWAY);
+        baseRequest.addAcceptedStatusCodes(new int[]{
+                HttpURLConnection.HTTP_BAD_METHOD
+                , HttpURLConnection.HTTP_BAD_REQUEST
+        });
+
+        assertTrue(baseRequest.getAcceptedStatusCodes().contains(HttpURLConnection.HTTP_OK));
+        assertTrue(baseRequest.getAcceptedStatusCodes().contains(HttpURLConnection.HTTP_BAD_METHOD));
+        assertTrue(baseRequest.getAcceptedStatusCodes().contains(HttpURLConnection.HTTP_BAD_REQUEST));
     }
 
     @Test

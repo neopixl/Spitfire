@@ -133,6 +133,14 @@ abstract class AbstractRequest<T> extends Request<T> {
     }
 
     /**
+     * Add accepted status code (<a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">Http status codes</a>), not null
+     * @param statusCodes int
+     */
+    public void addAcceptedStatusCodes(@NonNull int statusCodes) {
+        mAcceptedStatusCodes.add(statusCodes);
+    }
+
+    /**
      * Get the list of all accepted status codes
      * @return list of accepted status codes
      */
