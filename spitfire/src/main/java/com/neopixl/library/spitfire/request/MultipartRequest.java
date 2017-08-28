@@ -180,7 +180,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      * @param encoding         encode the inputs, default UTF-8
      * @throws IOException
      */
-    private void textParse(DataOutputStream dataOutputStream, Map<String, String> params, String encoding) throws IOException {
+    public void textParse(DataOutputStream dataOutputStream, Map<String, String> params, String encoding) throws IOException {
         try {
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 buildTextPart(dataOutputStream, entry.getKey(), entry.getValue());
@@ -198,7 +198,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      * @param jsonObject       the object to parse
      * @throws IOException
      */
-    private void jsonParse(DataOutputStream dataOutputStream, Object jsonObject) throws IOException {
+    public void jsonParse(DataOutputStream dataOutputStream, Object jsonObject) throws IOException {
         try {
             String json = SpitfireManager.getObjectMapper().writeValueAsString(jsonObject);
             StringBuilder stringBuilder = new StringBuilder();
@@ -221,7 +221,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      * @param data             loop through data
      * @throws IOException
      */
-    private void dataParse(DataOutputStream dataOutputStream, Map<String, RequestData> data) throws IOException {
+    public void dataParse(DataOutputStream dataOutputStream, Map<String, RequestData> data) throws IOException {
         for (Map.Entry<String, RequestData> entry : data.entrySet()) {
             buildDataPart(dataOutputStream, entry.getValue(), entry.getKey());
         }
