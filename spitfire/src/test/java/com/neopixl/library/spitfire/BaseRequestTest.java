@@ -31,7 +31,6 @@ import com.neopixl.library.spitfire.utils.ImmediateResponseDelivery;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;

@@ -23,11 +23,17 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest=Config.NONE)
 public class RequestDataTest {
+
+    private String dummyFilename = "neopixl.jpg";
+    private String dummyContentType = "image/jpeg";
+    private byte[] dummyByte = new byte[16];
 
     @Test
     public void publicMethods() throws Exception {
@@ -45,5 +51,69 @@ public class RequestDataTest {
         assertNotNull(RequestData.class.getConstructor(String.class, byte[].class));
 
         assertNotNull(RequestData.class.getConstructor(String.class, byte[].class, String.class));
+    }
+
+    @Test
+    public void emptyConstruction() throws Exception {
+        RequestData requestData = new RequestData();
+
+        assertNull(requestData.getContent());
+        assertNull(requestData.getFileName());
+        assertNull(requestData.getType());
+    }
+
+    @Test
+    public void emptyConstructionThenFilled() throws Exception {
+        RequestData requestData = new RequestData();
+        requestData.setContent(dummyByte);
+        requestData.setFileName(dummyFilename);
+        requestData.setType(dummyContentType);
+
+        assertEquals(dummyByte, requestData.getContent());
+        assertEquals(dummyFilename, requestData.getFileName());
+        assertEquals(dummyContentType, requestData.getType());
+    }
+
+    @Test
+    public void fullConstruction() throws Exception {
+        RequestData requestData = new RequestData(dummyFilename, dummyByte, dummyContentType);
+
+        assertEquals(dummyByte, requestData.getContent());
+        assertEquals(dummyFilename, requestData.getFileName());
+        assertEquals(dummyContentType, requestData.getType());
+    }
+
+    @Test
+    public void halfConstruction() throws Exception {
+        RequestData requestData = new RequestData(dummyFilename, dummyByte);
+
+        assertEquals(dummyByte, requestData.getContent());
+        assertEquals(dummyFilename, requestData.getFileName());
+        assertNull(requestData.getType());
+    }
+
+    @Test
+    public void halfConstructionThenFilled() throws Exception {
+        RequestData requestData = new RequestData(dummyFilename, dummyByte);
+        requestData.setType(dummyContentType);
+
+        assertEquals(dummyByte, requestData.getContent());
+        assertEquals(dummyFilename, requestData.getFileName());
+        assertEquals(dummyContentType, requestData.getType());
+    }
+
+    @Test
+    public void fullConstructionThenClear() throws Exception {
+        RequestData requestData = new RequestData(dummyFilename, dummyByte, dummyContentType);
+
+        assertEquals(dummyByte, requestData.getContent());
+        assertEquals(dummyFilename, requestData.getFileName());
+        assertEquals(dummyContentType, requestData.getType());
+
+        requestData.clear();
+
+        assertEquals((new byte[0]).length, requestData.getContent().length);
+        assertEquals(dummyFilename, requestData.getFileName());
+        assertEquals(dummyContentType, requestData.getType());
     }
 }
