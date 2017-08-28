@@ -16,15 +16,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.neopixl.library.spitfire.listener.RequestListener;
 import com.neopixl.library.spitfire.model.RequestData;
-import com.neopixl.library.spitfire.model.ResponseEvent;
 import com.neopixl.library.spitfire.request.BaseRequest;
 import com.neopixl.library.spitfire.request.MultipartRequest;
 import com.neopixl.library.spitfire.request.UploadFileRequest;
 import com.neopixl.library.spitfireapp.model.PostJsonRequest;
 import com.neopixl.library.spitfireapp.model.StatusMessageResponse;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private ScrollView scrollView;
     private LinearLayout linearLayout;
     private RequestQueue requestQueue;
-
-    private TextView getWithoutParamsTextViewEventBus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         linearLayout.removeAllViews();
         requestQueue = Volley.newRequestQueue(this);
-        EventBus.getDefault().register(this);
 
         loadGetRequest();
         loadPostRequest();
@@ -62,23 +55,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
-    @Subscribe
-    public void didReceiveResponseForGetWithoutParams(ResponseEvent<StatusMessageResponse> event) {
-        setSuccessForTextView(getWithoutParamsTextViewEventBus, event.isSuccess());
-    }
-
     private void loadGetRequest() {
-        getWithoutParamsTextViewEventBus = getTextViewForRequest("getWithoutParams");
-        BaseRequest<StatusMessageResponse> getWithoutParamsRequest = new BaseRequest.Builder<StatusMessageResponse>(Request.Method.GET,
-                "https://private-4b982e-neorequest.apiary-mock.com/get/data", StatusMessageResponse.class)
-                .build();
-
-        addRequestWithRandom(getWithoutParamsRequest);
-
         final TextView getWithoutParamsAndEmptyReturnTextView = getTextViewForRequest("getWithoutParamsAndEmptyReturn");
 
         BaseRequest<Void> getWithoutParamsAndEmptyReturnRequest = new BaseRequest.Builder<Void>(Request.Method.GET,

@@ -90,12 +90,6 @@ public class MultipartRequest<T> extends BaseRequest<T> {
             return this;
         }
 
-        @Override
-        public BaseRequest.Builder<T> stickyEvent(boolean isStickyEvent) {
-            super.stickyEvent(isStickyEvent);
-            return this;
-        }
-
         /**
          * Set the multipart data for the request
          * @param multiPartData HashMap&lt;String, NeoRequestData&gt; multiPartData, not null

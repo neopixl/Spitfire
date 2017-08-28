@@ -94,12 +94,6 @@ public class BaseRequest<T> extends AbstractRequest<T> {
             return this;
         }
 
-        @Override
-        public Builder<T> stickyEvent(boolean isStickyEvent) {
-            super.stickyEvent(isStickyEvent);
-            return this;
-        }
-
         /**
          * Create a request based on the current request
          * @return The request

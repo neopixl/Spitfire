@@ -7,7 +7,6 @@ All the documentations are available here :
 
  - Volley : [https://developer.android.com/training/volley/index.html](https://developer.android.com/training/volley/index.html)
  - Jackson : [https://github.com/FasterXML/jackson](https://github.com/FasterXML/jackson)
- - EventBus : [https://github.com/greenrobot/EventBus](https://github.com/greenrobot/EventBus)
 
 ## Usage
 This library was designed to be as simple to use as possible.  Here are the steps you'll need to follow:
@@ -28,7 +27,6 @@ This library was designed to be as simple to use as possible.  Here are the step
 			compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
 			compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
 			compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.5'
-			compile 'org.greenrobot:eventbus:3.0.0'
 		}
 
 * Create the DTO that you would like your request to be parsed as.
@@ -64,20 +62,6 @@ This library was designed to be as simple to use as possible.  Here are the step
         
 * That's it! 
 
-### Event Bus
-If you do not specify a listener the library automaticaly fallback to a EventBus event.
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		BaseRequest<DummyResponse> request = new BaseRequest.Builder<DummyResponse>(Request.Method.GET, "YOUR URL", DummyResponse.class).build();
-       requestQueue.add(request);
-	}
-	
-	@Subscribe
-	public void requestResponse(ResponseEvent<DummyResponse> event) {
-		Log.d("YOUR APP", "Dummy success ?: "+ event.isSuccess());
-	}
 
 ## More Complex Usage
 

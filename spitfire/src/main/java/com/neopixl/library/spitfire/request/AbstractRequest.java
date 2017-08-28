@@ -15,9 +15,6 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.neopixl.library.spitfire.SpitfireManager;
 import com.neopixl.library.spitfire.listener.RequestListener;
-import com.neopixl.library.spitfire.model.ResponseEvent;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -41,7 +38,6 @@ abstract class AbstractRequest<T> extends Request<T> {
 
     @Nullable
     private Map<String, String> headers;
-    private boolean isStickyEvent;
 
     private NetworkResponse networkResponse;
 
@@ -60,7 +56,6 @@ abstract class AbstractRequest<T> extends Request<T> {
         @Nullable
         private RequestListener<T> mListener;
         private Map<String, String> headers;
-        private boolean eventBusIsSticky;
 
         /**
          * Default
@@ -95,17 +90,6 @@ abstract class AbstractRequest<T> extends Request<T> {
         }
 
         /**
-         * Specifies if the request will post <a href="http://greenrobot.org/eventbus/documentation/configuration/sticky-events/" target="_blank">sticky events</a>
-         * @param isStickyEvent flag used to specify if all events will be sent as sticky events
-         * @return boolean
-         */
-
-        public AbstractBuilder<T, RequestType> stickyEvent(boolean isStickyEvent) {
-            this.eventBusIsSticky = isStickyEvent;
-            return this;
-        }
-
-        /**
          * You must implement this method in your subclass.
          * @return AbstractNeoRequest
          */
@@ -124,7 +108,6 @@ abstract class AbstractRequest<T> extends Request<T> {
         setShouldCache(builder.method == Method.GET);
 
         this.mListener = builder.mListener;
-        this.isStickyEvent = builder.eventBusIsSticky;
 
         mAcceptedStatusCodes = new ArrayList<>();
         mAcceptedStatusCodes.add(HttpURLConnection.HTTP_OK);
@@ -144,7 +127,7 @@ abstract class AbstractRequest<T> extends Request<T> {
      * @param listener request listener (can be null, in this case the response will be sent using events with EventBus)
      * @param classResponse the class used to parse the response associated to the request.
      */
-    AbstractRequest(int method, String url, Map<String, String> headers, RequestListener<T> listener, Class<T> classResponse, boolean isStickyEvent) {
+    AbstractRequest(int method, String url, Map<String, String> headers, RequestListener<T> listener, Class<T> classResponse) {
         super(method, url, null);
 
         this.headers = headers!=null ? headers : new HashMap<String, String>();
@@ -153,7 +136,6 @@ abstract class AbstractRequest<T> extends Request<T> {
         setShouldCache(method == Method.GET);
 
         this.mListener = listener;
-        this.isStickyEvent = isStickyEvent;
 
         mAcceptedStatusCodes = new ArrayList<>();
         mAcceptedStatusCodes.add(HttpURLConnection.HTTP_OK);
@@ -192,14 +174,6 @@ abstract class AbstractRequest<T> extends Request<T> {
     protected void deliverResponse(T response) {
         if (mListener != null) {
             mListener.onSuccess(this, networkResponse, response);
-        } else {
-            ResponseEvent<T> event = new ResponseEvent<>(response, null, networkResponse, this);
-            EventBus eventBus = EventBus.getDefault();
-            if (isStickyEvent) {
-                eventBus.postSticky(event);
-            } else {
-                eventBus.post(event);
-            }
         }
     }
 
@@ -217,14 +191,6 @@ abstract class AbstractRequest<T> extends Request<T> {
 
         if (mListener != null) {
             mListener.onFailure(this, networkResponse, error);
-        } else {
-            ResponseEvent<T> event = new ResponseEvent<>(null, error, networkResponse, this);
-            EventBus eventBus = EventBus.getDefault();
-            if (isStickyEvent) {
-                eventBus.postSticky(event);
-            } else {
-                eventBus.post(event);
-            }
         }
     }
 
@@ -317,14 +283,5 @@ abstract class AbstractRequest<T> extends Request<T> {
             return null;
         }
         return super.getBody();
-    }
-
-    /**
-     * Returns the sticky's state for the event signal sent using EventBus.
-     * see <a href="http://greenrobot.org/eventbus/documentation/configuration/sticky-events/" target="_blank">Sticky Events</a>
-     * @return boolean
-     */
-    public boolean isStickyEvent() {
-        return isStickyEvent;
     }
 }
