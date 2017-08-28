@@ -84,7 +84,7 @@ public class MultipartRequestTest {
         headers.put("X-ApiKey", "azerty");
         headers.put("Authorization", "Bearer 1000:2b52d2ccfd6007d7a8d58d8cabb32bc0");
 
-        dummyData = new RequestData("neopixl.jpg", new byte[16]);
+        dummyData = new RequestData("neopixl.jpg", new byte[16], "image/jpeg");
         dummyDataMap.put("1", dummyData);
         dummyDataMap.put("2", dummyData);
 

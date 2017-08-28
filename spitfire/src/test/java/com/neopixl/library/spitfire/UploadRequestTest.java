@@ -130,6 +130,7 @@ public class UploadRequestTest {
     @Test(expected = IllegalArgumentException.class)
     public void builderGenerationNoDataInGet() throws Exception {
         UploadFileRequest.Builder<DummyResponse> builder = new UploadFileRequest.Builder<>(Request.Method.GET, url, DummyResponse.class);
+        builder.partData(dummyData);
 
         UploadFileRequest<DummyResponse> baseRequest = builder.build();
     }

@@ -209,7 +209,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
             stringBuilder.append(json);
             stringBuilder.append(lineEnd);
             dataOutputStream.writeBytes(stringBuilder.toString());
-        } catch (JsonProcessingException e) {
+        } catch (JsonProcessingException e) {// shouldn't really happen, but is declared as possibility so:
             textParse(dataOutputStream, getParams(), getParamsEncoding());
         }
     }
