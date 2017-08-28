@@ -146,7 +146,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
 
         try {
             // populate text payload
-            Object jsonBody = getJsonObjectBody();
+            Object jsonBody = getJsonObject();
             if (jsonBody == null) {
                 Map<String, String> params = getParams();
                 if (params != null && params.size() > 0) {

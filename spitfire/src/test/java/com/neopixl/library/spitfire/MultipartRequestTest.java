@@ -17,14 +17,12 @@
 package com.neopixl.library.spitfire;
 
 import com.neopixl.library.spitfire.listener.RequestListener;
-import com.neopixl.library.spitfire.model.RequestData;
-import com.neopixl.library.spitfire.request.BaseRequest;
 import com.neopixl.library.spitfire.request.MultipartRequest;
-import com.neopixl.library.spitfire.request.UploadFileRequest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +30,7 @@ import java.util.Map;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricTestRunner.class)
+@Config(manifest=Config.NONE)
 public class MultipartRequestTest {
 
     @Test
@@ -40,7 +39,7 @@ public class MultipartRequestTest {
         assertNotNull(MultipartRequest.class.getMethod("getBodyContentType"));
         assertNotNull(MultipartRequest.class.getMethod("getBody"));
         assertNotNull(MultipartRequest.class.getMethod("getUrl"));
-        assertNotNull(MultipartRequest.class.getMethod("getJsonObjectBody"));
+        assertNotNull(MultipartRequest.class.getMethod("getJsonObject"));
         assertNotNull(MultipartRequest.class.getMethod("getParams"));
         assertNotNull(MultipartRequest.class.getMethod("getMultiPartData"));
 

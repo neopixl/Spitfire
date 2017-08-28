@@ -16,19 +16,17 @@
 
 package com.neopixl.library.spitfire;
 
-import com.neopixl.library.spitfire.listener.RequestListener;
 import com.neopixl.library.spitfire.model.RequestData;
-import com.neopixl.library.spitfire.request.MultipartRequest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-
-import java.util.Map;
+import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricTestRunner.class)
+@Config(manifest=Config.NONE)
 public class RequestDataTest {
 
     @Test

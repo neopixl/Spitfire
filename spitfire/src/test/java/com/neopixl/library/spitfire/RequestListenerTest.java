@@ -16,41 +16,26 @@
 
 package com.neopixl.library.spitfire;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.neopixl.library.spitfire.listener.RequestListener;
-import com.neopixl.library.spitfire.model.RequestData;
-import com.neopixl.library.spitfire.request.UploadFileRequest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.Map;
-
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest=Config.NONE)
-public class UploadRequestTest {
+public class RequestListenerTest {
 
     @Test
     public void publicMethods() throws Exception {
         // Catch-all test to find API-breaking changes.
-        assertNotNull(UploadFileRequest.class.getMethod("getBodyContentType"));
-        assertNotNull(UploadFileRequest.class.getMethod("getBody"));
-        assertNotNull(UploadFileRequest.class.getMethod("getPartData"));
-
-        assertNotNull(UploadFileRequest.class.getDeclaredConstructor(UploadFileRequest.Builder.class));
-
-        // Catch-all test to find API-breaking changes for the builder.
-        assertNotNull(UploadFileRequest.Builder.class.getMethod("listener",
-                RequestListener.class));
-        assertNotNull(UploadFileRequest.Builder.class.getMethod("headers",
-                Map.class));
-        assertNotNull(UploadFileRequest.Builder.class.getMethod("partData",
-                RequestData.class));
-        assertNotNull(UploadFileRequest.Builder.class.getMethod("build"));
-
-        assertNotNull(UploadFileRequest.Builder.class.getConstructor(int.class, String.class, Class.class));
+        assertNotNull(RequestListener.class.getMethod("onSuccess", Request.class, NetworkResponse.class, Object.class));
+        assertNotNull(RequestListener.class.getMethod("onFailure", Request.class, NetworkResponse.class, VolleyError.class));
     }
 }

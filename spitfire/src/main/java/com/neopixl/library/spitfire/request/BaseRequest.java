@@ -25,7 +25,7 @@ import java.util.Map;
 public class BaseRequest<T> extends AbstractRequest<T> {
 
     @Nullable
-    private Object jsonObjectBody;
+    private Object jsonObject;
 
     @Nullable
     private Map<String, String> standardParams;
@@ -112,9 +112,9 @@ public class BaseRequest<T> extends AbstractRequest<T> {
         super(builder);
 
         this.standardParams = builder.parameters;
-        this.jsonObjectBody = builder.jsonObject;
+        this.jsonObject = builder.jsonObject;
 
-        if (builder.method == Method.GET && jsonObjectBody != null) {
+        if (builder.method == Method.GET && jsonObject != null) {
             throw new IllegalArgumentException("Cannot use json body request with GET");
         }
     }
@@ -124,7 +124,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
      * @return the current content type
      */
     @NonNull
-    protected String getJsonContentType() {
+    public String getJsonContentType() {
         return "application/json; charset=" + getParamsEncoding();
     }
 
@@ -136,7 +136,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
     @Override
     @NonNull
     public String getBodyContentType() {
-        if ((getMethod() == com.android.volley.Request.Method.POST || getMethod() == com.android.volley.Request.Method.PUT) && getJsonObjectBody() != null) {
+        if ((getMethod() == com.android.volley.Request.Method.POST || getMethod() == com.android.volley.Request.Method.PUT) && getJsonObject() != null) {
             return getJsonContentType();
         }
         return super.getBodyContentType();
@@ -157,21 +157,35 @@ public class BaseRequest<T> extends AbstractRequest<T> {
         String bodyContentType = getBodyContentType();
         int method = getMethod();
         if (method != Method.GET && bodyContentType != null && bodyContentType.equals(getJsonContentType())) {
-            byte ptext[];
-            try {
-                ptext = SpitfireManager.getObjectMapper().writeValueAsBytes(getJsonObjectBody());
-                VolleyLog.d("Sending JSON BODY : " + new String(ptext, getParamsEncoding()));
-            } catch (JsonProcessingException e) {
-                JSONObject object = new JSONObject(getParams());
-                VolleyLog.d("Sending JSON FROM PARAMS : " + object.toString());
-                ptext = object.toString().getBytes();
-            } catch (UnsupportedEncodingException e) {
-                ptext = null;
-                e.printStackTrace();
-            }
-            return ptext;
+            return getJsonBody();
         }
         return super.getBody();
+    }
+
+
+    /**
+     * Returns the raw POST or PUT body to be sent in a JSON format.
+     *
+     * <p>This method will use the object given in the builder in order to
+     * build, parse and bind the exact value and format.
+     *
+     * @throws AuthFailureError in the event of auth failure
+     */
+    @Nullable
+    public byte[] getJsonBody() {
+        byte ptext[];
+        try {
+            ptext = SpitfireManager.getObjectMapper().writeValueAsBytes(getJsonObject());
+            VolleyLog.d("Sending JSON BODY : " + new String(ptext, getParamsEncoding()));
+        } catch (JsonProcessingException e) {
+            JSONObject object = new JSONObject(getParams());
+            VolleyLog.d("Sending JSON FROM PARAMS : " + object.toString());
+            ptext = object.toString().getBytes();
+        } catch (UnsupportedEncodingException e) {
+            ptext = null;
+            e.printStackTrace();
+        }
+        return ptext;
     }
 
     /**
@@ -190,12 +204,12 @@ public class BaseRequest<T> extends AbstractRequest<T> {
     }
 
     /**
-     * Get the json object body for the request
+     * Get the json object for the request
      * @return the json body, can be null
      */
     @Nullable
-    public Object getJsonObjectBody() {
-        return jsonObjectBody;
+    public Object getJsonObject() {
+        return jsonObject;
     }
 
     /**
@@ -218,14 +232,6 @@ public class BaseRequest<T> extends AbstractRequest<T> {
      * @return The full URL
      */
     protected String parseGetUrl(int method, @NonNull String url, @Nullable Map<String, String> params, @NonNull String encoding) {
-        if (params != null) {
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                if (entry.getValue() == null || entry.getValue().equals("null")) {
-                    entry.setValue("");
-                }
-            }
-        }
-
         if (method == Request.Method.GET && params != null && !params.isEmpty()) {
             final StringBuilder result = new StringBuilder(url);
             final int startLength = result.length();
