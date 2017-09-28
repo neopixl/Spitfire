@@ -14,7 +14,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +30,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
     private final String boundary = "bound-" + System.currentTimeMillis();
 
     @Nullable
-    private HashMap<String, RequestData> multiPartData;
+    private HashMap<String, List<RequestData>> multiPartData;
 
     /**
      * Builder used to create the final request
@@ -36,7 +38,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      */
     public static class Builder<T> extends BaseRequest.Builder<T> {
 
-        private HashMap<String, RequestData> multiPartData;
+        private HashMap<String, List<RequestData>> multiPartData = new HashMap<>();
 
         /**
          * Constructor for the builder
@@ -91,12 +93,57 @@ public class MultipartRequest<T> extends BaseRequest<T> {
         }
 
         /**
-         * Set the multipart data for the request
+         * Add the multipartData map for the request builder
          * @param multiPartData HashMap&lt;String, NeoRequestData&gt; multiPartData, not null
          * @return Builder {@link Builder}
          */
         public Builder<T> multiPartData(@NonNull HashMap<String, RequestData> multiPartData) {
-            this.multiPartData = new HashMap<>(multiPartData);
+            for (Map.Entry<String, RequestData> entry : multiPartData.entrySet()) {
+                List<RequestData> currentAddedList = this.multiPartData.get(entry.getKey());
+                if (currentAddedList == null) {
+                    currentAddedList = new ArrayList<>();
+                }
+
+                currentAddedList.add(entry.getValue());
+                this.multiPartData.put(entry.getKey(), currentAddedList);
+            }
+
+            return this;
+        }
+
+        /**
+         * Set the multipart data list for the request builder
+         * @param multiPartData HashMap&lt;String, List&lt;NeoRequestData&gt;&gt; multiPartData, not null
+         * @return Builder {@link Builder}
+         */
+        public Builder<T> multiPartDataList(@NonNull HashMap<String, List<RequestData>> multiPartData) {
+            for (Map.Entry<String, List<RequestData>> entry : multiPartData.entrySet()) {
+                List<RequestData> currentAddedList = this.multiPartData.get(entry.getKey());
+                if (currentAddedList == null) {
+                    currentAddedList = new ArrayList<>();
+                }
+
+                currentAddedList.addAll(entry.getValue());
+                this.multiPartData.put(entry.getKey(), currentAddedList);
+            }
+
+            return this;
+        }
+
+        /**
+         * Insert the data in the given key
+         * @param key String key of the data, not null
+         * @param partData RequestData data, not null
+         * @return
+         */
+        public Builder<T> insertMultiPartData(@NonNull String key, @NonNull RequestData partData) {
+            List<RequestData> currentAddedList = this.multiPartData.get(key);
+            if (currentAddedList == null) {
+                currentAddedList = new ArrayList<>();
+            }
+
+            currentAddedList.add(partData);
+            this.multiPartData.put(key, currentAddedList);
             return this;
         }
 
@@ -157,7 +204,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
             }
 
             // populate data byte payload
-            Map<String, RequestData> data = getMultiPartData();
+            Map<String, List<RequestData>> data = getMultiPartData();
             if (data != null && data.size() > 0) {
                 dataParse(dos, data);
             }
@@ -221,9 +268,11 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      * @param data             loop through data
      * @throws IOException
      */
-    public void dataParse(DataOutputStream dataOutputStream, Map<String, RequestData> data) throws IOException {
-        for (Map.Entry<String, RequestData> entry : data.entrySet()) {
-            buildDataPart(dataOutputStream, entry.getValue(), entry.getKey());
+    public void dataParse(DataOutputStream dataOutputStream, Map<String, List<RequestData>> data) throws IOException {
+        for (Map.Entry<String, List<RequestData>> entry : data.entrySet()) {
+            for (RequestData datapart : entry.getValue()) {
+                buildDataPart(dataOutputStream, datapart, entry.getKey());
+            }
         }
     }
 
@@ -281,10 +330,10 @@ public class MultipartRequest<T> extends BaseRequest<T> {
 
     /**
      * Get multiPart data for the current request.
-     * @return HashMap&lt;String, NeoRequestData&gt; {@link RequestData}, can be null
+     * @return HashMap&lt;String, List&lt;NeoRequestData&gt;&gt; {@link RequestData}, can be null
      */
     @Nullable
-    public HashMap<String, RequestData> getMultiPartData() {
+    public HashMap<String, List<RequestData>> getMultiPartData() {
         return multiPartData;
     }
 

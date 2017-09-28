@@ -41,7 +41,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.DataOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -64,7 +66,8 @@ public class MultipartRequestTest {
     private HashMap<String, String> headers = new HashMap<>();
     private DummyResponse dummyResponse = new DummyResponse();
     private DummyResponse dummyRequestObject = new DummyResponse();
-    private HashMap<String, RequestData> dummyDataMap = new HashMap<>();
+    private HashMap<String, List<RequestData>> dummyDataMap = new HashMap<>();
+    private HashMap<String, RequestData> dummyDataMapNoList = new HashMap<>();
     private RequestData dummyData;
     private ExecutorDelivery mDelivery;
     private Response<DummyResponse> mSuccessResponse;
@@ -85,8 +88,15 @@ public class MultipartRequestTest {
         headers.put("Authorization", "Bearer 1000:2b52d2ccfd6007d7a8d58d8cabb32bc0");
 
         dummyData = new RequestData("neopixl.jpg", new byte[16], "image/jpeg");
-        dummyDataMap.put("1", dummyData);
-        dummyDataMap.put("2", dummyData);
+        List<RequestData> dataList = new ArrayList<>();
+        dataList.add(dummyData);
+        dummyDataMap.put("1", dataList);
+        dataList = new ArrayList<>();
+        dataList.add(dummyData);
+        dummyDataMap.put("2", dataList);
+
+        dummyDataMapNoList.put("1", dummyData);
+        dummyDataMapNoList.put("2", dummyData);
 
         byte[] data = new byte[16];
         Cache.Entry cacheEntry = CacheTestUtils.makeRandomCacheEntry(data);
@@ -119,6 +129,10 @@ public class MultipartRequestTest {
                 Map.class));
         assertNotNull(MultipartRequest.Builder.class.getMethod("multiPartData",
                 HashMap.class));
+        assertNotNull(MultipartRequest.Builder.class.getMethod("multiPartDataList",
+                HashMap.class));
+        assertNotNull(MultipartRequest.Builder.class.getMethod("insertMultiPartData",
+                String.class, RequestData.class));
         assertNotNull(MultipartRequest.Builder.class.getMethod("build"));
 
         assertNotNull(MultipartRequest.Builder.class.getConstructor(int.class, String.class, Class.class));
@@ -130,7 +144,57 @@ public class MultipartRequestTest {
         builder.parameters(parameters);
         builder.object(dummyRequestObject);
         builder.headers(headers);
-        builder.multiPartData(dummyDataMap);
+        builder.multiPartDataList(dummyDataMap);
+
+        MultipartRequest<DummyResponse> baseRequest = builder.build();
+
+        assertEquals("The url should be the same", url, baseRequest.getUrl());
+        assertEquals("The method should be the same", Request.Method.POST, baseRequest.getMethod());
+        assertEquals("The parameters should be the same", parameters, baseRequest.getParams());
+        assertEquals("The object should be the same", dummyRequestObject, baseRequest.getJsonObject());
+        assertEquals("The multi part should be the same", dummyDataMap, baseRequest.getMultiPartData());
+
+        Map returnedMap = baseRequest.getHeaders();
+        for (String key : headers.keySet()) {
+            assertTrue("The key should be contained", returnedMap.containsKey(key));
+            assertEquals("The same value should be contained", headers.get(key), returnedMap.get(key));
+        }
+    }
+
+    @Test
+    public void builderPostGenerationWithPutMultipartSimple() throws Exception {
+        MultipartRequest.Builder<DummyResponse> builder = new MultipartRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
+        builder.parameters(parameters);
+        builder.object(dummyRequestObject);
+        builder.headers(headers);
+        builder.multiPartData(dummyDataMapNoList);
+
+        MultipartRequest<DummyResponse> baseRequest = builder.build();
+
+        assertEquals("The url should be the same", url, baseRequest.getUrl());
+        assertEquals("The method should be the same", Request.Method.POST, baseRequest.getMethod());
+        assertEquals("The parameters should be the same", parameters, baseRequest.getParams());
+        assertEquals("The object should be the same", dummyRequestObject, baseRequest.getJsonObject());
+        assertEquals("The multi part should be the same", dummyDataMap, baseRequest.getMultiPartData());
+
+        Map returnedMap = baseRequest.getHeaders();
+        for (String key : headers.keySet()) {
+            assertTrue("The key should be contained", returnedMap.containsKey(key));
+            assertEquals("The same value should be contained", headers.get(key), returnedMap.get(key));
+        }
+    }
+
+    @Test
+    public void builderPostGenerationWithInsertMultipart() throws Exception {
+        MultipartRequest.Builder<DummyResponse> builder = new MultipartRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
+        builder.parameters(parameters);
+        builder.object(dummyRequestObject);
+        builder.headers(headers);
+        for (Map.Entry<String, List<RequestData>> entry : dummyDataMap.entrySet()) {
+            for (RequestData datapart : entry.getValue()) {
+                builder.insertMultiPartData(entry.getKey(), datapart);
+            }
+        }
 
         MultipartRequest<DummyResponse> baseRequest = builder.build();
 
@@ -179,7 +243,7 @@ public class MultipartRequestTest {
         MultipartRequest.Builder<DummyResponse> builder = new MultipartRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
         builder.object(dummyRequestObject);
         builder.headers(headers);
-        builder.multiPartData(dummyDataMap);
+        builder.multiPartDataList(dummyDataMap);
         MultipartRequest<DummyResponse> baseRequest = builder.build();
 
         assertTrue(baseRequest.getBodyContentType().startsWith("multipart/form-data;boundary="));
@@ -206,7 +270,7 @@ public class MultipartRequestTest {
         MultipartRequest.Builder<DummyResponse> builder = new MultipartRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
         builder.parameters(parameters);
         builder.headers(headers);
-        builder.multiPartData(dummyDataMap);
+        builder.multiPartDataList(dummyDataMap);
         MultipartRequest<DummyResponse> baseRequest = builder.build();
 
 
