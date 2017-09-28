@@ -25,12 +25,16 @@ import java.util.Map;
 
 public class MultipartRequest<T> extends BaseRequest<T> {
 
+    private static final String JSON_KEY_DEFAULT = "jsonObject";
+
     private final String twoHyphens = "--";
     private final String lineEnd = "\r\n";
     private final String boundary = "bound-" + System.currentTimeMillis();
 
     @Nullable
     private HashMap<String, List<RequestData>> multiPartData;
+    @NonNull
+    private String jsonKey = MultipartRequest.JSON_KEY_DEFAULT;
 
     /**
      * Builder used to create the final request
@@ -39,6 +43,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
     public static class Builder<T> extends BaseRequest.Builder<T> {
 
         private HashMap<String, List<RequestData>> multiPartData = new HashMap<>();
+        private String jsonKey = MultipartRequest.JSON_KEY_DEFAULT;
 
         /**
          * Constructor for the builder
@@ -57,6 +62,18 @@ public class MultipartRequest<T> extends BaseRequest<T> {
          */
         public Builder<T> object(@Nullable Object jsonObject) {
             super.object(jsonObject);
+            return this;
+        }
+
+        /**
+         * Specifies the object, with the given key
+         * @param jsonKey the name of the json in the request multipart data
+         * @param jsonObject The object to be embedded in the body, can be null
+         * @return
+         */
+        public Builder<T> object(String jsonKey, @Nullable Object jsonObject) {
+            super.object(jsonObject);
+            this.jsonKey = jsonKey;
             return this;
         }
 
@@ -160,6 +177,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
         super(builder);
 
         this.multiPartData = builder.multiPartData;
+        this.jsonKey = builder.jsonKey;
 
         if (builder.method == Method.GET) {
             throw new IllegalArgumentException("Cannot use multipart with GET request");
@@ -250,7 +268,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
             String json = SpitfireManager.getObjectMapper().writeValueAsString(jsonObject);
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(twoHyphens + boundary + lineEnd);
-            stringBuilder.append("Content-Disposition: form-data; name=\"jsonObject\"" + lineEnd);
+            stringBuilder.append("Content-Disposition: form-data; name=\""+ jsonKey + "\"" + lineEnd);
             stringBuilder.append("Content-Type: application/json" + lineEnd);
             stringBuilder.append(lineEnd);
             stringBuilder.append(json);
@@ -337,4 +355,12 @@ public class MultipartRequest<T> extends BaseRequest<T> {
         return multiPartData;
     }
 
+    /**
+     * Get the json key
+     * @return String the key, non null
+     */
+    @NonNull
+    public String getJsonKey() {
+        return jsonKey;
+    }
 }

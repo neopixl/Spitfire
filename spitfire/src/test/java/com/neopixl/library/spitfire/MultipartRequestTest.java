@@ -121,6 +121,8 @@ public class MultipartRequestTest {
         // Catch-all test to find API-breaking changes for the builder.
         assertNotNull(MultipartRequest.Builder.class.getMethod("object",
                 Object.class));
+        assertNotNull(MultipartRequest.Builder.class.getMethod("object",
+                String.class, Object.class));
         assertNotNull(MultipartRequest.Builder.class.getMethod("parameters",
                 Map.class));
         assertNotNull(MultipartRequest.Builder.class.getMethod("listener",
