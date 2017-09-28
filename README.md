@@ -22,7 +22,7 @@ This library was designed to be as simple to use as possible.  Here are the step
 		}
 
 		dependencies {
-			compile 'com.neopixl.library:spitfire:0.3.5'
+			compile 'com.neopixl.library:spitfire:0.4'
 			compile 'com.android.volley:volley:1.0.0'
 			compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
 			compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
