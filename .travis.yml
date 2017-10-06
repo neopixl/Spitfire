@@ -29,7 +29,6 @@ sudo: false
 # =============== Before ===============
 before_install:
     - chmod +x gradlew
-    - chmod +x set_tags.sh
 
 
 # =============== Running ===============
