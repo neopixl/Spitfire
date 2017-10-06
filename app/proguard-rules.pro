@@ -45,11 +45,11 @@
 #General rules
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable,*Annotation*,EnclosingMethod,Signature,Exceptions,InnerClasses
--keep class com.neopixl.library.spitfireapp.model.** { *; }
--keepclassmembers class com.neopixl.library.spitfireapp.model.** {
+-keep class com.neopixl.spitfireapp.model.** { *; }
+-keepclassmembers class com.neopixl.spitfireapp.model.** {
     *;
 }
--keep public class com.neopixl.library.spitfireapp.model.** {
+-keep public class com.neopixl.spitfireapp.model.** {
   public void set*(***);
   public *** get*();
 }

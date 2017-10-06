@@ -1,4 +1,4 @@
-com.neopixl.library.spitfire
-com.neopixl.library.spitfire.listener
-com.neopixl.library.spitfire.model
-com.neopixl.library.spitfire.request
+com.neopixl.spitfire
+com.neopixl.spitfire.listener
+com.neopixl.spitfire.model
+com.neopixl.spitfire.request

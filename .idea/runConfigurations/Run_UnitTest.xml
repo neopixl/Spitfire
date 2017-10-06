@@ -17,7 +17,7 @@
       <value defaultName="singleModule" />
     </option>
     <envs />
-    <dir value="$PROJECT_DIR$/spitfire/src/test/java/com/neopixl/library/spitfire" />
+    <dir value="$PROJECT_DIR$/spitfire/src/test/java/com/neopixl/spitfire" />
     <patterns />
     <method />
   </configuration>

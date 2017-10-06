@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion "26.0.2"
     publishNonDefault true
 
     def p = ['curl', '-u', 'build:E$^VM8476C(XW>Kb6f;b', 'http://tools.neopixl.com/buildnumber/nextBuildNumber.php?project=Spitfire'].execute()
