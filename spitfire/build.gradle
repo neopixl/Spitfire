@@ -7,7 +7,7 @@ apply plugin: "net.saliman.cobertura"
 
 // =============== Global vars  ===============
 
-def versionNameGlobal = '0.5'
+def versionNameGlobal = '0.4'
 
 
 // =============== Android configuration  ===============
@@ -74,7 +74,7 @@ dependencies {
 }
 
 
-// =============== Demo App  ===============
+// =============== Demo App jar copy  ===============
 
 android.libraryVariants.all { variant ->
     def name = variant.buildType.name
@@ -93,7 +93,12 @@ android.libraryVariants.all { variant ->
     }
 }
 
-// =============== Jar parameters  ===============
+// =============== Sources parameters  ===============
+
+task sourcesZip(type: Zip) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -101,7 +106,13 @@ task sourcesJar(type: Jar) {
 }
 
 
+// =============== Jar parameters  ===============
+
 task jar(type: Jar) {
+    from android.sourceSets.main
+}
+
+task jarDistribution(type: Jar) {
     from android.sourceSets.main
 }
 
@@ -131,11 +142,18 @@ task javadocZip(type: Zip, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
 
 
 // =============== Artefact and POM  ===============
 
 artifacts {
+    archives sourcesJar
+    archives javadocZip
     archives sourcesJar
     archives javadocZip
 }
@@ -168,8 +186,10 @@ def pomConfig = {
 publishing {
     publications {
         SpitfirePublication(MavenPublication) {
+            artifact file("build/libs/spitfire.jar")
             artifact sourcesJar
-            artifact javadocZip
+            artifact javadocJar
+
 
             groupId 'com.neopixl'
             artifactId 'spitfire'
