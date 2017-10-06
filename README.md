@@ -1,3 +1,7 @@
+[![Twitter](https://img.shields.io/badge/Twitter-@Neopixl-blue.svg?style=flat)](http://twitter.com/neopixl)
+[![Site](https://img.shields.io/badge/Site-neopixl.com-orange.svg?style=flat)](https://neopixl.com)
+[![API](https://img.shields.io/badge/API-16%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=8)
+
 # Spitfire by @Neopixl
 
 A simple Android Network library. This library can be used as a wrapper for Google Volley, FasterXML Jackson serializer.
