@@ -29,6 +29,7 @@ sudo: false
 # =============== Before ===============
 before_install:
     - chmod +x gradlew
+    - chmod +x set_tags.sh
 
 
 # =============== Running ===============
@@ -40,6 +41,7 @@ script:
 after_success:
     - ./gradlew :spitfire:cobertura :spitfire:coveralls
     - ./gradlew :spitfire:bintrayUpload
+    - sh set_tags.sh
 
 
 # =============== Deploy ===============
