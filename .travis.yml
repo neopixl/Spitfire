@@ -41,7 +41,6 @@ script:
 after_success:
     - ./gradlew :spitfire:cobertura :spitfire:coveralls
     - ./gradlew :spitfire:bintrayUpload
-    - sh set_tags.sh
 
 
 # =============== Deploy ===============
@@ -55,6 +54,6 @@ deploy:
     file_glob: "true"
     skip_cleanup: true
     on:
-        tags: true
+        tags: false
         branch: master
         repo: neopixl/Spitfire
