@@ -1,4 +1,16 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+apply plugin: "com.github.kt3k.coveralls"
+apply plugin: "net.saliman.cobertura"
+
+
+// =============== Global vars  ===============
+
+def versionNameGlobal = '0.5'
+
+
+// =============== Android configuration  ===============
 
 android {
     compileSdkVersion 26
@@ -12,13 +24,14 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode code
-        versionName "1.0"
+        versionName versionNameGlobal
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
+            testCoverageEnabled true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -33,6 +46,12 @@ android {
                 srcDir 'src/../lib'
             }
         }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
     }
 }
 
@@ -54,6 +73,9 @@ dependencies {
 
 }
 
+
+// =============== Demo App  ===============
+
 android.libraryVariants.all { variant ->
     def name = variant.buildType.name
     if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
@@ -71,7 +93,27 @@ android.libraryVariants.all { variant ->
     }
 }
 
-task jarJavadoc(type: Javadoc) {
+// =============== Jar parameters  ===============
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+
+task jar(type: Jar) {
+    from android.sourceSets.main
+}
+
+task fatJar(type: Jar) {
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+// =============== Javadoc parameters  ===============
+
+task javadoc(type: Javadoc) {
     print "Javadoc - 0"
 
     include '**/*.java'
@@ -84,12 +126,101 @@ task jarJavadoc(type: Javadoc) {
     failOnError false
 }
 
-task jar(type: Jar) {
-    from android.sourceSets.main
+task javadocZip(type: Zip, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
 
-task fatJar(type: Jar) {
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+
+
+// =============== Artefact and POM  ===============
+
+artifacts {
+    archives sourcesJar
+    archives javadocZip
 }
+
+
+// Create the pom configuration:
+def pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            name "Neopixl"
+            email "contact@neopixl.com"
+        }
+    }
+
+    scm {
+        url "https://github.com:neopixl/Spitfire"
+    }
+}
+
+
+
+// Create the publication with the pom configuration:
+publishing {
+    publications {
+        SpitfirePublication(MavenPublication) {
+            artifact sourcesJar
+            artifact javadocZip
+
+            groupId 'com.neopixl'
+            artifactId 'spitfire'
+            version versionNameGlobal
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'Android JSON networking library')
+                root.appendNode('name', 'Spitfire')
+                root.appendNode('url', 'https://neopixl.com')
+
+                def dependenciesNode = asNode().appendNode('dependencies')
+
+                //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+                configurations.compile.allDependencies.each {
+                    // Only com.fasterxml.jackson.core
+                    if (it.group != null && it.name != null && it.group.startsWith("com.fasterxml.jackson")) {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+
+// =============== Bintray settings  ===============
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['SpitfirePublication']
+
+
+    pkg {
+        repo = 'Spitfire'
+        name = 'Spitfire'
+        userOrg = user
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/neopixl/Spitfire.git'
+        version {
+            name = versionNameGlobal
+            released  = new Date()
+            vcsTag = versionNameGlobal
+        }
+    }
+}
+
+// =============== Coveralls settings  ===============
+cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report

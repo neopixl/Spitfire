@@ -1,3 +1,8 @@
+# =============== Project Configuration ===============
+env:
+  global:
+    secure: Wvb4qdmTFZB3Td0jt33ww8P2+WggcWLL6ASfuNCU+PM3HVN6ps8Insb9hI1xO4Vr3HEwoJWMIXczWCXP1eOt9ioKueeqq7TJaJWWpJbFnCPbwH2pdRCzMFw8iNy5hP/MTQrbKTJMD2kctrrJ6qbX0f0VOajteD5C0z8YpsGYJlKKJnlRPkYFzyX3QrjrInrhmNRgTieVIOKT7PxQwtjkGBg61avmNl9HIUQ20jp1MY8BY6d6w/NMHHaWh6y00Z+IYvhoYdjaSM5TNYHh87tvamKYhStbH4kNE63Ma25spoalFhPCjfusPhYG3ZmMw8E5lwsL0h284dAf+wGgwstLMy7/B1j2CM+ScpzVVmjmRSsynjQ0ccw0oftHA9dC0Xl86n+KinKIfpYw6rMvbqaHFyQDGJ3AIwWcesVp95Byo1kJyXb0K2hkuObOEg9TqygPgarefLWJEFcmQ+ERwaai8RAvzUI/FQJSxrxzgDYkFj3MtXkLNa58gdTOrnJecPxqFvaZTmBS1tBakzCY8kXprnNHzPUBcVNilD0ObULYcRw+TGOfojXUELcfilwj44tFN+HLKtCOI9fnepNTwV/q5Yf/1XJBJd0xOV/+ik/9UYbNxZiv8nyE5EmQxRxie0TYHUplbaNI3VGCJLM6xELUzqgXc7/JQqirJlxk/UtNq58=
+
 language: android
 android:
   components:
@@ -13,5 +18,41 @@ android:
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
 
+
+# =============== VM configuration ===============
+jdk:
+    - oraclejdk8
+
+sudo: false
+
+
+# =============== Before ===============
+before_install:
+    - chmod +x gradlew
+
+
+# =============== Running ===============
 script:
-   - ./gradlew build -p spitfire
+    - ./gradlew :clean :spitfire:build
+
+
+# =============== After ===============
+after_success:
+    - ./gradlew :spitfire:cobertura :spitfire:coveralls
+    - ./gradlew :spitfire:bintrayUpload
+
+
+# =============== Deploy ===============
+deploy:
+    provider: releases
+    api_key:
+        secure: "Wvb4qdmTFZB3Td0jt33ww8P2+WggcWLL6ASfuNCU+PM3HVN6ps8Insb9hI1xO4Vr3HEwoJWMIXczWCXP1eOt9ioKueeqq7TJaJWWpJbFnCPbwH2pdRCzMFw8iNy5hP/MTQrbKTJMD2kctrrJ6qbX0f0VOajteD5C0z8YpsGYJlKKJnlRPkYFzyX3QrjrInrhmNRgTieVIOKT7PxQwtjkGBg61avmNl9HIUQ20jp1MY8BY6d6w/NMHHaWh6y00Z+IYvhoYdjaSM5TNYHh87tvamKYhStbH4kNE63Ma25spoalFhPCjfusPhYG3ZmMw8E5lwsL0h284dAf+wGgwstLMy7/B1j2CM+ScpzVVmjmRSsynjQ0ccw0oftHA9dC0Xl86n+KinKIfpYw6rMvbqaHFyQDGJ3AIwWcesVp95Byo1kJyXb0K2hkuObOEg9TqygPgarefLWJEFcmQ+ERwaai8RAvzUI/FQJSxrxzgDYkFj3MtXkLNa58gdTOrnJecPxqFvaZTmBS1tBakzCY8kXprnNHzPUBcVNilD0ObULYcRw+TGOfojXUELcfilwj44tFN+HLKtCOI9fnepNTwV/q5Yf/1XJBJd0xOV/+ik/9UYbNxZiv8nyE5EmQxRxie0TYHUplbaNI3VGCJLM6xELUzqgXc7/JQqirJlxk/UtNq58="
+    file:
+        - "spitfire/build/libs/spitfire.jar"
+        - "spitfire/build/distributions/spitfire-javadoc.zip"
+    file_glob: "true"
+    skip_cleanup: true
+    on:
+        tags: true
+        branch: master
+        repo: neopixl/Spitfire

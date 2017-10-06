@@ -1,5 +1,8 @@
 [![Twitter](https://img.shields.io/badge/Twitter-@Neopixl-blue.svg?style=flat)](http://twitter.com/neopixl)
 [![Site](https://img.shields.io/badge/Site-neopixl.com-orange.svg?style=flat)](https://neopixl.com)
+[![Travis](https://api.travis-ci.org/neopixl/Spitfire.svg?branch=master)](https://travis-ci.org/neopixl/Spitfire)
+[![Coverage Status](https://coveralls.io/repos/github/neopixl/Spitfire/badge.svg?branch=master)](https://coveralls.io/github/neopixl/Spitfire?branch=master)
+[![GitHub release](https://img.shields.io/github/release/neopixl/Spitfire.svg)]()
 [![API](https://img.shields.io/badge/API-16%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=8)
 
 # Spitfire by @Neopixl
@@ -21,9 +24,6 @@ This library was designed to be as simple to use as possible.  Here are the step
 		dependencies {
 			compile 'com.neopixl.library:spitfire:1.0'
 			compile 'com.android.volley:volley:1.0.0'
-			compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
-			compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
-			compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.5'
 		}
 
 * Create the DTO that you would like your request to be parsed as.
@@ -180,8 +180,6 @@ You can change :
 	-keepnames class com.fasterxml.jackson.** { *; }
 	-dontwarn com.fasterxml.jackson.databind.**
 
-
-# In progress
 
 
 # They use it
