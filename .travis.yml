@@ -36,19 +36,3 @@ script:
 after_success:
     - ./gradlew :spitfire:cobertura :spitfire:coveralls
     - ./gradlew :spitfire:bintrayUpload
-
-
-# =============== Deploy ===============
-deploy:
-    provider: releases
-    api_key:
-        secure: "hXRdq3ibdjAcVorAU2NrODPom0mTRxvhgmmtMAFhfso3UATOv5qjFlM6XDVCj+prwOh/WNuVt9U+JP+mVweZP4HabOs7jCPc9NNIFJb91vFH+rIfDFQTYUqZ+hRtLFjJ9RcfqV6TcVODUE3kQNKAt3KlajfegfD96AjbeNmIbMGNsNyW9o/Hc3mVKM9L9AR8BLJpxerZCorBJMKuEtfcABlMl3ikC0BDXUVEOZWFGxZolEFERazqG70iL+wRkgeMlo2Vzn5nn80X0bxKf7vQUbfLXv1NtPyCsl/O+T7ukDXCcA8P/3Fnldn3gJcMqKZrVKZeUM0gcxtOMGwwq1ZSgk1mRnvGR80ByuB9QK7KC0Q7T9ahaduNzP+r3ICYvhVERondZuCkMmCklbsE4bCLuJ8LBr/UGGreMlsM7QH1UVaAYPVGG9xzsaCBrVnzexgJIhal95QT0ctIjRlCR4lxAE3tbdALR8LgDC1b/8Tl7zg4ipUj7WdWwlzdqNWlP+ddewzrs7Y6R3aDFGoXbnvnQoGcfVTU9DAe5kTCzyhiZaFuOnIbA1CsJL9lsqD/hm/1oxaEZi9AF4lpMc50u8muNwUJgr4+Py9xbrncE8eqF4qV+ml9IgaplXpu4M5zk8OWwBzh6YxGxE0gghkuLMscT0aPezNDhKgZbmouFuvC3JE="
-    file:
-        - spitfire/build/distributions/*
-        - "spitfire/build/libs/spitfire.jar"
-    file_glob: "true"
-    skip_cleanup: true
-    on:
-        tags: false
-        branch: master
-        repo: neopixl/Spitfire

@@ -2,7 +2,7 @@
 [![Site](https://img.shields.io/badge/Site-neopixl.com-orange.svg?style=flat)](https://neopixl.com)
 [![Travis](https://api.travis-ci.org/neopixl/Spitfire.svg?branch=master)](https://travis-ci.org/neopixl/Spitfire)
 [![Coverage Status](https://coveralls.io/repos/github/neopixl/Spitfire/badge.svg?branch=master)](https://coveralls.io/github/neopixl/Spitfire?branch=master)
-[![GitHub release](https://img.shields.io/github/release/neopixl/Spitfire.svg)]()
+[![Bintray](https://img.shields.io/bintray/v/fdewasmes/Spitfire/Spitfire.svg)]()
 [![API](https://img.shields.io/badge/API-16%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=8)
 
 # Spitfire by @Neopixl
