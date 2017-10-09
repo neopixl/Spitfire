@@ -1,5 +1,8 @@
 [![Twitter](https://img.shields.io/badge/Twitter-@Neopixl-blue.svg?style=flat)](http://twitter.com/neopixl)
 [![Site](https://img.shields.io/badge/Site-neopixl.com-orange.svg?style=flat)](https://neopixl.com)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Spitfire-orange.svg?style=flat)](https://android-arsenal.com/details/1/6290)
+
+
 [![Travis](https://api.travis-ci.org/neopixl/Spitfire.svg?branch=master)](https://travis-ci.org/neopixl/Spitfire)
 [![Coverage Status](https://coveralls.io/repos/github/neopixl/Spitfire/badge.svg?branch=master)](https://coveralls.io/github/neopixl/Spitfire?branch=master)
 [![Bintray](https://img.shields.io/bintray/v/fdewasmes/Spitfire/Spitfire.svg)]()
@@ -7,13 +10,19 @@
 
 # Spitfire by @Neopixl
 
+
+![Logo](logo.png)
+
 A simple Android Network library. This library can be used as a wrapper for Google Volley, FasterXML Jackson serializer.
 All the Volley and Jackson method are fully operational.
+
 
 All the documentations are available here :
 
  - Volley : [https://developer.android.com/training/volley/index.html](https://developer.android.com/training/volley/index.html)
  - Jackson : [https://github.com/FasterXML/jackson](https://github.com/FasterXML/jackson)
+ 
+Contribution : [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Usage
 This library was designed to be as simple to use as possible.  Here are the steps you'll need to follow:
