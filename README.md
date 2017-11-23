@@ -55,7 +55,7 @@ This library was designed to be as simple to use as possible.  Here are the step
 		BaseRequest<DummyResponse> request = new BaseRequest.Builder<DummyResponse>(Request.Method.GET,
                 "YOUR URL", DummyResponse.class).listener(new RequestListener<DummyResponse>() {
             @Override
-            public void onSuccess(Request request, NetworkResponse response, DummyResponse response) {
+            public void onSuccess(Request request, NetworkResponse response, DummyResponse result) {
                 Log.d("YOUR APP", "Dummy success");
             }
 
