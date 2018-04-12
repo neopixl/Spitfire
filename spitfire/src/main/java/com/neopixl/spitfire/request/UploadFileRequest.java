@@ -94,14 +94,18 @@ public class UploadFileRequest<T> extends AbstractRequest<T> {
     /**
      * Returns the raw POST or PUT body to be sent.
      *
+     * <p>Since version 1.1 this function do the calculation of the body, but only once in the lifetime of the request</p>
+     *
      * <p>By default, the body consists of the request parameters in
      * application/x-www-form-urlencoded format. When overriding this method, consider overriding
      * {@link #getBodyContentType()} as well to match the new body format.
      *
      * @throws AuthFailureError in the event of auth failure
+     * @return byte[] or null
      */
     @Override
-    public byte[] getBody() throws AuthFailureError {
+    @Nullable
+    byte[] calculateBody() throws AuthFailureError {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(bos);
 

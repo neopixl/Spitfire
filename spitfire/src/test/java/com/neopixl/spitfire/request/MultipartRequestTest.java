@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.neopixl.spitfire;
+package com.neopixl.spitfire.request;
 
 import com.android.volley.Cache;
 import com.android.volley.ExecutorDelivery;
@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.neopixl.spitfire.listener.RequestListener;
 import com.neopixl.spitfire.mock.DummyResponse;
 import com.neopixl.spitfire.model.RequestData;
+import com.neopixl.spitfire.request.BaseRequest;
 import com.neopixl.spitfire.request.MultipartRequest;
 import com.neopixl.spitfire.utils.CacheTestUtils;
 import com.neopixl.spitfire.utils.ImmediateResponseDelivery;
@@ -40,6 +41,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.DataOutputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -257,6 +259,7 @@ public class MultipartRequestTest {
         MultipartRequest<DummyResponse> baseRequest = Mockito.mock(MultipartRequest.class);
 
         Mockito.when(baseRequest.getBody()).thenCallRealMethod();
+        Mockito.when(baseRequest.calculateBody()).thenCallRealMethod();
         Mockito.when(baseRequest.getJsonObject()).thenReturn(dummyRequestObject);
         Mockito.when(baseRequest.getMultiPartData()).thenReturn(dummyDataMap);
         Mockito.when(baseRequest.getMethod()).thenReturn(Request.Method.POST);
@@ -285,6 +288,7 @@ public class MultipartRequestTest {
         MultipartRequest<DummyResponse> baseRequest = Mockito.mock(MultipartRequest.class);
 
         Mockito.when(baseRequest.getBody()).thenCallRealMethod();
+        Mockito.when(baseRequest.calculateBody()).thenCallRealMethod();
         Mockito.when(baseRequest.getParams()).thenReturn(parameters);
         Mockito.when(baseRequest.getMultiPartData()).thenReturn(dummyDataMap);
         Mockito.when(baseRequest.getMethod()).thenReturn(Request.Method.POST);

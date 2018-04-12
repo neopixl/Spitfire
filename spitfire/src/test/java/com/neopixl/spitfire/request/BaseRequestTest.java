@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.neopixl.spitfire;
+package com.neopixl.spitfire.request;
 
 import com.android.volley.Cache;
 import com.android.volley.ExecutorDelivery;
@@ -38,6 +38,7 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
@@ -241,6 +242,7 @@ public class BaseRequestTest {
         BaseRequest<DummyResponse> baseRequest = Mockito.mock(BaseRequest.class);
 
         Mockito.when(baseRequest.getBody()).thenCallRealMethod();
+        Mockito.when(baseRequest.calculateBody()).thenCallRealMethod();
         Mockito.when(baseRequest.getBodyContentType()).thenReturn("application/json; charset=null");
         Mockito.when(baseRequest.getJsonContentType()).thenCallRealMethod();
         Mockito.when(baseRequest.getMethod()).thenReturn(Request.Method.POST);

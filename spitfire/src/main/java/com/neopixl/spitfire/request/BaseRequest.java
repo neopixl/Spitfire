@@ -145,21 +145,24 @@ public class BaseRequest<T> extends AbstractRequest<T> {
     /**
      * Returns the raw POST or PUT body to be sent.
      *
+     * <p>Since version 1.1 this function do the calculation of the body, but only once in the lifetime of the request</p>
+     *
      * <p>By default, the body consists of the request parameters in
      * application/x-www-form-urlencoded format. When overriding this method, consider overriding
      * {@link #getBodyContentType()} as well to match the new body format.
      *
      * @throws AuthFailureError in the event of auth failure
+     * @return byte[] or null
      */
     @Override
     @Nullable
-    public byte[] getBody() throws AuthFailureError {
+    byte[] calculateBody() throws AuthFailureError {
         String bodyContentType = getBodyContentType();
         int method = getMethod();
         if (method != Method.GET && bodyContentType != null && bodyContentType.equals(getJsonContentType())) {
             return getJsonBody();
         }
-        return super.getBody();
+        return super.calculateBody();
     }
 
 

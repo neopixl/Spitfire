@@ -195,17 +195,20 @@ public class MultipartRequest<T> extends BaseRequest<T> {
     }
 
     /**
-     * Returns the raw POST or PUT body to be sent. (Can be null)
+     * Returns the raw POST or PUT body to be sent.
+     *
+     * <p>Since version 1.1 this function do the calculation of the body, but only once in the lifetime of the request</p>
      *
      * <p>By default, the body consists of the request parameters in
      * application/x-www-form-urlencoded format. When overriding this method, consider overriding
      * {@link #getBodyContentType()} as well to match the new body format.
      *
      * @throws AuthFailureError in the event of auth failure
+     * @return byte[] or null
      */
     @Override
     @Nullable
-    public byte[] getBody() throws AuthFailureError {
+    byte[] calculateBody() throws AuthFailureError {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(bos);
 
@@ -245,7 +248,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      * @param encoding         encode the inputs, default UTF-8
      * @throws IOException
      */
-    public void textParse(DataOutputStream dataOutputStream, Map<String, String> params, String encoding) throws IOException {
+    void textParse(DataOutputStream dataOutputStream, Map<String, String> params, String encoding) throws IOException {
         try {
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 buildTextPart(dataOutputStream, entry.getKey(), entry.getValue());
@@ -263,7 +266,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      * @param jsonObject       the object to parse
      * @throws IOException
      */
-    public void jsonParse(DataOutputStream dataOutputStream, Object jsonObject) throws IOException {
+    void jsonParse(DataOutputStream dataOutputStream, Object jsonObject) throws IOException {
         try {
             String json = SpitfireManager.getObjectMapper().writeValueAsString(jsonObject);
             StringBuilder stringBuilder = new StringBuilder();
@@ -286,7 +289,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      * @param data             loop through data
      * @throws IOException
      */
-    public void dataParse(DataOutputStream dataOutputStream, Map<String, List<RequestData>> data) throws IOException {
+    void dataParse(DataOutputStream dataOutputStream, Map<String, List<RequestData>> data) throws IOException {
         for (Map.Entry<String, List<RequestData>> entry : data.entrySet()) {
             for (RequestData datapart : entry.getValue()) {
                 buildDataPart(dataOutputStream, datapart, entry.getKey());
@@ -302,7 +305,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      * @param parameterValue   value of input
      * @throws IOException
      */
-    private void buildTextPart(DataOutputStream dataOutputStream, String parameterName, String parameterValue) throws IOException {
+    void buildTextPart(DataOutputStream dataOutputStream, String parameterName, String parameterValue) throws IOException {
         dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);
         dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"" + parameterName + "\"" + lineEnd);
         //dataOutputStream.writeBytes("Content-Type: text/plain; charset=UTF-8" + lineEnd);
@@ -318,7 +321,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      * @param inputName        name of data input
      * @throws IOException
      */
-    private void buildDataPart(DataOutputStream dataOutputStream, RequestData dataFile, String inputName) throws IOException {
+    void buildDataPart(DataOutputStream dataOutputStream, RequestData dataFile, String inputName) throws IOException {
         dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);
         dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"" +
                 inputName + "\"; filename=\"" + dataFile.getFileName() + "\"" + lineEnd);
