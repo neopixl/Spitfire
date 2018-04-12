@@ -7,9 +7,10 @@ buildscript {
             url "https://plugins.gradle.org/m2/"
         }
         mavenLocal()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.1.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3' // Used for bintray
         classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1" // Used for coverall
         classpath 'net.saliman:gradle-cobertura-plugin:2.4.0' // Used for coverall
