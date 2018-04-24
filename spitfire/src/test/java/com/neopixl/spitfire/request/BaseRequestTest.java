@@ -23,6 +23,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
+import com.fasterxml.jackson.core.io.JsonStringEncoder;
 import com.neopixl.spitfire.listener.RequestListener;
 import com.neopixl.spitfire.mock.DummyResponse;
 import com.neopixl.spitfire.request.BaseRequest;
@@ -40,6 +41,7 @@ import org.robolectric.annotation.Config;
 
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,10 +77,12 @@ public class BaseRequestTest {
 
         parameters.put("page", "1");
         parameters.put("limit", "50");
+        parameters.put("specialCharNotEncoded", "% 🤞 🌎 $ ~ ! @ # $ % ^ & * ( ) _ + \\");
 
         headers.put("If-Range", "Wed, 21 Oct 2017 07:28:00 GMT");
         headers.put("X-ApiKey", "azerty");
         headers.put("Authorization", "Bearer 1000:2b52d2ccfd6007d7a8d58d8cabb32bc0");
+        headers.put("specialCharNotEncoded", "% 🤞 🌎 $ ~ ! @ # $ % ^ & * ( ) _ + \\");
 
         headersWithContentType.putAll(headers);
         headersWithContentType.put("Content-Type", "application/json");
@@ -89,6 +93,8 @@ public class BaseRequestTest {
         mSuccessResponse = Response.success(dummyResponse, cacheEntry);
         volleyError = new ServerError();
         mErrorResponse = Response.error(volleyError);
+
+        dummyRequestObject.setMessage("% 🤞 🌎 $ ~ ! @ # $ % ^ & * ( ) _ + \\");
     }
 
     @Test
@@ -145,7 +151,7 @@ public class BaseRequestTest {
         assertNotEquals("The url should not be the same", url, returnedUrl);
 
         for (String key : parameters.keySet()) {
-            String value = parameters.get(key);
+            String value = URLEncoder.encode(parameters.get(key), "UTF-8");
             assertTrue("The key should be contained", returnedUrl.contains(key +"="+ value));
         }
 

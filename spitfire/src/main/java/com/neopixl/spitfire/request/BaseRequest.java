@@ -179,14 +179,15 @@ public class BaseRequest<T> extends AbstractRequest<T> {
         byte ptext[];
         try {
             ptext = SpitfireManager.getObjectMapper().writeValueAsBytes(getJsonObject());
-            VolleyLog.d("Sending JSON BODY : " + new String(ptext, getParamsEncoding()));
         } catch (JsonProcessingException e) {
             JSONObject object = new JSONObject(getParams());
-            VolleyLog.d("Sending JSON FROM PARAMS : " + object.toString());
             ptext = object.toString().getBytes();
-        } catch (UnsupportedEncodingException e) {
-            ptext = null;
-            e.printStackTrace();
+        }
+
+        try {
+            VolleyLog.d("Sending JSON BODY : " + new String(ptext, getParamsEncoding()));
+        } catch (Exception e) {
+            VolleyLog.d("Sending JSON BODY");
         }
         return ptext;
     }
