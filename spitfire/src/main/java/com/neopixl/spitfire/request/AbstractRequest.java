@@ -239,7 +239,7 @@ abstract class AbstractRequest<T> extends Request<T> {
      * Returns a list of extra HTTP headers to go along with this request. Can
      * throw <b>AuthFailureError</b> as authentication may be required to
      * provide these values.
-     * @throws AuthFailureError In the event of auth failure
+     * @throws AuthFailureError In the event of auth failure.
      * @return Map&lt;String, String&gt;
      */
     @Override
@@ -258,18 +258,18 @@ abstract class AbstractRequest<T> extends Request<T> {
     /**
      * Returns the raw POST or PUT body to be sent.
      *
-     * <p>Since version 1.1 this function do not calculate the body everytime
-     * <b>WARNING</b> : This function should not be override, override the calculateBody methods</p>
+     * <p>Since version 1.1 this method does not calculate the body everytime
+     * <b>WARNING</b> : This method can not be overridden, consider overriding the calculateBody method</p>
      *
      * <p>By default, the body consists of the request parameters in
      * application/x-www-form-urlencoded format. When overriding this method, consider overriding
      * {@link #getBodyContentType()} as well to match the new body format.
      *
-     * @throws AuthFailureError in the event of auth failure
+     * @throws AuthFailureError In the event of auth failure.
      * @return byte[] or null
      */
     @Nullable
-    public byte[] getBody() throws AuthFailureError {
+    public final byte[] getBody() throws AuthFailureError {
         if (body == null) {
             body = calculateBody();
         }
@@ -279,13 +279,13 @@ abstract class AbstractRequest<T> extends Request<T> {
     /**
      * Returns the raw POST or PUT body to be sent.
      *
-     * <p>Since version 1.1 this function do the calculation of the body, but only once in the lifetime of the request</p>
+     * <p>Since version 1.1 this method does the calculation of the body, but only once in the lifetime of the request</p>
      *
      * <p>By default, the body consists of the request parameters in
      * application/x-www-form-urlencoded format. When overriding this method, consider overriding
      * {@link #getBodyContentType()} as well to match the new body format.
      *
-     * @throws AuthFailureError in the event of auth failure
+     * @throws AuthFailureError In the event of auth failure.
      * @return byte[] or null
      */
     byte[] calculateBody() throws AuthFailureError {
@@ -300,10 +300,10 @@ abstract class AbstractRequest<T> extends Request<T> {
         StringBuilder encodedParams = new StringBuilder();
 
         try {
-            Iterator i$ = params.entrySet().iterator();
+            Iterator iterator = params.entrySet().iterator();
 
-            while(i$.hasNext()) {
-                java.util.Map.Entry<String, String> entry = (java.util.Map.Entry)i$.next();
+            while(iterator.hasNext()) {
+                java.util.Map.Entry<String, String> entry = (java.util.Map.Entry)iterator.next();
                 encodedParams.append(URLEncoder.encode(entry.getKey(), paramsEncoding));
                 encodedParams.append('=');
                 encodedParams.append(URLEncoder.encode(entry.getValue(), paramsEncoding));
