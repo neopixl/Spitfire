@@ -26,8 +26,6 @@ import com.android.volley.VolleyError;
 import com.neopixl.spitfire.listener.RequestListener;
 import com.neopixl.spitfire.mock.DummyResponse;
 import com.neopixl.spitfire.model.RequestData;
-import com.neopixl.spitfire.request.BaseRequest;
-import com.neopixl.spitfire.request.MultipartRequest;
 import com.neopixl.spitfire.utils.CacheTestUtils;
 import com.neopixl.spitfire.utils.ImmediateResponseDelivery;
 
@@ -41,7 +39,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.DataOutputStream;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +47,6 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)

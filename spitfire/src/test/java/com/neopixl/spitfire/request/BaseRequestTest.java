@@ -23,10 +23,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
-import com.fasterxml.jackson.core.io.JsonStringEncoder;
 import com.neopixl.spitfire.listener.RequestListener;
 import com.neopixl.spitfire.mock.DummyResponse;
-import com.neopixl.spitfire.request.BaseRequest;
 import com.neopixl.spitfire.utils.CacheTestUtils;
 import com.neopixl.spitfire.utils.ImmediateResponseDelivery;
 
@@ -39,7 +37,6 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.util.HashMap;
