@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.neopixl.spitfire;
+package com.neopixl.spitfire.request;
 
 import com.android.volley.Cache;
 import com.android.volley.ExecutorDelivery;

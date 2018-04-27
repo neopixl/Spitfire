@@ -7,14 +7,14 @@ apply plugin: "net.saliman.cobertura"
 
 // =============== Global vars  ===============
 
-def versionNameGlobal = '1.0.0'
+def versionNameGlobal = '1.1.0'
 
 
 // =============== Android configuration  ===============
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
     publishNonDefault true
 
     def p = ['curl', '-u', 'build:E$^VM8476C(XW>Kb6f;b', 'http://tools.neopixl.com/buildnumber/nextBuildNumber.php?project=Spitfire'].execute()
@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode code
         versionName versionNameGlobal
 
@@ -56,20 +56,19 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.2.29'
-    testCompile 'org.robolectric:robolectric:3.0'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.2.29'
+    testImplementation 'org.robolectric:robolectric:3.0'
 
-    //compile 'com.android.volley:volley:1.0.0'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.5'
-    compile 'com.android.support:support-annotations:25.3.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.8.5'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.8.5'
+    implementation 'com.android.support:support-annotations:25.3.1'
 
 }
 

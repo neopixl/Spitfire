@@ -9,6 +9,7 @@ public class PostJsonRequest {
 
     private String test2;
     private int test1;
+    private String specialChars;
     private StatusMessageResponse testObject;
 
     public String getTest2() {
@@ -33,5 +34,13 @@ public class PostJsonRequest {
 
     public void setTestObject(StatusMessageResponse testObject) {
         this.testObject = testObject;
+    }
+
+    public String getSpecialChars() {
+        return specialChars;
+    }
+
+    public void setSpecialChars(String specialChars) {
+        this.specialChars = specialChars;
     }
 }

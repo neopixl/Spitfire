@@ -145,21 +145,24 @@ public class BaseRequest<T> extends AbstractRequest<T> {
     /**
      * Returns the raw POST or PUT body to be sent.
      *
+     * <p>Since version 1.1 this method does the calculation of the body, but only once in the lifetime of the request</p>
+     *
      * <p>By default, the body consists of the request parameters in
      * application/x-www-form-urlencoded format. When overriding this method, consider overriding
      * {@link #getBodyContentType()} as well to match the new body format.
      *
-     * @throws AuthFailureError in the event of auth failure
+     * @throws AuthFailureError In the event of auth failure.
+     * @return byte[] or null
      */
     @Override
     @Nullable
-    public byte[] getBody() throws AuthFailureError {
+    byte[] calculateBody() throws AuthFailureError {
         String bodyContentType = getBodyContentType();
         int method = getMethod();
         if (method != Method.GET && bodyContentType != null && bodyContentType.equals(getJsonContentType())) {
             return getJsonBody();
         }
-        return super.getBody();
+        return super.calculateBody();
     }
 
 
@@ -169,21 +172,22 @@ public class BaseRequest<T> extends AbstractRequest<T> {
      * <p>This method will use the object given in the builder in order to
      * build, parse and bind the exact value and format.
      *
-     * @throws AuthFailureError in the event of auth failure
+     * @throws AuthFailureError In the event of auth failure.
      */
     @Nullable
     public byte[] getJsonBody() {
         byte ptext[];
         try {
             ptext = SpitfireManager.getObjectMapper().writeValueAsBytes(getJsonObject());
-            VolleyLog.d("Sending JSON BODY : " + new String(ptext, getParamsEncoding()));
         } catch (JsonProcessingException e) {
             JSONObject object = new JSONObject(getParams());
-            VolleyLog.d("Sending JSON FROM PARAMS : " + object.toString());
             ptext = object.toString().getBytes();
-        } catch (UnsupportedEncodingException e) {
-            ptext = null;
-            e.printStackTrace();
+        }
+
+        try {
+            VolleyLog.d("Sending JSON BODY : " + new String(ptext, getParamsEncoding()));
+        } catch (Exception e) {
+            VolleyLog.d("Sending JSON BODY");
         }
         return ptext;
     }

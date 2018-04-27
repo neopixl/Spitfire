@@ -16,9 +16,12 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.neopixl.spitfire.SpitfireManager;
 import com.neopixl.spitfire.listener.RequestListener;
 
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +35,7 @@ abstract class AbstractRequest<T> extends Request<T> {
 
     private List<Integer> mAcceptedStatusCodes;
     private Class<T> classResponse;
+    private byte[] body;
 
     @Nullable
     private final RequestListener<T> mListener;
@@ -235,7 +239,7 @@ abstract class AbstractRequest<T> extends Request<T> {
      * Returns a list of extra HTTP headers to go along with this request. Can
      * throw <b>AuthFailureError</b> as authentication may be required to
      * provide these values.
-     * @throws AuthFailureError In the event of auth failure
+     * @throws AuthFailureError In the event of auth failure.
      * @return Map&lt;String, String&gt;
      */
     @Override
@@ -254,18 +258,61 @@ abstract class AbstractRequest<T> extends Request<T> {
     /**
      * Returns the raw POST or PUT body to be sent.
      *
+     * <p>Since version 1.1 this method does not calculate the body everytime
+     * <b>WARNING</b> : This method can not be overridden, consider overriding the calculateBody method</p>
+     *
      * <p>By default, the body consists of the request parameters in
      * application/x-www-form-urlencoded format. When overriding this method, consider overriding
      * {@link #getBodyContentType()} as well to match the new body format.
      *
-     * @throws AuthFailureError in the event of auth failure
-     * @return byte[] or null if the
+     * @throws AuthFailureError In the event of auth failure.
+     * @return byte[] or null
      */
     @Nullable
-    public byte[] getBody() throws AuthFailureError {
+    public final byte[] getBody() throws AuthFailureError {
+        if (body == null) {
+            body = calculateBody();
+        }
+        return body;
+    }
+
+    /**
+     * Returns the raw POST or PUT body to be sent.
+     *
+     * <p>Since version 1.1 this method does the calculation of the body, but only once in the lifetime of the request</p>
+     *
+     * <p>By default, the body consists of the request parameters in
+     * application/x-www-form-urlencoded format. When overriding this method, consider overriding
+     * {@link #getBodyContentType()} as well to match the new body format.
+     *
+     * @throws AuthFailureError In the event of auth failure.
+     * @return byte[] or null
+     */
+    byte[] calculateBody() throws AuthFailureError {
         if (getMethod() == Method.GET) {
             return null;
         }
-        return super.getBody();
+        Map<String, String> params = this.getParams();
+        return params != null && params.size() > 0 ? this.encodeParameters(params, this.getParamsEncoding()) : null;
+    }
+
+    private byte[] encodeParameters(Map<String, String> params, String paramsEncoding) {
+        StringBuilder encodedParams = new StringBuilder();
+
+        try {
+            Iterator iterator = params.entrySet().iterator();
+
+            while(iterator.hasNext()) {
+                java.util.Map.Entry<String, String> entry = (java.util.Map.Entry)iterator.next();
+                encodedParams.append(URLEncoder.encode(entry.getKey(), paramsEncoding));
+                encodedParams.append('=');
+                encodedParams.append(URLEncoder.encode(entry.getValue(), paramsEncoding));
+                encodedParams.append('&');
+            }
+
+            return encodedParams.toString().getBytes(paramsEncoding);
+        } catch (UnsupportedEncodingException var6) {
+            throw new RuntimeException("Encoding not supported: " + paramsEncoding, var6);
+        }
     }
 }

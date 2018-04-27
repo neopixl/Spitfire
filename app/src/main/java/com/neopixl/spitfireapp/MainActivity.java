@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
         postJsonRequest.setTest1(1);
         postJsonRequest.setTest2("salut");
         postJsonRequest.setTestObject(satusMessageRequest);
+        postJsonRequest.setSpecialChars("% 🤞 🌎 $ ~ ! @ # $ % ^ & * ( ) _ + \\");
 
         final TextView postWithJsonAndHeaderTextView = getTextViewForRequest("postWithJsonAndHeader");
         BaseRequest<StatusMessageResponse> postWithJsonAndHeaderRequest = new BaseRequest.Builder<StatusMessageResponse>(Request.Method.POST,

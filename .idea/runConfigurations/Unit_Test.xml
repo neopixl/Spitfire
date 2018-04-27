@@ -2,7 +2,7 @@
   <configuration default="false" name="Unit Test" type="AndroidJUnit" factoryName="Android JUnit">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
       <pattern>
-        <option name="PATTERN" value="com.neopixl.spitfire.*" />
+        <option name="PATTERN" value="com.neopixl.spitfire.request.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
