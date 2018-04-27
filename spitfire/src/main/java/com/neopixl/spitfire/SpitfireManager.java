@@ -65,7 +65,7 @@ public final class SpitfireManager {
     }
 
     /**
-     * Define the new ObjectMapper used by the networks library
+     * Define the new ObjectMapper used by the network library
      * @param objectMapper the new ObjectMapper
      */
     public static void setObjectMapper(@NonNull ObjectMapper objectMapper) {
