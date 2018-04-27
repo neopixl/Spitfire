@@ -1,37 +1,18 @@
 package com.neopixl.spitfire;
 
-import com.android.volley.Cache;
-import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
-import com.android.volley.ServerError;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.neopixl.spitfire.listener.RequestListener;
-import com.neopixl.spitfire.mock.DummyResponse;
-import com.neopixl.spitfire.request.BaseRequest;
-import com.neopixl.spitfire.utils.CacheTestUtils;
-import com.neopixl.spitfire.utils.ImmediateResponseDelivery;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-
-import java.net.HttpURLConnection;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Florian ALONSO on 4/27/18.
  * For Neopixl
  */
-@RunWith(RobolectricTestRunner.class)
-@Config(manifest=Config.NONE)
 public class SpitfireManagerTest {
 
     @Before

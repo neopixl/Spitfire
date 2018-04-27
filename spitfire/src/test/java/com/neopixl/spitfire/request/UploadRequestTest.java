@@ -26,7 +26,6 @@ import com.android.volley.VolleyError;
 import com.neopixl.spitfire.listener.RequestListener;
 import com.neopixl.spitfire.mock.DummyResponse;
 import com.neopixl.spitfire.model.RequestData;
-import com.neopixl.spitfire.request.UploadFileRequest;
 import com.neopixl.spitfire.utils.CacheTestUtils;
 import com.neopixl.spitfire.utils.ImmediateResponseDelivery;
 
