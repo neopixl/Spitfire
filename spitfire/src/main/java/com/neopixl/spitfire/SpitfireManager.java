@@ -65,6 +65,17 @@ public final class SpitfireManager {
     }
 
     /**
+     * Define the new ObjectMapper used by the networks library
+     * @param objectMapper the new ObjectMapper
+     */
+    public static void setObjectMapper(@NonNull ObjectMapper objectMapper) {
+        if (objectMapper == null) {
+            throw new IllegalArgumentException("Object mapper should not be null");
+        }
+        SpitfireManager.objectMapper = objectMapper;
+    }
+
+    /**
      * Generate a default retry policy (30 seconds for the timeout, 1 retry maximum, 1 backoff multiplier)
      * @return a default retry policy, not null
      */
