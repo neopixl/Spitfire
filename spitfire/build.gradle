@@ -81,9 +81,9 @@ android.libraryVariants.all { variant ->
         return; // Skip debug builds.
     }
     def task = project.tasks.create "jar${name.capitalize()}", Jar
-    task.dependsOn variant.javaCompile
+    task.dependsOn variant.getJavaCompiler()
     //task.dependsOn javadoc    //Disabled
-    task.from variant.javaCompile.destinationDir
+    task.from variant.getJavaCompiler().destinationDir
     artifacts.add('archives', task);
     delete("../app/libs/spitfire.jar")
     copy {
@@ -117,7 +117,7 @@ task jarDistribution(type: Jar) {
 
 task fatJar(type: Jar) {
     baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from { configurations.implementation.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
@@ -204,7 +204,6 @@ publishing {
                 //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
                 configurations.implementation.allDependencies.each {
                     // Only com.fasterxml.jackson.core
-                    println "I want to set a breakpoint here"
                     if (it.group != null && it.name != null && it.group.startsWith("com.fasterxml.jackson")) {
                         def dependencyNode = dependenciesNode.appendNode('dependency')
                         dependencyNode.appendNode('groupId', it.group)
@@ -243,4 +242,7 @@ bintray {
 }
 
 // =============== Coveralls settings  ===============
-cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
+cobertura {
+    coverageFormats = ['html', 'xml']
+    androidVariant = "debug"
+} // coveralls plugin depends on xml format report
