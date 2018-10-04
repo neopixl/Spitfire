@@ -136,7 +136,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
     @Override
     @NonNull
     public String getBodyContentType() {
-        if ((getMethod() == com.android.volley.Request.Method.POST || getMethod() == com.android.volley.Request.Method.PUT) && getJsonObject() != null) {
+        if (HTTP_METHOD_JSON_ALLOWED.contains(getMethod()) && getJsonObject() != null) {
             return getJsonContentType();
         }
         return super.getBodyContentType();

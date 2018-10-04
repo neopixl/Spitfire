@@ -33,6 +33,13 @@ import java.util.Map;
 
 abstract class AbstractRequest<T> extends Request<T> {
 
+    static final List<Integer> HTTP_METHOD_JSON_ALLOWED = new ArrayList<Integer>() {{
+        add(com.android.volley.Request.Method.POST);
+        add(com.android.volley.Request.Method.PUT);
+        add(com.android.volley.Request.Method.PATCH);
+        add(com.android.volley.Request.Method.DELETE);
+    }};
+
     private List<Integer> mAcceptedStatusCodes;
     private Class<T> classResponse;
     private byte[] body;

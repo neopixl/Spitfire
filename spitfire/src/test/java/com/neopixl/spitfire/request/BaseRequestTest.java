@@ -289,4 +289,79 @@ public class BaseRequestTest {
         assertTrue("The body should not be json typed", baseRequest.getBodyContentType().contains("application/x-www-form-urlencoded"));
         assertNull(baseRequest.getBody());
     }
+
+    @Test
+    public void builderPatchGeneration() throws Exception {
+        BaseRequest.Builder<DummyResponse> builder = new BaseRequest.Builder<>(Request.Method.PATCH, url, DummyResponse.class);
+        builder.parameters(parameters);
+        builder.object(dummyRequestObject);
+        builder.headers(headers);
+
+        BaseRequest<DummyResponse> baseRequest = builder.build();
+
+        assertEquals("The url should be the same", url, baseRequest.getUrl());
+        assertEquals("The method should be the same", Request.Method.PATCH, baseRequest.getMethod());
+        assertEquals("The parameters should be the same", parameters, baseRequest.getParams());
+        assertEquals("The object should be the same", dummyRequestObject, baseRequest.getJsonObject());
+
+        Map returnedMap = baseRequest.getHeaders();
+        for (String key : headers.keySet()) {
+            assertTrue("The key should be contained", returnedMap.containsKey(key));
+            assertEquals("The same value should be contained", headers.get(key), returnedMap.get(key));
+        }
+    }
+
+    @Test
+    public void builderPatchGenerationWierdValue() throws Exception {
+        BaseRequest.Builder<DummyResponse> builder = new BaseRequest.Builder<>(Request.Method.PATCH, url, DummyResponse.class);
+        builder.headers(headersWithContentType);
+
+        BaseRequest<DummyResponse> baseRequest = builder.build();
+
+        assertEquals("The url should be the same", url, baseRequest.getUrl());
+        assertEquals("The method should be the same", Request.Method.PATCH, baseRequest.getMethod());
+
+        Map returnedMap = baseRequest.getHeaders();
+        for (String key : headersWithContentType.keySet()) {
+            assertTrue("The key should be contained", returnedMap.containsKey(key));
+            assertEquals("The same value should be contained", headersWithContentType.get(key), returnedMap.get(key));
+        }
+    }
+    @Test
+    public void requestPatchConstruct_body() throws Exception {
+        BaseRequest<DummyResponse> baseRequest = Mockito.mock(BaseRequest.class);
+
+        Mockito.when(baseRequest.getBody()).thenCallRealMethod();
+        Mockito.when(baseRequest.calculateBody()).thenCallRealMethod();
+        Mockito.when(baseRequest.getBodyContentType()).thenReturn("application/json; charset=null");
+        Mockito.when(baseRequest.getJsonContentType()).thenCallRealMethod();
+        Mockito.when(baseRequest.getMethod()).thenReturn(Request.Method.PATCH);
+
+        baseRequest.getBody();
+        Mockito.verify(baseRequest, Mockito.times(1)).getJsonBody();
+    }
+
+    @Test
+    public void requestPatchParamConstruct_contentType() throws Exception {
+        BaseRequest.Builder<DummyResponse> builder = new BaseRequest.Builder<>(Request.Method.PATCH, url, DummyResponse.class);
+        builder.parameters(parameters);
+        builder.headers(headers);
+        BaseRequest<DummyResponse> baseRequest = builder.build();
+
+
+        assertTrue("The body should not be json typed", baseRequest.getBodyContentType().contains("application/x-www-form-urlencoded"));
+        assertNotNull(baseRequest.getBody());
+    }
+
+    @Test
+    public void requestPatchParamConstruct_body() throws Exception {
+        BaseRequest<DummyResponse> baseRequest = Mockito.mock(BaseRequest.class);
+
+        Mockito.when(baseRequest.getBody()).thenCallRealMethod();
+        Mockito.when(baseRequest.getBodyContentType()).thenReturn("application/x-www-form-urlencoded; charset=null");
+        Mockito.when(baseRequest.getMethod()).thenReturn(Request.Method.PATCH);
+
+        baseRequest.getBody();
+        Mockito.verify(baseRequest, Mockito.never()).getJsonBody();
+    }
 }
