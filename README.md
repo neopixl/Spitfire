@@ -31,8 +31,7 @@ This library was designed to be as simple to use as possible.  Here are the step
 
 
 		dependencies {
-			implementation 'com.neopixl:spitfire:1.1.0'
-			implementation 'com.android.volley:volley:1.0.0'
+			implementation 'com.neopixl:spitfire:2.0.0-alpha'
 		}
 
 * Create the DTO that you would like your request to be parsed as.
