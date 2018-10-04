@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version UNDEFINED *(2018-10-)*
+Version 1.1.1 *(2018-10-04)*
 ----------------------------
 
  * Added HTTP PATCH and DELETE methods support for sending a JSON body
