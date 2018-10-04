@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         loadGetRequest();
         loadPostRequest();
+        loadPatchRequest();
         loadFileStreamRequest();
         loadMultipartRequest();
     }
@@ -188,6 +189,62 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
                         setSuccessForTextView(postWithStatusErrorTextView, (response != null && response.statusCode == 400));
+
+                    }
+                }).build();
+
+        addRequestWithRandom(postWithStatusErrorTextViewRequest);
+    }
+
+    private void loadPatchRequest() {
+
+        Map<String, String> fullHeaders = new HashMap<>();
+        fullHeaders.put("Authorization", "Basic abcdefghijklmnopqrstuvwxyz");
+        fullHeaders.put("Token", "abcdefghijkl");
+
+        PostJsonRequest postJsonRequest = new PostJsonRequest();
+        StatusMessageResponse satusMessageRequest = new StatusMessageResponse();
+        satusMessageRequest.setStatus(200);
+        satusMessageRequest.setMessage("abcdefghijkl");
+        postJsonRequest.setTest1(1);
+        postJsonRequest.setTest2("salut");
+        postJsonRequest.setTestObject(satusMessageRequest);
+        postJsonRequest.setSpecialChars("% 🤞 🌎 $ ~ ! @ # $ % ^ & * ( ) _ + \\");
+
+        final TextView patchWithJsonAndHeaderTextView = getTextViewForRequest("patchWithJsonAndHeader");
+        BaseRequest<StatusMessageResponse> postWithJsonAndHeaderRequest = new BaseRequest.Builder<StatusMessageResponse>(Request.Method.PATCH,
+                "https://private-4b982e-neorequest.apiary-mock.com/patch/json", StatusMessageResponse.class).listener(new RequestListener<StatusMessageResponse>() {
+            @Override
+            public void onSuccess(Request request, NetworkResponse response, StatusMessageResponse v) {
+                setSuccessForTextView(patchWithJsonAndHeaderTextView, true);
+            }
+
+            @Override
+            public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+                setSuccessForTextView(patchWithJsonAndHeaderTextView, false);
+
+            }
+        })
+                .headers(fullHeaders)
+                .object(postJsonRequest)
+                .build();
+
+        addRequestWithRandom(postWithJsonAndHeaderRequest);
+
+
+
+        final TextView patchWithStatusErrorTextView = getTextViewForRequest("patchWithStatusError");
+        BaseRequest<Void> postWithStatusErrorTextViewRequest = new BaseRequest.Builder<Void>(Request.Method.PATCH,
+                "https://private-4b982e-neorequest.apiary-mock.com/patch/errordata-json", Void.class)
+                .listener(new RequestListener<Void>() {
+                    @Override
+                    public void onSuccess(Request request, NetworkResponse response, Void v) {
+                        setSuccessForTextView(patchWithStatusErrorTextView, false);
+                    }
+
+                    @Override
+                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+                        setSuccessForTextView(patchWithStatusErrorTextView, (response != null && response.statusCode == 400));
 
                     }
                 }).build();
