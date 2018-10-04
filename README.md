@@ -31,7 +31,7 @@ This library was designed to be as simple to use as possible.  Here are the step
 
 
 		dependencies {
-			implementation 'com.neopixl:spitfire:1.1.0'
+			implementation 'com.neopixl:spitfire:1.1.1'
 			implementation 'com.android.volley:volley:1.0.0'
 		}
 
