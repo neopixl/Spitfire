@@ -13,8 +13,8 @@ def versionNameGlobal = '1.1.0'
 // =============== Android configuration  ===============
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
     publishNonDefault true
 
     def p = ['curl', '-u', 'build:E$^VM8476C(XW>Kb6f;b', 'http://tools.neopixl.com/buildnumber/nextBuildNumber.php?project=Spitfire'].execute()
@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode code
         versionName versionNameGlobal
 
@@ -68,10 +68,12 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.18.3'
     testImplementation 'org.robolectric:robolectric:3.8'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.8.5'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.8.5'
-    implementation 'com.android.support:support-annotations:25.3.1'
+    implementation 'com.android.support:support-annotations:28.0.0'
+
+    implementation 'com.android.volley:volley:1.1.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.7'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.7'
 }
 
 
