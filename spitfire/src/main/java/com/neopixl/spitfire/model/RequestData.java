@@ -10,13 +10,13 @@ import android.support.annotation.NonNull;
 public class RequestData {
 
     @NonNull
-    private String fileName;
+    private String fileName = "";
 
     @NonNull
-    private byte[] content;
+    private byte[] content = new byte[0];
 
     @NonNull
-    private String type;
+    private String type = "";
 
     /**
      * Default data part
@@ -91,6 +91,7 @@ public class RequestData {
      *
      * @return mime type, not null
      */
+    @NonNull
     public String getType() {
         return type;
     }

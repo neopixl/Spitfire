@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class UploadFileRequest<T> extends AbstractRequest<T> {
 
-    private RequestData partData;
+    private final RequestData partData;
 
     public static class Builder<T> extends AbstractBuilder<T, UploadFileRequest<T>> {
 
@@ -41,14 +41,16 @@ public class UploadFileRequest<T> extends AbstractRequest<T> {
             return this;
         }
 
+        @NonNull
         @Override
         public Builder<T> listener(@Nullable RequestListener<T> listener) {
             super.listener(listener);
             return this;
         }
 
+        @NonNull
         @Override
-        public Builder<T> headers(@NonNull Map headers) {
+        public Builder<T> headers(@Nullable Map headers) {
             super.headers(headers);
             return this;
         }
@@ -57,6 +59,7 @@ public class UploadFileRequest<T> extends AbstractRequest<T> {
          * Create a request based on the current request
          * @return The request
          */
+        @NonNull
         public UploadFileRequest<T> build() {
             return new UploadFileRequest<T>(this);
         }
