@@ -60,8 +60,8 @@ public class MultipartRequest<T> extends BaseRequest<T> {
          * @param jsonObject The object to be embedded in the body, can be null
          * @return Builder {@link BaseRequest.Builder}
          */
-        public Builder<T> object(@Nullable Object jsonObject) {
-            super.object(jsonObject);
+        public Builder<T> json(@Nullable Object jsonObject) {
+            super.json(jsonObject);
             return this;
         }
 
@@ -71,8 +71,8 @@ public class MultipartRequest<T> extends BaseRequest<T> {
          * @param jsonObject The object to be embedded in the body, can be null
          * @return
          */
-        public Builder<T> object(String jsonKey, @Nullable Object jsonObject) {
-            super.object(jsonObject);
+        public Builder<T> json(String jsonKey, @Nullable Object jsonObject) {
+            super.json(jsonObject);
             this.jsonKey = jsonKey;
             return this;
         }

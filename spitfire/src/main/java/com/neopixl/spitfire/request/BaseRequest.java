@@ -57,7 +57,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
          * @param jsonObject The object to be embedded in the body, can be null
          * @return Builder {@link Builder}
          */
-        public Builder<T> object(@Nullable Object jsonObject) {
+        public Builder<T> json(@Nullable Object jsonObject) {
             this.jsonObject = jsonObject;
             return this;
         }

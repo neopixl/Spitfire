@@ -82,7 +82,7 @@ If you want to send a full JSON in the body of your request, simply create a new
         objectToSerializeAndSend.setMessage("My message");
 
         BaseRequest<DummyResponse> request = new BaseRequest.Builder<DummyResponse>(Request.Method.GET, "YOUR URL", DummyResponse.class)
-                .object(objectToSerializeAndSend)
+                .json(objectToSerializeAndSend)
                 .listener(new RequestListener<DummyResponse>() {
                     @Override
                     public void onSuccess(Request request, NetworkResponse response, DummyResponse dummyResponse) {

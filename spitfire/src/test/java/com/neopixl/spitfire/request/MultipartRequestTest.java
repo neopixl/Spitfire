@@ -116,9 +116,9 @@ public class MultipartRequestTest {
         assertNotNull(MultipartRequest.class.getDeclaredConstructor(MultipartRequest.Builder.class));
 
         // Catch-all test to find API-breaking changes for the builder.
-        assertNotNull(MultipartRequest.Builder.class.getMethod("object",
+        assertNotNull(MultipartRequest.Builder.class.getMethod("json",
                 Object.class));
-        assertNotNull(MultipartRequest.Builder.class.getMethod("object",
+        assertNotNull(MultipartRequest.Builder.class.getMethod("json",
                 String.class, Object.class));
         assertNotNull(MultipartRequest.Builder.class.getMethod("parameters",
                 Map.class));
@@ -141,7 +141,7 @@ public class MultipartRequestTest {
     public void builderPostGeneration() throws Exception {
         MultipartRequest.Builder<DummyResponse> builder = new MultipartRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
         builder.parameters(parameters);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
         builder.headers(headers);
         builder.multiPartDataList(dummyDataMap);
 
@@ -164,7 +164,7 @@ public class MultipartRequestTest {
     public void builderPostGenerationWithPutMultipartSimple() throws Exception {
         MultipartRequest.Builder<DummyResponse> builder = new MultipartRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
         builder.parameters(parameters);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
         builder.headers(headers);
         builder.multiPartData(dummyDataMapNoList);
 
@@ -187,7 +187,7 @@ public class MultipartRequestTest {
     public void builderPostGenerationWithInsertMultipart() throws Exception {
         MultipartRequest.Builder<DummyResponse> builder = new MultipartRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
         builder.parameters(parameters);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
         builder.headers(headers);
         for (Map.Entry<String, List<RequestData>> entry : dummyDataMap.entrySet()) {
             for (RequestData datapart : entry.getValue()) {
@@ -240,7 +240,7 @@ public class MultipartRequestTest {
     @Test
     public void requestPostConstruct_contentType() throws Exception {
         MultipartRequest.Builder<DummyResponse> builder = new MultipartRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
         builder.headers(headers);
         builder.multiPartDataList(dummyDataMap);
         MultipartRequest<DummyResponse> baseRequest = builder.build();

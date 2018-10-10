@@ -106,7 +106,7 @@ public class BaseRequestTest {
         assertNotNull(BaseRequest.class.getDeclaredConstructor(BaseRequest.Builder.class));
 
         // Catch-all test to find API-breaking changes for the builder.
-        assertNotNull(BaseRequest.Builder.class.getMethod("object",
+        assertNotNull(BaseRequest.Builder.class.getMethod("json",
                 Object.class));
         assertNotNull(BaseRequest.Builder.class.getMethod("parameters",
                 Map.class));
@@ -166,7 +166,7 @@ public class BaseRequestTest {
     public void builderPostGeneration() throws Exception {
         BaseRequest.Builder<DummyResponse> builder = new BaseRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
         builder.parameters(parameters);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
         builder.headers(headers);
 
         BaseRequest<DummyResponse> baseRequest = builder.build();
@@ -186,7 +186,7 @@ public class BaseRequestTest {
     @Test(expected = IllegalArgumentException.class)
     public void builderGenerationNoJsonInGet() throws Exception {
         BaseRequest.Builder<DummyResponse> builder = new BaseRequest.Builder<>(Request.Method.GET, url, DummyResponse.class);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
 
         BaseRequest<DummyResponse> baseRequest = builder.build();
         baseRequest.getJsonObject();
@@ -232,7 +232,7 @@ public class BaseRequestTest {
     @Test
     public void requestPostConstruct_contentType() throws Exception {
         BaseRequest.Builder<DummyResponse> builder = new BaseRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
         builder.headers(headers);
         BaseRequest<DummyResponse> baseRequest = builder.build();
 
