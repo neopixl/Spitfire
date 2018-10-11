@@ -1,6 +1,7 @@
 package com.neopixl.spitfire.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * Created by Florian ALONSO on 10/14/16.
@@ -15,8 +16,8 @@ public class RequestData {
     @NonNull
     private byte[] content = new byte[0];
 
-    @NonNull
-    private String type = "";
+    @Nullable
+    private String type;
 
     /**
      * Default data part
@@ -91,7 +92,7 @@ public class RequestData {
      *
      * @return mime type, not null
      */
-    @NonNull
+    @Nullable
     public String getType() {
         return type;
     }
@@ -101,7 +102,7 @@ public class RequestData {
      *
      * @param type mime type, not null
      */
-    public void setType(@NonNull String type) {
+    public void setType(@Nullable String type) {
         this.type = type;
     }
 

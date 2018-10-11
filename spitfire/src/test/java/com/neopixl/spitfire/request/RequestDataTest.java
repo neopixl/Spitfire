@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class RequestDataTest {
 
@@ -53,7 +54,7 @@ public class RequestDataTest {
 
         assertNotNull(requestData.getContent());
         assertNotNull(requestData.getFileName());
-        assertNotNull(requestData.getType());
+        assertNull(requestData.getType());
     }
 
     @Test
@@ -83,7 +84,7 @@ public class RequestDataTest {
 
         assertEquals(dummyByte, requestData.getContent());
         assertEquals(dummyFilename, requestData.getFileName());
-        assertNotNull(requestData.getType());
+        assertNull(requestData.getType());
     }
 
     @Test

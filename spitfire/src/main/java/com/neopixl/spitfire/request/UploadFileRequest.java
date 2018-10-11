@@ -78,6 +78,10 @@ public class UploadFileRequest<T> extends AbstractRequest<T> {
             throw new IllegalArgumentException("Partdata should not be null.");
         }
 
+        if (partData.getType() == null) {
+            throw new IllegalArgumentException("Partdata type cannot be null");
+        }
+
         if (builder.method == Method.GET) {
             throw new IllegalArgumentException("Cannot use streamfile with GET request");
         }
@@ -90,7 +94,7 @@ public class UploadFileRequest<T> extends AbstractRequest<T> {
     @Override
     @NonNull
     public String getBodyContentType() {
-        return getPartData().getType();
+        return getPartData().getType() != null ? getPartData().getType() : "";
     }
 
 
