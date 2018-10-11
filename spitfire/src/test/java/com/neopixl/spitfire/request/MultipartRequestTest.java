@@ -69,6 +69,7 @@ public class MultipartRequestTest {
     private ExecutorDelivery mDelivery;
     private Response<DummyResponse> mSuccessResponse;
     private Response<DummyResponse> mErrorResponse;
+    private NetworkResponse dummyNetworkResponse;
 
 
     @Before
@@ -101,6 +102,8 @@ public class MultipartRequestTest {
         mSuccessResponse = Response.success(dummyResponse, cacheEntry);
         volleyError = new ServerError();
         mErrorResponse = Response.error(volleyError);
+
+        dummyNetworkResponse = new NetworkResponse(new byte[0]);
     }
 
     @Test
@@ -224,7 +227,7 @@ public class MultipartRequestTest {
         MultipartRequest<DummyResponse> baseRequest = builder.build();
 
         mDelivery.postResponse(baseRequest, mErrorResponse);
-        Mockito.verify(listener, Mockito.times(1)).onFailure(Mockito.eq(baseRequest), Mockito.isNull(NetworkResponse.class), Mockito.eq(volleyError));
+        Mockito.verify(listener, Mockito.times(1)).onFailure(Mockito.eq(baseRequest), Mockito.isNull(), Mockito.eq(volleyError));
     }
 
     @Test
@@ -233,8 +236,9 @@ public class MultipartRequestTest {
         builder.listener(listener);
         MultipartRequest<DummyResponse> baseRequest = builder.build();
 
+        baseRequest.parseNetworkResponse(dummyNetworkResponse);
         mDelivery.postResponse(baseRequest, mSuccessResponse);
-        Mockito.verify(listener, Mockito.times(1)).onSuccess(Mockito.eq(baseRequest), Mockito.isNull(NetworkResponse.class), Mockito.any(DummyResponse.class));
+        Mockito.verify(listener, Mockito.times(1)).onSuccess(Mockito.eq(baseRequest), Mockito.isNotNull(), Mockito.any(DummyResponse.class));
     }
 
     @Test
@@ -290,7 +294,7 @@ public class MultipartRequestTest {
         Mockito.when(baseRequest.getMethod()).thenReturn(Request.Method.POST);
 
         baseRequest.getBody();
-        Mockito.verify(baseRequest, Mockito.times(1)).textParse(Mockito.any(DataOutputStream.class), Mockito.eq(parameters), Mockito.isNull(String.class));
+        Mockito.verify(baseRequest, Mockito.times(1)).textParse(Mockito.any(DataOutputStream.class), Mockito.eq(parameters), Mockito.isNull());
         Mockito.verify(baseRequest, Mockito.times(1)).dataParse(Mockito.any(DataOutputStream.class), Mockito.eq(dummyDataMap));
 
     }

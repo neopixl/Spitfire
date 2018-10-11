@@ -184,7 +184,7 @@ abstract class AbstractRequest<T> extends Request<T> {
         }
 
 
-        if (mListener != null && this.networkResponse != null) {
+        if (mListener != null) {
             mListener.onFailure(this, networkResponse, error);
         }
     }

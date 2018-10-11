@@ -66,6 +66,7 @@ public class BaseRequestTest {
     private ExecutorDelivery mDelivery;
     private Response<DummyResponse> mSuccessResponse;
     private Response<DummyResponse> mErrorResponse;
+    private NetworkResponse dummyNetworkResponse;
 
 
     @Before
@@ -92,6 +93,8 @@ public class BaseRequestTest {
         mErrorResponse = Response.error(volleyError);
 
         dummyRequestObject.setMessage("% 🤞 🌎 $ ~ ! @ # $ % ^ & * ( ) _ + \\");
+
+        dummyNetworkResponse = new NetworkResponse(new byte[0]);
     }
 
     @Test
@@ -216,7 +219,7 @@ public class BaseRequestTest {
         BaseRequest<DummyResponse> baseRequest = builder.build();
 
         mDelivery.postResponse(baseRequest, mErrorResponse);
-        Mockito.verify(listener, Mockito.times(1)).onFailure(Mockito.eq(baseRequest), Mockito.isNull(NetworkResponse.class), Mockito.eq(volleyError));
+        Mockito.verify(listener, Mockito.times(1)).onFailure(Mockito.eq(baseRequest), Mockito.isNull(), Mockito.eq(volleyError));
     }
 
     @Test
@@ -225,8 +228,9 @@ public class BaseRequestTest {
         builder.listener(listener);
         BaseRequest<DummyResponse> baseRequest = builder.build();
 
+        baseRequest.parseNetworkResponse(dummyNetworkResponse);
         mDelivery.postResponse(baseRequest, mSuccessResponse);
-        Mockito.verify(listener, Mockito.times(1)).onSuccess(Mockito.eq(baseRequest), Mockito.isNull(NetworkResponse.class), Mockito.any(DummyResponse.class));
+        Mockito.verify(listener, Mockito.times(1)).onSuccess(Mockito.eq(baseRequest), Mockito.isNotNull(), Mockito.any(DummyResponse.class));
     }
 
     @Test

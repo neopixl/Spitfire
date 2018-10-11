@@ -28,5 +28,5 @@ public interface RequestListener<T> {
      * @param response the network response
      * @param error <b>VolleyError</b> error for the request
      */
-    void onFailure(@NonNull Request request, @NonNull NetworkResponse response, @Nullable VolleyError error);
+    void onFailure(@NonNull Request request, @Nullable NetworkResponse response, @Nullable VolleyError error);
 }

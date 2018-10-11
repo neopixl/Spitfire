@@ -257,6 +257,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
                     result.append("=");
                     result.append(encodedValue);
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
             return result.toString();
