@@ -74,7 +74,7 @@ public class UploadRequestTest {
         headers.put("X-ApiKey", "azerty");
         headers.put("Authorization", "Bearer 1000:2b52d2ccfd6007d7a8d58d8cabb32bc0");
 
-        dummyData = new RequestData("neopixl.jpg", new byte[16]);
+        dummyData = new RequestData("neopixl.jpg", new byte[16], "image/jpeg");
 
         byte[] data = new byte[16];
         Cache.Entry cacheEntry = CacheTestUtils.makeRandomCacheEntry(data);
