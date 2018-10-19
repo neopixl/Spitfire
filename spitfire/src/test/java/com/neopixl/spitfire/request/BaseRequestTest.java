@@ -129,7 +129,7 @@ public class BaseRequestTest {
         builder.parameters(parameters);
         builder.headers(headers);
         BaseRequest<DummyResponse> baseRequest = builder.build();
-        baseRequest.addAcceptedStatusCodes(HttpURLConnection.HTTP_BAD_GATEWAY);
+        baseRequest.addAcceptedStatusCode(HttpURLConnection.HTTP_BAD_GATEWAY);
         baseRequest.addAcceptedStatusCodes(new int[]{
                 HttpURLConnection.HTTP_BAD_METHOD
                 , HttpURLConnection.HTTP_BAD_REQUEST
