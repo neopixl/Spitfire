@@ -206,6 +206,11 @@ abstract class AbstractRequest<T> extends Request<T> {
     protected Response<T> parseNetworkResponse(@NonNull NetworkResponse response) {
         this.networkResponse = response;
 
+        if (response.statusCode == HttpURLConnection.HTTP_NOT_MODIFIED) {
+            setShouldCache(false);
+            return Response.success(null, HttpHeaderParser.parseCacheHeaders(response));
+        }
+
         JavaType returnType = getReturnType();
         T returnData = null;
         if (returnType != null) {

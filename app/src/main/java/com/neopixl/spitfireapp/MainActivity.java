@@ -21,6 +21,7 @@ import com.neopixl.spitfire.request.MultipartRequest;
 import com.neopixl.spitfire.request.UploadFileRequest;
 import com.neopixl.spitfireapp.model.PostJsonRequest;
 import com.neopixl.spitfireapp.model.StatusMessageResponse;
+import com.neopixl.spitfireapp.model.WrapperStatusMessageResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,6 +61,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadGetRequest() {
+        final TextView getWithoutParamsAndNoContentReturnTextView = getTextViewForRequest("getWithoutParamsAndNoContentReturnTextView");
+        BaseRequest<StatusMessageResponse> getWithParamsAndNoContentReturnRequest = new BaseRequest.Builder<StatusMessageResponse>(Request.Method.GET,
+                "https://private-4b982e-neorequest.apiary-mock.com/get/datanocontent", StatusMessageResponse.class)
+                .listener(new RequestListener<StatusMessageResponse>() {
+                    @Override
+                    public void onSuccess(Request request, NetworkResponse response, StatusMessageResponse v) {
+                        setSuccessForTextView(getWithoutParamsAndNoContentReturnTextView, true);
+                    }
+
+                    @Override
+                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+                        setSuccessForTextView(getWithoutParamsAndNoContentReturnTextView, false);
+
+                    }
+                }).build();
+        addRequestWithRandom(getWithParamsAndNoContentReturnRequest);
+
+        final TextView getWithoutParamsAndPartialContentReturnTextView = getTextViewForRequest("getWithoutParamsAndPartialContentReturnTextView");
+        BaseRequest<WrapperStatusMessageResponse> getWithParamsAndPartialContentReturnRequest = new BaseRequest.Builder<WrapperStatusMessageResponse>(Request.Method.GET,
+                "https://private-4b982e-neorequest.apiary-mock.com/get/datapartialcontent", WrapperStatusMessageResponse.class)
+                .listener(new RequestListener<WrapperStatusMessageResponse>() {
+                    @Override
+                    public void onSuccess(Request request, NetworkResponse response, WrapperStatusMessageResponse v) {
+                        setSuccessForTextView(getWithoutParamsAndPartialContentReturnTextView, v != null && v.getStatusList() != null && !v.getStatusList().isEmpty());
+                    }
+
+                    @Override
+                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+                        setSuccessForTextView(getWithoutParamsAndPartialContentReturnTextView, false);
+
+                    }
+                }).build();
+        addRequestWithRandom(getWithParamsAndPartialContentReturnRequest);
+
         final TextView getWithoutParamsAndEmptyReturnTextView = getTextViewForRequest("getWithoutParamsAndEmptyReturn");
 
         BaseRequest<Void> getWithoutParamsAndEmptyReturnRequest = new BaseRequest.Builder<Void>(Request.Method.GET,
@@ -226,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
             }
         })
                 .headers(fullHeaders)
-                .object(postJsonRequest)
+                .json(postJsonRequest)
                 .build();
 
         addRequestWithRandom(postWithJsonAndHeaderRequest);
