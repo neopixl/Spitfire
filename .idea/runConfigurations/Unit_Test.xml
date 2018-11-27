@@ -21,6 +21,9 @@
       <value defaultName="singleModule" />
     </option>
     <patterns />
-    <method />
+    <method>
+      <option name="Android.Gradle.BeforeRunTask" enabled="false" />
+      <option name="Make" enabled="true" />
+    </method>
   </configuration>
 </component>
