@@ -298,7 +298,7 @@ public class BaseRequestTest {
     public void builderPatchGeneration() throws Exception {
         BaseRequest.Builder<DummyResponse> builder = new BaseRequest.Builder<>(Request.Method.PATCH, url, DummyResponse.class);
         builder.parameters(parameters);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
         builder.headers(headers);
 
         BaseRequest<DummyResponse> baseRequest = builder.build();
