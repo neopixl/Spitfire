@@ -69,6 +69,7 @@ public class MultipartRequestTest {
     private ExecutorDelivery mDelivery;
     private Response<DummyResponse> mSuccessResponse;
     private Response<DummyResponse> mErrorResponse;
+    private NetworkResponse dummyNetworkResponse;
 
 
     @Before
@@ -101,6 +102,8 @@ public class MultipartRequestTest {
         mSuccessResponse = Response.success(dummyResponse, cacheEntry);
         volleyError = new ServerError();
         mErrorResponse = Response.error(volleyError);
+
+        dummyNetworkResponse = new NetworkResponse(new byte[0]);
     }
 
     @Test
@@ -116,9 +119,9 @@ public class MultipartRequestTest {
         assertNotNull(MultipartRequest.class.getDeclaredConstructor(MultipartRequest.Builder.class));
 
         // Catch-all test to find API-breaking changes for the builder.
-        assertNotNull(MultipartRequest.Builder.class.getMethod("object",
+        assertNotNull(MultipartRequest.Builder.class.getMethod("json",
                 Object.class));
-        assertNotNull(MultipartRequest.Builder.class.getMethod("object",
+        assertNotNull(MultipartRequest.Builder.class.getMethod("json",
                 String.class, Object.class));
         assertNotNull(MultipartRequest.Builder.class.getMethod("parameters",
                 Map.class));
@@ -141,7 +144,7 @@ public class MultipartRequestTest {
     public void builderPostGeneration() throws Exception {
         MultipartRequest.Builder<DummyResponse> builder = new MultipartRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
         builder.parameters(parameters);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
         builder.headers(headers);
         builder.multiPartDataList(dummyDataMap);
 
@@ -164,7 +167,7 @@ public class MultipartRequestTest {
     public void builderPostGenerationWithPutMultipartSimple() throws Exception {
         MultipartRequest.Builder<DummyResponse> builder = new MultipartRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
         builder.parameters(parameters);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
         builder.headers(headers);
         builder.multiPartData(dummyDataMapNoList);
 
@@ -187,7 +190,7 @@ public class MultipartRequestTest {
     public void builderPostGenerationWithInsertMultipart() throws Exception {
         MultipartRequest.Builder<DummyResponse> builder = new MultipartRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
         builder.parameters(parameters);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
         builder.headers(headers);
         for (Map.Entry<String, List<RequestData>> entry : dummyDataMap.entrySet()) {
             for (RequestData datapart : entry.getValue()) {
@@ -224,7 +227,7 @@ public class MultipartRequestTest {
         MultipartRequest<DummyResponse> baseRequest = builder.build();
 
         mDelivery.postResponse(baseRequest, mErrorResponse);
-        Mockito.verify(listener, Mockito.times(1)).onFailure(Mockito.eq(baseRequest), Mockito.isNull(NetworkResponse.class), Mockito.eq(volleyError));
+        Mockito.verify(listener, Mockito.times(1)).onFailure(Mockito.eq(baseRequest), Mockito.isNull(), Mockito.eq(volleyError));
     }
 
     @Test
@@ -233,14 +236,15 @@ public class MultipartRequestTest {
         builder.listener(listener);
         MultipartRequest<DummyResponse> baseRequest = builder.build();
 
+        baseRequest.parseNetworkResponse(dummyNetworkResponse);
         mDelivery.postResponse(baseRequest, mSuccessResponse);
-        Mockito.verify(listener, Mockito.times(1)).onSuccess(Mockito.eq(baseRequest), Mockito.isNull(NetworkResponse.class), Mockito.any(DummyResponse.class));
+        Mockito.verify(listener, Mockito.times(1)).onSuccess(Mockito.eq(baseRequest), Mockito.isNotNull(), Mockito.any(DummyResponse.class));
     }
 
     @Test
     public void requestPostConstruct_contentType() throws Exception {
         MultipartRequest.Builder<DummyResponse> builder = new MultipartRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
         builder.headers(headers);
         builder.multiPartDataList(dummyDataMap);
         MultipartRequest<DummyResponse> baseRequest = builder.build();
@@ -290,7 +294,7 @@ public class MultipartRequestTest {
         Mockito.when(baseRequest.getMethod()).thenReturn(Request.Method.POST);
 
         baseRequest.getBody();
-        Mockito.verify(baseRequest, Mockito.times(1)).textParse(Mockito.any(DataOutputStream.class), Mockito.eq(parameters), Mockito.isNull(String.class));
+        Mockito.verify(baseRequest, Mockito.times(1)).textParse(Mockito.any(DataOutputStream.class), Mockito.eq(parameters), Mockito.isNull());
         Mockito.verify(baseRequest, Mockito.times(1)).dataParse(Mockito.any(DataOutputStream.class), Mockito.eq(dummyDataMap));
 
     }

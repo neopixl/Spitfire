@@ -31,8 +31,8 @@ This library was designed to be as simple to use as possible.  Here are the step
 
 
 		dependencies {
-			implementation 'com.neopixl:spitfire:1.1.0'
-			implementation 'com.android.volley:volley:1.0.0'
+			implementation 'com.neopixl:spitfire:2.0.0-alpha'
+			implementation 'com.android.volley:volley:1.1.1'
 		}
 
 * Create the DTO that you would like your request to be parsed as.
@@ -83,7 +83,7 @@ If you want to send a full JSON in the body of your request, simply create a new
         objectToSerializeAndSend.setMessage("My message");
 
         BaseRequest<DummyResponse> request = new BaseRequest.Builder<DummyResponse>(Request.Method.GET, "YOUR URL", DummyResponse.class)
-                .object(objectToSerializeAndSend)
+                .json(objectToSerializeAndSend)
                 .listener(new RequestListener<DummyResponse>() {
                     @Override
                     public void onSuccess(Request request, NetworkResponse response, DummyResponse dummyResponse) {

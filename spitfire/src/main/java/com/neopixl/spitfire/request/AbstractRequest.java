@@ -40,16 +40,20 @@ abstract class AbstractRequest<T> extends Request<T> {
         add(com.android.volley.Request.Method.DELETE);
     }};
 
-    private List<Integer> mAcceptedStatusCodes;
-    private Class<T> classResponse;
+    @NonNull
+    private final List<Integer> mAcceptedStatusCodes;
+    @NonNull
+    private final Class<T> classResponse;
+    @Nullable
     private byte[] body;
 
     @Nullable
     private final RequestListener<T> mListener;
 
     @Nullable
-    private Map<String, String> headers;
+    private final Map<String, String> headers;
 
+    @Nullable
     private NetworkResponse networkResponse;
 
     /**
@@ -61,8 +65,8 @@ abstract class AbstractRequest<T> extends Request<T> {
         protected int method = -10;
 
         @NonNull
-        private String url;
-        private Class<T> classResponse;
+        private final String url;
+        private final Class<T> classResponse;
 
         @Nullable
         private RequestListener<T> mListener;
@@ -74,7 +78,7 @@ abstract class AbstractRequest<T> extends Request<T> {
          * @param url given url to access the resource, not nul
          * @param classResponse class used to parse the response
          */
-        public AbstractBuilder(int method, @NonNull String url, Class<T> classResponse) {
+        public AbstractBuilder(int method, @NonNull String url, @NonNull Class<T> classResponse) {
             this.method = method;
             this.url = url;
             this.classResponse = classResponse;
@@ -85,6 +89,7 @@ abstract class AbstractRequest<T> extends Request<T> {
          * @param listener {@link RequestListener}, can be null
          * @return the builder
          */
+        @NonNull
         public AbstractBuilder<T, RequestType> listener(@Nullable RequestListener<T> listener) {
             this.mListener = listener;
             return this;
@@ -95,6 +100,7 @@ abstract class AbstractRequest<T> extends Request<T> {
          * @param headers used to send the request, can be null
          * @return Map&lt;String, String&gt;
          */
+        @NonNull
         public AbstractBuilder<T, RequestType> headers(@Nullable Map<String, String> headers) {
             this.headers = new HashMap<>(headers);
             return this;
@@ -104,6 +110,7 @@ abstract class AbstractRequest<T> extends Request<T> {
          * You must implement this method in your subclass.
          * @return AbstractNeoRequest
          */
+        @NonNull
         abstract public RequestType build() ;
     }
 
@@ -112,7 +119,7 @@ abstract class AbstractRequest<T> extends Request<T> {
      * Constructor to create the request
      * @param builder a builder from the {@link AbstractBuilder}
      */
-    AbstractRequest(AbstractBuilder builder) {
+    AbstractRequest(@NonNull AbstractBuilder builder) {
         super(builder.method, builder.url, null);
 
         Map<String, String> builderHeaders = builder.headers;
@@ -145,10 +152,10 @@ abstract class AbstractRequest<T> extends Request<T> {
 
     /**
      * Add accepted status code (<a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">Http status codes</a>), not null
-     * @param statusCodes int
+     * @param statusCode int
      */
-    public void addAcceptedStatusCodes(@NonNull int statusCodes) {
-        mAcceptedStatusCodes.add(statusCodes);
+    public void addAcceptedStatusCode(int statusCode) {
+        mAcceptedStatusCodes.add(statusCode);
     }
 
     /**
@@ -166,8 +173,8 @@ abstract class AbstractRequest<T> extends Request<T> {
      * @param response The response
      */
     @Override
-    protected void deliverResponse(T response) {
-        if (mListener != null) {
+    protected void deliverResponse(@NonNull T response) {
+        if (mListener != null && this.networkResponse != null) {
             mListener.onSuccess(this, networkResponse, response);
         }
     }
@@ -178,7 +185,7 @@ abstract class AbstractRequest<T> extends Request<T> {
      * @param error <b>VolleyError</b>
      */
     @Override
-    public void deliverError(VolleyError error) {
+    public void deliverError(@Nullable VolleyError error) {
         if (error != null && error.networkResponse != null && this.networkResponse == null) {
             this.networkResponse = error.networkResponse;
         }
@@ -195,7 +202,8 @@ abstract class AbstractRequest<T> extends Request<T> {
      * @return Response object linked to a specific type
      */
     @Override
-    protected Response<T> parseNetworkResponse(NetworkResponse response) {
+    @NonNull
+    protected Response<T> parseNetworkResponse(@NonNull NetworkResponse response) {
         this.networkResponse = response;
 
         JavaType returnType = getReturnType();
@@ -253,7 +261,9 @@ abstract class AbstractRequest<T> extends Request<T> {
     @NonNull
     public Map<String, String> getHeaders() throws AuthFailureError {
         Map<String, String> currentHeader = new HashMap<>(super.getHeaders());
-        currentHeader.putAll(this.headers);
+        if (this.headers != null) {
+            currentHeader.putAll(this.headers);
+        }
 
         String bodyContentType = getBodyContentType();
         if (bodyContentType == null && currentHeader.containsKey("Content-Type")) {
@@ -295,6 +305,7 @@ abstract class AbstractRequest<T> extends Request<T> {
      * @throws AuthFailureError In the event of auth failure.
      * @return byte[] or null
      */
+    @Nullable
     byte[] calculateBody() throws AuthFailureError {
         if (getMethod() == Method.GET) {
             return null;
@@ -303,7 +314,8 @@ abstract class AbstractRequest<T> extends Request<T> {
         return params != null && params.size() > 0 ? this.encodeParameters(params, this.getParamsEncoding()) : null;
     }
 
-    private byte[] encodeParameters(Map<String, String> params, String paramsEncoding) {
+    @NonNull
+    private byte[] encodeParameters(@NonNull Map<String, String> params, @NonNull String paramsEncoding) {
         StringBuilder encodedParams = new StringBuilder();
 
         try {

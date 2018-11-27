@@ -61,6 +61,7 @@ public class UploadRequestTest {
     private ExecutorDelivery mDelivery;
     private Response<DummyResponse> mSuccessResponse;
     private Response<DummyResponse> mErrorResponse;
+    private NetworkResponse dummyNetworkResponse;
 
 
     @Before
@@ -73,7 +74,7 @@ public class UploadRequestTest {
         headers.put("X-ApiKey", "azerty");
         headers.put("Authorization", "Bearer 1000:2b52d2ccfd6007d7a8d58d8cabb32bc0");
 
-        dummyData = new RequestData("neopixl.jpg", new byte[16]);
+        dummyData = new RequestData("neopixl.jpg", new byte[16], "image/jpeg");
 
         byte[] data = new byte[16];
         Cache.Entry cacheEntry = CacheTestUtils.makeRandomCacheEntry(data);
@@ -81,6 +82,8 @@ public class UploadRequestTest {
         mSuccessResponse = Response.success(dummyResponse, cacheEntry);
         volleyError = new ServerError();
         mErrorResponse = Response.error(volleyError);
+
+        dummyNetworkResponse = new NetworkResponse(new byte[0]);
     }
 
     @Test
@@ -146,7 +149,7 @@ public class UploadRequestTest {
         UploadFileRequest<DummyResponse> baseRequest = builder.build();
 
         mDelivery.postResponse(baseRequest, mErrorResponse);
-        Mockito.verify(listener, Mockito.times(1)).onFailure(Mockito.eq(baseRequest), Mockito.isNull(NetworkResponse.class), Mockito.eq(volleyError));
+        Mockito.verify(listener, Mockito.times(1)).onFailure(Mockito.eq(baseRequest), Mockito.isNull(), Mockito.eq(volleyError));
     }
 
     @Test
@@ -156,8 +159,9 @@ public class UploadRequestTest {
         builder.partData(dummyData);
         UploadFileRequest<DummyResponse> baseRequest = builder.build();
 
+        baseRequest.parseNetworkResponse(dummyNetworkResponse);
         mDelivery.postResponse(baseRequest, mSuccessResponse);
-        Mockito.verify(listener, Mockito.times(1)).onSuccess(Mockito.eq(baseRequest), Mockito.isNull(NetworkResponse.class), Mockito.any(DummyResponse.class));
+        Mockito.verify(listener, Mockito.times(1)).onSuccess(Mockito.eq(baseRequest), Mockito.isNotNull(), Mockito.any(DummyResponse.class));
     }
 
     @Test

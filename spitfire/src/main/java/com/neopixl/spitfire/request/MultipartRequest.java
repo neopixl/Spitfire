@@ -32,7 +32,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
     private final String boundary = "bound-" + System.currentTimeMillis();
 
     @Nullable
-    private HashMap<String, List<RequestData>> multiPartData;
+    private final HashMap<String, List<RequestData>> multiPartData;
     @NonNull
     private String jsonKey = MultipartRequest.JSON_KEY_DEFAULT;
 
@@ -42,7 +42,9 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      */
     public static class Builder<T> extends BaseRequest.Builder<T> {
 
-        private HashMap<String, List<RequestData>> multiPartData = new HashMap<>();
+        @NonNull
+        private final HashMap<String, List<RequestData>> multiPartData = new HashMap<>();
+        @NonNull
         private String jsonKey = MultipartRequest.JSON_KEY_DEFAULT;
 
         /**
@@ -51,7 +53,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
          * @param url    The URL
          * @param classResponse the class used to parse the response associated to the request.
          */
-        public Builder(int method, @NonNull String url, Class<T> classResponse) {
+        public Builder(int method, @NonNull String url, @NonNull Class<T> classResponse) {
             super(method, url, classResponse);
         }
 
@@ -60,8 +62,9 @@ public class MultipartRequest<T> extends BaseRequest<T> {
          * @param jsonObject The object to be embedded in the body, can be null
          * @return Builder {@link BaseRequest.Builder}
          */
-        public Builder<T> object(@Nullable Object jsonObject) {
-            super.object(jsonObject);
+        @NonNull
+        public Builder<T> json(@Nullable Object jsonObject) {
+            super.json(jsonObject);
             return this;
         }
 
@@ -71,8 +74,9 @@ public class MultipartRequest<T> extends BaseRequest<T> {
          * @param jsonObject The object to be embedded in the body, can be null
          * @return
          */
-        public Builder<T> object(String jsonKey, @Nullable Object jsonObject) {
-            super.object(jsonObject);
+        @NonNull
+        public Builder<T> json(@NonNull String jsonKey, @Nullable Object jsonObject) {
+            super.json(jsonObject);
             this.jsonKey = jsonKey;
             return this;
         }
@@ -82,7 +86,8 @@ public class MultipartRequest<T> extends BaseRequest<T> {
          * @param parameters Map&lt;String, String&gt;, not null
          * @return Builder {@link BaseRequest.Builder}
          */
-        public Builder<T> parameters(@NonNull  Map<String, String> parameters) {
+        @NonNull
+        public Builder<T> parameters(@NonNull Map<String, String> parameters) {
             super.parameters(parameters);
             return this;
         }
@@ -90,8 +95,9 @@ public class MultipartRequest<T> extends BaseRequest<T> {
         /**
          * Set the listener for the request
          * @param listener {@link RequestListener}, can be null
-         * @return
+         * @return  Builder {@link BaseRequest.Builder}
          */
+        @NonNull
         @Override
         public Builder<T> listener(@Nullable RequestListener<T> listener) {
             super.listener(listener);
@@ -101,10 +107,11 @@ public class MultipartRequest<T> extends BaseRequest<T> {
         /**
          * Set the headers for the request
          * @param headers used to send the request, not null
-         * @return
+         * @return  Builder {@link BaseRequest.Builder}
          */
+        @NonNull
         @Override
-        public Builder<T> headers(@NonNull Map<String, String>  headers) {
+        public Builder<T> headers(@Nullable Map<String, String>  headers) {
             super.headers(headers);
             return this;
         }
@@ -114,6 +121,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
          * @param multiPartData HashMap&lt;String, NeoRequestData&gt; multiPartData, not null
          * @return Builder {@link Builder}
          */
+        @NonNull
         public Builder<T> multiPartData(@NonNull HashMap<String, RequestData> multiPartData) {
             for (Map.Entry<String, RequestData> entry : multiPartData.entrySet()) {
                 List<RequestData> currentAddedList = this.multiPartData.get(entry.getKey());
@@ -133,6 +141,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
          * @param multiPartData HashMap&lt;String, List&lt;NeoRequestData&gt;&gt; multiPartData, not null
          * @return Builder {@link Builder}
          */
+        @NonNull
         public Builder<T> multiPartDataList(@NonNull HashMap<String, List<RequestData>> multiPartData) {
             for (Map.Entry<String, List<RequestData>> entry : multiPartData.entrySet()) {
                 List<RequestData> currentAddedList = this.multiPartData.get(entry.getKey());
@@ -151,8 +160,9 @@ public class MultipartRequest<T> extends BaseRequest<T> {
          * Insert the data in the given key
          * @param key String key of the data, not null
          * @param partData RequestData data, not null
-         * @return
+         * @return  Builder {@link Builder}
          */
+        @NonNull
         public Builder<T> insertMultiPartData(@NonNull String key, @NonNull RequestData partData) {
             List<RequestData> currentAddedList = this.multiPartData.get(key);
             if (currentAddedList == null) {
@@ -168,6 +178,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
          * Build a new MultipartNeoRequest object based on the Builder's parameters
          * @return MultipartNeoRequest {@link MultipartRequest}
          */
+        @NonNull
         public MultipartRequest<T> build() {
             return new MultipartRequest<T>(this);
         }
@@ -248,7 +259,10 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      * @param encoding         encode the inputs, default UTF-8
      * @throws IOException
      */
-    void textParse(DataOutputStream dataOutputStream, Map<String, String> params, String encoding) throws IOException {
+    void textParse(@NonNull DataOutputStream dataOutputStream, @Nullable Map<String, String> params, @NonNull String encoding) throws IOException {
+        if (params == null) {
+            return;
+        }
         try {
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 buildTextPart(dataOutputStream, entry.getKey(), entry.getValue());
@@ -266,7 +280,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      * @param jsonObject       the object to parse
      * @throws IOException
      */
-    void jsonParse(DataOutputStream dataOutputStream, Object jsonObject) throws IOException {
+    void jsonParse(@NonNull DataOutputStream dataOutputStream, @NonNull Object jsonObject) throws IOException {
         try {
             String json = SpitfireManager.getObjectMapper().writeValueAsString(jsonObject);
             StringBuilder stringBuilder = new StringBuilder();
@@ -289,7 +303,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      * @param data             loop through data
      * @throws IOException
      */
-    void dataParse(DataOutputStream dataOutputStream, Map<String, List<RequestData>> data) throws IOException {
+    void dataParse(@NonNull DataOutputStream dataOutputStream, @NonNull Map<String, List<RequestData>> data) throws IOException {
         for (Map.Entry<String, List<RequestData>> entry : data.entrySet()) {
             for (RequestData datapart : entry.getValue()) {
                 buildDataPart(dataOutputStream, datapart, entry.getKey());
@@ -305,7 +319,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      * @param parameterValue   value of input
      * @throws IOException
      */
-    void buildTextPart(DataOutputStream dataOutputStream, String parameterName, String parameterValue) throws IOException {
+    void buildTextPart(@NonNull DataOutputStream dataOutputStream, @NonNull String parameterName, @NonNull String parameterValue) throws IOException {
         dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);
         dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"" + parameterName + "\"" + lineEnd);
         //dataOutputStream.writeBytes("Content-Type: text/plain; charset=UTF-8" + lineEnd);
@@ -321,7 +335,7 @@ public class MultipartRequest<T> extends BaseRequest<T> {
      * @param inputName        name of data input
      * @throws IOException
      */
-    void buildDataPart(DataOutputStream dataOutputStream, RequestData dataFile, String inputName) throws IOException {
+    void buildDataPart(@NonNull DataOutputStream dataOutputStream, @NonNull RequestData dataFile, @NonNull String inputName) throws IOException {
         dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);
         dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"" +
                 inputName + "\"; filename=\"" + dataFile.getFileName() + "\"" + lineEnd);

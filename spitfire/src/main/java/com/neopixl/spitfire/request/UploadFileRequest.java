@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class UploadFileRequest<T> extends AbstractRequest<T> {
 
-    private RequestData partData;
+    private final RequestData partData;
 
     public static class Builder<T> extends AbstractBuilder<T, UploadFileRequest<T>> {
 
@@ -41,14 +41,16 @@ public class UploadFileRequest<T> extends AbstractRequest<T> {
             return this;
         }
 
+        @NonNull
         @Override
         public Builder<T> listener(@Nullable RequestListener<T> listener) {
             super.listener(listener);
             return this;
         }
 
+        @NonNull
         @Override
-        public Builder<T> headers(@NonNull Map headers) {
+        public Builder<T> headers(@Nullable Map headers) {
             super.headers(headers);
             return this;
         }
@@ -57,6 +59,7 @@ public class UploadFileRequest<T> extends AbstractRequest<T> {
          * Create a request based on the current request
          * @return The request
          */
+        @NonNull
         public UploadFileRequest<T> build() {
             return new UploadFileRequest<T>(this);
         }
@@ -75,6 +78,10 @@ public class UploadFileRequest<T> extends AbstractRequest<T> {
             throw new IllegalArgumentException("Partdata should not be null.");
         }
 
+        if (partData.getType() == null) {
+            throw new IllegalArgumentException("Partdata type cannot be null");
+        }
+
         if (builder.method == Method.GET) {
             throw new IllegalArgumentException("Cannot use streamfile with GET request");
         }
@@ -87,7 +94,7 @@ public class UploadFileRequest<T> extends AbstractRequest<T> {
     @Override
     @NonNull
     public String getBodyContentType() {
-        return getPartData().getType();
+        return getPartData().getType() != null ? getPartData().getType() : "";
     }
 
 

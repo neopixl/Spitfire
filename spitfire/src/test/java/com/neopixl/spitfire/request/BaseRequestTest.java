@@ -66,6 +66,7 @@ public class BaseRequestTest {
     private ExecutorDelivery mDelivery;
     private Response<DummyResponse> mSuccessResponse;
     private Response<DummyResponse> mErrorResponse;
+    private NetworkResponse dummyNetworkResponse;
 
 
     @Before
@@ -92,6 +93,8 @@ public class BaseRequestTest {
         mErrorResponse = Response.error(volleyError);
 
         dummyRequestObject.setMessage("% 🤞 🌎 $ ~ ! @ # $ % ^ & * ( ) _ + \\");
+
+        dummyNetworkResponse = new NetworkResponse(new byte[0]);
     }
 
     @Test
@@ -106,7 +109,7 @@ public class BaseRequestTest {
         assertNotNull(BaseRequest.class.getDeclaredConstructor(BaseRequest.Builder.class));
 
         // Catch-all test to find API-breaking changes for the builder.
-        assertNotNull(BaseRequest.Builder.class.getMethod("object",
+        assertNotNull(BaseRequest.Builder.class.getMethod("json",
                 Object.class));
         assertNotNull(BaseRequest.Builder.class.getMethod("parameters",
                 Map.class));
@@ -126,7 +129,7 @@ public class BaseRequestTest {
         builder.parameters(parameters);
         builder.headers(headers);
         BaseRequest<DummyResponse> baseRequest = builder.build();
-        baseRequest.addAcceptedStatusCodes(HttpURLConnection.HTTP_BAD_GATEWAY);
+        baseRequest.addAcceptedStatusCode(HttpURLConnection.HTTP_BAD_GATEWAY);
         baseRequest.addAcceptedStatusCodes(new int[]{
                 HttpURLConnection.HTTP_BAD_METHOD
                 , HttpURLConnection.HTTP_BAD_REQUEST
@@ -166,7 +169,7 @@ public class BaseRequestTest {
     public void builderPostGeneration() throws Exception {
         BaseRequest.Builder<DummyResponse> builder = new BaseRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
         builder.parameters(parameters);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
         builder.headers(headers);
 
         BaseRequest<DummyResponse> baseRequest = builder.build();
@@ -186,7 +189,7 @@ public class BaseRequestTest {
     @Test(expected = IllegalArgumentException.class)
     public void builderGenerationNoJsonInGet() throws Exception {
         BaseRequest.Builder<DummyResponse> builder = new BaseRequest.Builder<>(Request.Method.GET, url, DummyResponse.class);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
 
         BaseRequest<DummyResponse> baseRequest = builder.build();
         baseRequest.getJsonObject();
@@ -216,7 +219,7 @@ public class BaseRequestTest {
         BaseRequest<DummyResponse> baseRequest = builder.build();
 
         mDelivery.postResponse(baseRequest, mErrorResponse);
-        Mockito.verify(listener, Mockito.times(1)).onFailure(Mockito.eq(baseRequest), Mockito.isNull(NetworkResponse.class), Mockito.eq(volleyError));
+        Mockito.verify(listener, Mockito.times(1)).onFailure(Mockito.eq(baseRequest), Mockito.isNull(), Mockito.eq(volleyError));
     }
 
     @Test
@@ -225,14 +228,15 @@ public class BaseRequestTest {
         builder.listener(listener);
         BaseRequest<DummyResponse> baseRequest = builder.build();
 
+        baseRequest.parseNetworkResponse(dummyNetworkResponse);
         mDelivery.postResponse(baseRequest, mSuccessResponse);
-        Mockito.verify(listener, Mockito.times(1)).onSuccess(Mockito.eq(baseRequest), Mockito.isNull(NetworkResponse.class), Mockito.any(DummyResponse.class));
+        Mockito.verify(listener, Mockito.times(1)).onSuccess(Mockito.eq(baseRequest), Mockito.isNotNull(), Mockito.any(DummyResponse.class));
     }
 
     @Test
     public void requestPostConstruct_contentType() throws Exception {
         BaseRequest.Builder<DummyResponse> builder = new BaseRequest.Builder<>(Request.Method.POST, url, DummyResponse.class);
-        builder.object(dummyRequestObject);
+        builder.json(dummyRequestObject);
         builder.headers(headers);
         BaseRequest<DummyResponse> baseRequest = builder.build();
 

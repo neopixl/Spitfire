@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 2.0.0 *(2018-10-XX)* UNRELEASED
+----------------------------
+
+ * Updated Jackson to 2.9.4
+ * Updated Volley to 1.1.1
+ * Updated compile and target SDK to 28
+ * Updated improved kotlin compliance
+ * Updated Gradle to 3.2.1
+
+ 
 Version 1.1.1 *(2018-10-04)*
 ----------------------------
 

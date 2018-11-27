@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
             }
         })
                 .headers(fullHeaders)
-                .object(postJsonRequest)
+                .json(postJsonRequest)
                 .build();
 
         addRequestWithRandom(postWithJsonAndHeaderRequest);
