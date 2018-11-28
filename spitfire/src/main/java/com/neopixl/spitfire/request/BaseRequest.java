@@ -27,7 +27,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
     private final Object jsonObject;
 
     @Nullable
-    private final Map standardParams;
+    private final Map<String, String> parameters;
 
     /**
      * Class Builder used to create a new request
@@ -115,7 +115,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
     protected BaseRequest(Builder builder) {
         super(builder);
 
-        this.standardParams = builder.parameters;
+        this.parameters = builder.parameters;
         this.jsonObject = builder.jsonObject;
 
         if (builder.method == Method.GET && jsonObject != null) {
@@ -227,7 +227,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
     @Override
     @Nullable
     public Map<String, String> getParams() {
-        return standardParams;
+        return parameters;
     }
 
     /**
