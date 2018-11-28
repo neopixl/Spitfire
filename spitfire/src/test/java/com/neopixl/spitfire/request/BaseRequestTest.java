@@ -18,11 +18,14 @@ package com.neopixl.spitfire.request;
 
 import com.android.volley.Cache;
 import com.android.volley.ExecutorDelivery;
+import com.android.volley.Network;
+import com.android.volley.NetworkDispatcher;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.DiskBasedCache;
 import com.neopixl.spitfire.listener.RequestListener;
 import com.neopixl.spitfire.mock.DummyResponse;
 import com.neopixl.spitfire.utils.CacheTestUtils;
@@ -39,8 +42,12 @@ import org.robolectric.annotation.Config;
 
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.PriorityBlockingQueue;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -56,6 +63,8 @@ public class BaseRequestTest {
     private RequestListener<DummyResponse> listener;
     @Mock
     private VolleyError volleyError;
+    @Mock
+    private Cache cache;
 
     private String url = "http://neopixl.com/";
     private HashMap<String, String> parameters = new HashMap<>();
@@ -67,6 +76,13 @@ public class BaseRequestTest {
     private Response<DummyResponse> mSuccessResponse;
     private Response<DummyResponse> mErrorResponse;
     private NetworkResponse dummyNetworkResponse;
+    private NetworkResponse notModifedNetworkResponse;
+    private NetworkDispatcher networkDispatcherNotModified;
+    private Network networkMockedNotModified;
+    private NetworkResponse noContentNetworkResponse;
+    private NetworkDispatcher networkDispatcherNoContent;
+    private Network networkMockedNoContent;
+    private PriorityBlockingQueue<Request<?>> mNetworkQueue;
 
 
     @Before
@@ -90,11 +106,33 @@ public class BaseRequestTest {
         mDelivery = new ImmediateResponseDelivery();
         mSuccessResponse = Response.success(dummyResponse, cacheEntry);
         volleyError = new ServerError();
+        mNetworkQueue = new PriorityBlockingQueue<>();
         mErrorResponse = Response.error(volleyError);
 
         dummyRequestObject.setMessage("% 🤞 🌎 $ ~ ! @ # $ % ^ & * ( ) _ + \\");
 
         dummyNetworkResponse = new NetworkResponse(new byte[0]);
+        notModifedNetworkResponse = new NetworkResponse(
+                HttpsURLConnection.HTTP_NOT_MODIFIED,
+                null,
+                true,
+                200L,
+                new ArrayList<>()
+        );
+        networkMockedNotModified = Mockito.mock(Network.class);
+        Mockito.when(networkMockedNotModified.performRequest(Mockito.any())).thenReturn(notModifedNetworkResponse);
+        networkDispatcherNotModified = new NetworkDispatcher(mNetworkQueue, networkMockedNotModified, cache, mDelivery);
+
+        noContentNetworkResponse = new NetworkResponse(
+                HttpsURLConnection.HTTP_NOT_MODIFIED,
+                null,
+                true,
+                200L,
+                new ArrayList<>()
+        );
+        networkMockedNoContent = Mockito.mock(Network.class);
+        Mockito.when(networkMockedNoContent.performRequest(Mockito.any())).thenReturn(noContentNetworkResponse);
+        networkDispatcherNoContent = new NetworkDispatcher(mNetworkQueue, networkMockedNoContent, cache, mDelivery);
     }
 
     @Test
@@ -367,5 +405,29 @@ public class BaseRequestTest {
 
         baseRequest.getBody();
         Mockito.verify(baseRequest, Mockito.never()).getJsonBody();
+    }
+
+    @Test
+    public void requestNotModified_success() throws Exception {
+        BaseRequest.Builder<DummyResponse> builder = new BaseRequest.Builder<>(Request.Method.GET, url, DummyResponse.class);
+        builder.listener(listener);
+        BaseRequest<DummyResponse> baseRequest = builder.build();
+        mNetworkQueue.add(baseRequest);
+
+        networkDispatcherNotModified.start();
+
+        Mockito.verify(listener, Mockito.timeout(1000).times(1)).onSuccess(Mockito.eq(baseRequest), Mockito.isNotNull(), Mockito.isNull());
+    }
+
+    @Test
+    public void requestNoContent_success() throws Exception {
+        BaseRequest.Builder<DummyResponse> builder = new BaseRequest.Builder<>(Request.Method.GET, url, DummyResponse.class);
+        builder.listener(listener);
+        BaseRequest<DummyResponse> baseRequest = builder.build();
+        mNetworkQueue.add(baseRequest);
+
+        networkDispatcherNoContent.start();
+
+        Mockito.verify(listener, Mockito.timeout(1000).times(1)).onSuccess(Mockito.eq(baseRequest), Mockito.isNotNull(), Mockito.isNull());
     }
 }
