@@ -20,7 +20,7 @@ public interface RequestListener<T> {
      * @param response the network response
      * @param result the parsed response
      */
-    void onSuccess(@NonNull Request request, @NonNull NetworkResponse response, @Nullable T result);
+    void onSuccess(@NonNull Request<T> request, @NonNull NetworkResponse response, @Nullable T result);
 
     /**
      * Called when the request has failed
@@ -28,5 +28,5 @@ public interface RequestListener<T> {
      * @param response the network response
      * @param error <b>VolleyError</b> error for the request
      */
-    void onFailure(@NonNull Request request, @Nullable NetworkResponse response, @Nullable VolleyError error);
+    void onFailure(@NonNull Request<T> request, @Nullable NetworkResponse response, @Nullable VolleyError error);
 }

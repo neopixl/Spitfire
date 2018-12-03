@@ -3,6 +3,7 @@ package com.neopixl.spitfireapp;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.widget.LinearLayout;
@@ -21,6 +22,7 @@ import com.neopixl.spitfire.request.MultipartRequest;
 import com.neopixl.spitfire.request.UploadFileRequest;
 import com.neopixl.spitfireapp.model.PostJsonRequest;
 import com.neopixl.spitfireapp.model.StatusMessageResponse;
+import com.neopixl.spitfireapp.model.WrapperStatusMessageResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,18 +62,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadGetRequest() {
+        final TextView getWithoutParamsAndNoContentReturnTextView = getTextViewForRequest("getWithoutParamsAndNoContentReturnTextView");
+        BaseRequest<StatusMessageResponse> getWithParamsAndNoContentReturnRequest = new BaseRequest.Builder<StatusMessageResponse>(Request.Method.GET,
+                "https://private-4b982e-neorequest.apiary-mock.com/get/datanocontent", StatusMessageResponse.class)
+                .listener(new RequestListener<StatusMessageResponse>() {
+                    @Override
+                    public void onSuccess(@NonNull Request<StatusMessageResponse> request, @NonNull NetworkResponse response, StatusMessageResponse v) {
+                        setSuccessForTextView(getWithoutParamsAndNoContentReturnTextView, true);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Request<StatusMessageResponse> request, NetworkResponse response, VolleyError volleyError) {
+                        setSuccessForTextView(getWithoutParamsAndNoContentReturnTextView, false);
+
+                    }
+                }).build();
+        addRequestWithRandom(getWithParamsAndNoContentReturnRequest);
+
+        final TextView getWithoutParamsAndPartialContentReturnTextView = getTextViewForRequest("getWithoutParamsAndPartialContentReturnTextView");
+        BaseRequest<WrapperStatusMessageResponse> getWithParamsAndPartialContentReturnRequest = new BaseRequest.Builder<WrapperStatusMessageResponse>(Request.Method.GET,
+                "https://private-4b982e-neorequest.apiary-mock.com/get/datapartialcontent", WrapperStatusMessageResponse.class)
+                .listener(new RequestListener<WrapperStatusMessageResponse>() {
+                    @Override
+                    public void onSuccess(@NonNull Request<WrapperStatusMessageResponse> request, @NonNull NetworkResponse response, WrapperStatusMessageResponse v) {
+                        setSuccessForTextView(getWithoutParamsAndPartialContentReturnTextView, v != null && v.getStatusList() != null && !v.getStatusList().isEmpty());
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Request<WrapperStatusMessageResponse> request, NetworkResponse response, VolleyError volleyError) {
+                        setSuccessForTextView(getWithoutParamsAndPartialContentReturnTextView, false);
+
+                    }
+                }).build();
+        addRequestWithRandom(getWithParamsAndPartialContentReturnRequest);
+
         final TextView getWithoutParamsAndEmptyReturnTextView = getTextViewForRequest("getWithoutParamsAndEmptyReturn");
 
         BaseRequest<Void> getWithoutParamsAndEmptyReturnRequest = new BaseRequest.Builder<Void>(Request.Method.GET,
                 "https://private-4b982e-neorequest.apiary-mock.com/get/nodata", Void.class)
                 .listener(new RequestListener<Void>() {
                     @Override
-                    public void onSuccess(Request request, NetworkResponse response, Void v) {
+                    public void onSuccess(@NonNull Request<Void> request, @NonNull NetworkResponse response, Void v) {
                         setSuccessForTextView(getWithoutParamsAndEmptyReturnTextView, true);
                     }
 
                     @Override
-                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+                    public void onFailure(@NonNull Request<Void> request, NetworkResponse response, VolleyError volleyError) {
                         setSuccessForTextView(getWithoutParamsAndEmptyReturnTextView, false);
 
                     }
@@ -88,12 +124,12 @@ public class MainActivity extends AppCompatActivity {
                 "https://private-4b982e-neorequest.apiary-mock.com/get/data/3", Void.class)
                 .listener(new RequestListener<Void>() {
                     @Override
-                    public void onSuccess(Request request, NetworkResponse response, Void v) {
+                    public void onSuccess(@NonNull Request<Void> request, @NonNull NetworkResponse response, Void v) {
                         setSuccessForTextView(getWithParamsTextView, true);
                     }
 
                     @Override
-                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+                    public void onFailure(@NonNull Request<Void> request, NetworkResponse response, VolleyError volleyError) {
                         setSuccessForTextView(getWithParamsTextView, false);
 
                     }
@@ -106,12 +142,12 @@ public class MainActivity extends AppCompatActivity {
                 "https://private-4b982e-neorequest.apiary-mock.com/get/errordata/3", Void.class)
                 .listener(new RequestListener<Void>() {
                     @Override
-                    public void onSuccess(Request request, NetworkResponse response, Void v) {
+                    public void onSuccess(@NonNull Request<Void> request, @NonNull NetworkResponse response, Void v) {
                         setSuccessForTextView(getWithParamsErrorTextView, false);
                     }
 
                     @Override
-                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+                    public void onFailure(@NonNull Request<Void> request, NetworkResponse response, VolleyError volleyError) {
                         setSuccessForTextView(getWithParamsErrorTextView, true);
 
                     }
@@ -130,12 +166,12 @@ public class MainActivity extends AppCompatActivity {
                 "https://private-4b982e-neorequest.apiary-mock.com/post/data/3", StatusMessageResponse.class)
                 .listener(new RequestListener<StatusMessageResponse>() {
             @Override
-            public void onSuccess(Request request, NetworkResponse response, StatusMessageResponse v) {
+            public void onSuccess(@NonNull Request<StatusMessageResponse> request, @NonNull NetworkResponse response, StatusMessageResponse v) {
                 setSuccessForTextView(postWithParamsTextView, true);
             }
 
             @Override
-            public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+            public void onFailure(@NonNull Request<StatusMessageResponse> request, NetworkResponse response, VolleyError volleyError) {
                 setSuccessForTextView(postWithParamsTextView, false);
 
             }
@@ -159,12 +195,12 @@ public class MainActivity extends AppCompatActivity {
         BaseRequest<StatusMessageResponse> postWithJsonAndHeaderRequest = new BaseRequest.Builder<StatusMessageResponse>(Request.Method.POST,
                 "https://private-4b982e-neorequest.apiary-mock.com/post/json", StatusMessageResponse.class).listener(new RequestListener<StatusMessageResponse>() {
             @Override
-            public void onSuccess(Request request, NetworkResponse response, StatusMessageResponse v) {
+            public void onSuccess(@NonNull Request<StatusMessageResponse> request, @NonNull NetworkResponse response, StatusMessageResponse v) {
                 setSuccessForTextView(postWithJsonAndHeaderTextView, true);
             }
 
             @Override
-            public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+            public void onFailure(@NonNull Request<StatusMessageResponse> request, NetworkResponse response, VolleyError volleyError) {
                 setSuccessForTextView(postWithJsonAndHeaderTextView, false);
 
             }
@@ -182,12 +218,12 @@ public class MainActivity extends AppCompatActivity {
                 "https://private-4b982e-neorequest.apiary-mock.com/post/errordata-json", Void.class)
                 .listener(new RequestListener<Void>() {
                     @Override
-                    public void onSuccess(Request request, NetworkResponse response, Void v) {
+                    public void onSuccess(@NonNull Request<Void> request, @NonNull NetworkResponse response, Void v) {
                         setSuccessForTextView(postWithStatusErrorTextView, false);
                     }
 
                     @Override
-                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+                    public void onFailure(@NonNull Request<Void> request, NetworkResponse response, VolleyError volleyError) {
                         setSuccessForTextView(postWithStatusErrorTextView, (response != null && response.statusCode == 400));
 
                     }
@@ -215,18 +251,18 @@ public class MainActivity extends AppCompatActivity {
         BaseRequest<StatusMessageResponse> postWithJsonAndHeaderRequest = new BaseRequest.Builder<StatusMessageResponse>(Request.Method.PATCH,
                 "https://private-4b982e-neorequest.apiary-mock.com/patch/json", StatusMessageResponse.class).listener(new RequestListener<StatusMessageResponse>() {
             @Override
-            public void onSuccess(Request request, NetworkResponse response, StatusMessageResponse v) {
+            public void onSuccess(@NonNull Request<StatusMessageResponse> request, @NonNull NetworkResponse response, StatusMessageResponse v) {
                 setSuccessForTextView(patchWithJsonAndHeaderTextView, true);
             }
 
             @Override
-            public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+            public void onFailure(@NonNull Request<StatusMessageResponse> request, NetworkResponse response, VolleyError volleyError) {
                 setSuccessForTextView(patchWithJsonAndHeaderTextView, false);
 
             }
         })
                 .headers(fullHeaders)
-                .object(postJsonRequest)
+                .json(postJsonRequest)
                 .build();
 
         addRequestWithRandom(postWithJsonAndHeaderRequest);
@@ -238,12 +274,12 @@ public class MainActivity extends AppCompatActivity {
                 "https://private-4b982e-neorequest.apiary-mock.com/patch/errordata-json", Void.class)
                 .listener(new RequestListener<Void>() {
                     @Override
-                    public void onSuccess(Request request, NetworkResponse response, Void v) {
+                    public void onSuccess(@NonNull Request<Void> request, @NonNull NetworkResponse response, Void v) {
                         setSuccessForTextView(patchWithStatusErrorTextView, false);
                     }
 
                     @Override
-                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+                    public void onFailure(@NonNull Request<Void> request, NetworkResponse response, VolleyError volleyError) {
                         setSuccessForTextView(patchWithStatusErrorTextView, (response != null && response.statusCode == 400));
 
                     }
@@ -264,12 +300,12 @@ public class MainActivity extends AppCompatActivity {
         UploadFileRequest<Void> putImageStreamRequest = new UploadFileRequest.Builder<Void>(Request.Method.PUT, "https://private-4b982e-neorequest.apiary-mock.com/put/image", Void.class)
                 .listener(new RequestListener<Void>() {
                     @Override
-                    public void onSuccess(Request request, NetworkResponse response, Void v) {
+                    public void onSuccess(@NonNull Request<Void> request, @NonNull NetworkResponse response, Void v) {
                         setSuccessForTextView(putImageStreamTextView, true);
                     }
 
                     @Override
-                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+                    public void onFailure(@NonNull Request<Void> request, NetworkResponse response, VolleyError volleyError) {
                         setSuccessForTextView(putImageStreamTextView, false);
 
                     }
@@ -299,12 +335,12 @@ public class MainActivity extends AppCompatActivity {
                 "https://private-4b982e-neorequest.apiary-mock.com/put/images/3", Void.class)
                 .listener(new RequestListener<Void>() {
                     @Override
-                    public void onSuccess(Request request, NetworkResponse response, Void v) {
+                    public void onSuccess(@NonNull Request<Void> request, @NonNull NetworkResponse response, Void v) {
                         setSuccessForTextView(putImageMultipartTextView, true);
                     }
 
                     @Override
-                    public void onFailure(Request request, NetworkResponse response, VolleyError volleyError) {
+                    public void onFailure(@NonNull Request<Void> request, NetworkResponse response, VolleyError volleyError) {
                         setSuccessForTextView(putImageMultipartTextView, false);
 
                     }

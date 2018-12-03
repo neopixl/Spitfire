@@ -9,6 +9,7 @@ Version 2.0.0 *(2018-10-XX)* UNRELEASED
  * Updated compile and target SDK to 28
  * Updated improved kotlin compliance
  * Updated Gradle to 3.2.1
+ * Updated Fixed crash on HTTP code 304
 
  
 Version 1.1.1 *(2018-10-04)*
