@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 2.0.0 *(2018-10-XX)* UNRELEASED
+Version 2.0.0 *(2009-02-XX)* UNRELEASED
 ----------------------------
 
  * Updated Jackson to 2.9.4
@@ -9,7 +9,8 @@ Version 2.0.0 *(2018-10-XX)* UNRELEASED
  * Updated compile and target SDK to 28
  * Updated improved kotlin compliance
  * Updated Gradle to 3.2.1
- * Updated Fixed crash on HTTP code 304
+ * Fixed crash on HTTP code 304
+ * Fixed timeout crash when a lot of timeout occurs
 
  
 Version 1.1.1 *(2018-10-04)*
