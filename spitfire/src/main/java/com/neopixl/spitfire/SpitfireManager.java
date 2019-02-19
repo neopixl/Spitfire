@@ -20,6 +20,8 @@ public final class SpitfireManager {
     @Nullable
     private static ObjectMapper objectMapper;
 
+    @Nullable
+    private static DefaultRetryPolicy customDefaultRetryPolicy;
     private static int requestTimeout = 30000;// 30 seconds
 
     /**
@@ -28,6 +30,14 @@ public final class SpitfireManager {
      */
     public static void setRequestTimeout(int timeout) {
         requestTimeout = timeout;
+    }
+
+    /**
+     * Store a retry policy
+     * @param newRetryPolicy <b>DefaultRetryPolicy</b>, not null
+     */
+    public static void setDefaultRetryPolicy(@NonNull DefaultRetryPolicy newRetryPolicy) {
+        customDefaultRetryPolicy = newRetryPolicy;
     }
 
     /**
@@ -70,6 +80,13 @@ public final class SpitfireManager {
      */
     @NonNull
     private static RetryPolicy generateRetryPolicy() {
+        if (customDefaultRetryPolicy != null) {
+
+            new DefaultRetryPolicy(customDefaultRetryPolicy.getCurrentTimeout(),
+                    customDefaultRetryPolicy.getCurrentRetryCount(),
+                    customDefaultRetryPolicy.getBackoffMultiplier());
+
+        }
         return new DefaultRetryPolicy(requestTimeout,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
