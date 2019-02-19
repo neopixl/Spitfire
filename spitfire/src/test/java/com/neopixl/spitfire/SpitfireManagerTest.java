@@ -28,8 +28,6 @@ public class SpitfireManagerTest {
         // Catch-all test to find API-breaking changes for the builder.
         assertNotNull(SpitfireManager.class.getMethod("setObjectMapper",
                 ObjectMapper.class));
-        assertNotNull(SpitfireManager.class.getMethod("setDefaultRetryPolicy",
-                RetryPolicy.class));
         assertNotNull(SpitfireManager.class.getMethod("setRequestTimeout",
                 int.class));
     }
