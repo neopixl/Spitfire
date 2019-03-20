@@ -3,8 +3,9 @@ package com.neopixl.spitfireapp;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;

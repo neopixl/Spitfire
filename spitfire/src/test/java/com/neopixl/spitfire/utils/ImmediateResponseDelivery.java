@@ -16,7 +16,7 @@
 
 package com.neopixl.spitfire.utils;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.android.volley.ExecutorDelivery;
 
