@@ -8,7 +8,7 @@ Version 2.0.0 *(2009-02-XX)* UNRELEASED
  * Updated Volley to 1.1.1
  * Updated compile and target SDK to 28
  * Updated improved kotlin compliance
- * Updated Gradle to 3.2.1
+ * Updated Gradle to 3.3.2
  * Updated Support to AndroidX
  * Fixed crash on HTTP code 304
  * Fixed timeout crash when a lot of timeout occurs
