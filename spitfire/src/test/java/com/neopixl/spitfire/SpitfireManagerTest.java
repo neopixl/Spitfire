@@ -1,5 +1,6 @@
 package com.neopixl.spitfire;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RetryPolicy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -29,7 +30,7 @@ public class SpitfireManagerTest {
         assertNotNull(SpitfireManager.class.getMethod("setObjectMapper",
                 ObjectMapper.class));
         assertNotNull(SpitfireManager.class.getMethod("setDefaultRetryPolicy",
-                RetryPolicy.class));
+                DefaultRetryPolicy.class));
         assertNotNull(SpitfireManager.class.getMethod("setRequestTimeout",
                 int.class));
     }

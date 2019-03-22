@@ -1,7 +1,7 @@
 package com.neopixl.spitfire;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RetryPolicy;
@@ -20,8 +20,8 @@ public final class SpitfireManager {
     @Nullable
     private static ObjectMapper objectMapper;
 
-    @NonNull
-    private static RetryPolicy defaultRetryPolicy = generateRetryPolicy();
+    @Nullable
+    private static DefaultRetryPolicy customDefaultRetryPolicy;
     private static int requestTimeout = 30000;// 30 seconds
 
     /**
@@ -30,15 +30,14 @@ public final class SpitfireManager {
      */
     public static void setRequestTimeout(int timeout) {
         requestTimeout = timeout;
-        defaultRetryPolicy = generateRetryPolicy();
     }
 
     /**
      * Store a retry policy
-     * @param newRetryPolicy <b>RetryPolicy</b>, not null
+     * @param newRetryPolicy <b>DefaultRetryPolicy</b>, not null
      */
-    public static void setDefaultRetryPolicy(@NonNull RetryPolicy newRetryPolicy) {
-        defaultRetryPolicy = newRetryPolicy;
+    public static void setDefaultRetryPolicy(@NonNull DefaultRetryPolicy newRetryPolicy) {
+        customDefaultRetryPolicy = newRetryPolicy;
     }
 
     /**
@@ -47,7 +46,7 @@ public final class SpitfireManager {
      */
     @NonNull
     public static RetryPolicy getDefaultRetryPolicy() {
-        return defaultRetryPolicy;
+        return generateRetryPolicy();
     }
 
     /**
@@ -81,6 +80,13 @@ public final class SpitfireManager {
      */
     @NonNull
     private static RetryPolicy generateRetryPolicy() {
+        if (customDefaultRetryPolicy != null) {
+
+            new DefaultRetryPolicy(customDefaultRetryPolicy.getCurrentTimeout(),
+                    customDefaultRetryPolicy.getCurrentRetryCount(),
+                    customDefaultRetryPolicy.getBackoffMultiplier());
+
+        }
         return new DefaultRetryPolicy(requestTimeout,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);

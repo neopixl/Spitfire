@@ -52,8 +52,8 @@ public class RequestDataTest {
     public void emptyConstruction() throws Exception {
         RequestData requestData = new RequestData();
 
-        assertNull(requestData.getContent());
-        assertNull(requestData.getFileName());
+        assertNotNull(requestData.getContent());
+        assertNotNull(requestData.getFileName());
         assertNull(requestData.getType());
     }
 

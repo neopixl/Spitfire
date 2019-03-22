@@ -16,6 +16,8 @@
 
 package com.neopixl.spitfire.utils;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.ExecutorDelivery;
 
 import java.util.concurrent.Executor;
@@ -29,7 +31,7 @@ public class ImmediateResponseDelivery extends ExecutorDelivery {
     public ImmediateResponseDelivery() {
         super(new Executor() {
             @Override
-            public void execute(Runnable command) {
+            public void execute(@NonNull Runnable command) {
                 command.run();
             }
         });

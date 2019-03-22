@@ -1,5 +1,8 @@
 package com.neopixl.spitfire.listener;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -17,7 +20,7 @@ public interface RequestListener<T> {
      * @param response the network response
      * @param result the parsed response
      */
-    void onSuccess(Request request, NetworkResponse response, T result);
+    void onSuccess(@NonNull Request<T> request, @NonNull NetworkResponse response, @Nullable T result);
 
     /**
      * Called when the request has failed
@@ -25,5 +28,5 @@ public interface RequestListener<T> {
      * @param response the network response
      * @param error <b>VolleyError</b> error for the request
      */
-    void onFailure(Request request, NetworkResponse response, VolleyError error);
+    void onFailure(@NonNull Request<T> request, @Nullable NetworkResponse response, @Nullable VolleyError error);
 }

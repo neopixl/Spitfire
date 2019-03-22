@@ -1,7 +1,7 @@
 package com.neopixl.spitfire.request;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -12,7 +12,6 @@ import com.neopixl.spitfire.listener.RequestListener;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,17 +24,17 @@ import java.util.Map;
 public class BaseRequest<T> extends AbstractRequest<T> {
 
     @Nullable
-    private Object jsonObject;
+    private final Object jsonObject;
 
     @Nullable
-    private Map<String, String> standardParams;
+    private final Map<String, String> parameters;
 
     /**
      * Class Builder used to create a new request
      */
     public static class Builder<T> extends AbstractBuilder<T, BaseRequest<T>> {
 
-
+        @Nullable
         private Map<String, String> parameters;
 
         @Nullable
@@ -48,7 +47,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
          * @param url           given url to access the resource, not null
          * @param classResponse class used to parse the response
          */
-        public Builder(int method, @NonNull String url, Class<T> classResponse) {
+        public Builder(int method, @NonNull String url, @NonNull Class<T> classResponse) {
             super(method, url, classResponse);
         }
 
@@ -57,7 +56,8 @@ public class BaseRequest<T> extends AbstractRequest<T> {
          * @param jsonObject The object to be embedded in the body, can be null
          * @return Builder {@link Builder}
          */
-        public Builder<T> object(@Nullable Object jsonObject) {
+        @NonNull
+        public Builder<T> json(@Nullable Object jsonObject) {
             this.jsonObject = jsonObject;
             return this;
         }
@@ -67,6 +67,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
          * @param parameters Map&lt;String, String&gt;, not null
          * @return Builder {@link Builder}
          */
+        @NonNull
         public Builder<T> parameters(@NonNull  Map<String, String> parameters) {
             this.parameters = new HashMap<>(parameters);
             return this;
@@ -75,8 +76,9 @@ public class BaseRequest<T> extends AbstractRequest<T> {
         /**
          * Set the listener for the request
          * @param listener {@link RequestListener}, can be null
-         * @return
+         * @return Builder {@link Builder}
          */
+        @NonNull
         @Override
         public Builder<T> listener(@Nullable RequestListener<T> listener) {
             super.listener(listener);
@@ -86,10 +88,11 @@ public class BaseRequest<T> extends AbstractRequest<T> {
         /**
          * Set the headers for the request
          * @param headers used to send the request, not null
-         * @return
+         * @return Builder {@link Builder}
          */
+        @NonNull
         @Override
-        public Builder<T> headers(@NonNull Map<String, String>  headers) {
+        public Builder<T> headers(@Nullable Map<String, String>  headers) {
             super.headers(headers);
             return this;
         }
@@ -98,7 +101,8 @@ public class BaseRequest<T> extends AbstractRequest<T> {
          * Create a request based on the current request
          * @return The request
          */
-
+        @NonNull
+        @Override
         public BaseRequest<T> build() {
             return new BaseRequest<T>(this);
         }
@@ -111,7 +115,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
     protected BaseRequest(Builder builder) {
         super(builder);
 
-        this.standardParams = builder.parameters;
+        this.parameters = builder.parameters;
         this.jsonObject = builder.jsonObject;
 
         if (builder.method == Method.GET && jsonObject != null) {
@@ -223,7 +227,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
     @Override
     @Nullable
     public Map<String, String> getParams() {
-        return standardParams;
+        return parameters;
     }
 
     /**
@@ -235,6 +239,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
      * @param encoding The encoding used to parse parameters set in the url (GET method), can be null
      * @return The full URL
      */
+    @NonNull
     protected String parseGetUrl(int method, @NonNull String url, @Nullable Map<String, String> params, @NonNull String encoding) {
         if (method == Request.Method.GET && params != null && !params.isEmpty()) {
             final StringBuilder result = new StringBuilder(url);
@@ -252,6 +257,7 @@ public class BaseRequest<T> extends AbstractRequest<T> {
                     result.append("=");
                     result.append(encodedValue);
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
             return result.toString();

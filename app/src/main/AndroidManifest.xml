@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name="android.support.multidex.MultiDexApplication" >
+        android:name="androidx.multidex.MultiDexApplication" >
         <activity android:name="com.neopixl.spitfireapp.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

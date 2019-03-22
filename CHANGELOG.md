@@ -1,6 +1,19 @@
 Change Log
 ==========
 
+Version 2.0.0 *(2009-02-XX)* UNRELEASED
+----------------------------
+
+ * Updated Jackson to 2.9.4
+ * Updated Volley to 1.1.1
+ * Updated compile and target SDK to 28
+ * Updated improved kotlin compliance
+ * Updated Gradle to 3.3.2
+ * Updated Support to AndroidX
+ * Fixed crash on HTTP code 304
+ * Fixed timeout crash when a lot of timeout occurs
+
+ 
 Version 1.1.1 *(2018-10-04)*
 ----------------------------
 
