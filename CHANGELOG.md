@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-Version 2.0.0 *(2009-02-XX)* UNRELEASED
+Version X.X.X *(XXXX-XX-XX)* UNRELEASED
+----------------------------
+ * 
+
+Version 2.0.0 *(2019-03-22)* 
 ----------------------------
 
  * Updated Jackson to 2.9.4
