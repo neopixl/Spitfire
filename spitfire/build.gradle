@@ -7,7 +7,7 @@ apply plugin: "net.saliman.cobertura"
 
 // =============== Global vars  ===============
 
-def versionNameGlobal = '2.0.0'
+def versionNameGlobal = '2.0.0-alpha7'
 
 
 // =============== Android configuration  ===============
